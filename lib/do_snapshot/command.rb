@@ -1,7 +1,4 @@
 require 'digitalocean'
-require 'date'
-require 'pony'
-require 'core_ext/hash'
 require 'thread'
 
 module DoSnapshot
@@ -16,26 +13,41 @@ module DoSnapshot
           send("#{key}=", option) unless skip.include? key
         end
 
-        self.notify  = false
-        self.threads = []
-
+        Log.info 'Start performing operations'
         work_droplets
-        email_message if notify && mail
+        Log.info 'All operations has been finished.'
 
-        Log.info 'All snapshots requested'
+        Log.notify if notify && !quiet
+      end
+
+      def fail_power_on(id)
+        return unless id
+
+        set_id
+        instance = Digitalocean::Droplet.find(id)
+        fail instance.message unless instance.status.include? 'OK'
+        if instance.droplet.status.include? 'active'
+          Log.info "Droplet id: #{id} failed to snapshot. But it still running."
+        else
+          Digitalocean::Droplet.power_on(id)
+          Log.info "Droplet id: #{id} failed to snapshot. POWER ON has been requested."
+        end
       end
 
       protected
 
-      attr_accessor :droplets
-      attr_accessor :exclude
-      attr_accessor :only
-      attr_accessor :keep
-      attr_accessor :mail
-      attr_accessor :smtp
-      attr_accessor :stop
-      attr_accessor :notify
-      attr_accessor :threads
+      attr_accessor :droplets, :mail, :smtp, :exclude, :only
+      attr_accessor :delay, :keep, :quiet, :stop, :clean
+
+      attr_writer :notify, :threads
+
+      def notify
+        @notify ||= false
+      end
+
+      def threads
+        @threads ||= []
+      end
 
       # Getting droplets list from API.
       # And store into object.
@@ -44,7 +56,7 @@ module DoSnapshot
         set_id
         Log.debug 'Loading list of DigitalOcean droplets'
         droplets = Digitalocean::Droplet.all
-        fail droplets.message unless droplets.status == 'OK'
+        fail droplets.message unless droplets.status.include? 'OK'
         self.droplets = droplets.droplets
       end
 
@@ -59,7 +71,7 @@ module DoSnapshot
           next if !only.empty? && !only.include?(id)
 
           instance = Digitalocean::Droplet.find(id)
-          fail instance.message unless instance.status == 'OK'
+          fail instance.message unless instance.status.include? 'OK'
 
           prepare_instance instance.droplet
         end
@@ -69,7 +81,7 @@ module DoSnapshot
       # Threads review
       #
       def thread_chain
-        threads.each {|t| t.join}
+        threads.each { |t| t.join }
       end
 
       # Preparing instance to take snapshot.
@@ -77,9 +89,9 @@ module DoSnapshot
       #
       def prepare_instance(instance)
         return unless instance
-        Log.debug "Preparing droplet id: #{instance.id} name: #{instance.name} to snapshot."
+        Log.info "Preparing droplet id: #{instance.id} name: #{instance.name} to take snapshot."
 
-        warning_size = "For droplet with id: #{instance.id} and name: #{instance.name} the maximum #{keep} is reached."
+        warning_size = "For droplet with id: #{instance.id} and name: #{instance.name} the maximum number #{keep} of snapshots is reached."
 
         if instance.snapshots.size >= keep && stop
           Log.warning warning_size
@@ -90,11 +102,15 @@ module DoSnapshot
         # Stopping instance.
         Log.debug 'Shutting down droplet.'
         threads << Thread.new do
-          unless instance.status.include? 'off'
-            event = Digitalocean::Droplet.power_off(instance.id)
-            if event.status.include? 'OK'
-              sleep 1.3 until get_event_status(event.event_id)
+          begin
+            unless instance.status.include? 'off'
+              event = Digitalocean::Droplet.power_off(instance.id)
+              if event.status.include? 'OK'
+                sleep delay until get_event_status(event.event_id)
+              end
             end
+          rescue => e
+            raise DropletShutdownError.new(instance.id), e.message, e.backtrace
           end
 
           # Create snapshot.
@@ -105,7 +121,7 @@ module DoSnapshot
       # Trying to create a snapshot.
       #
       def create_snapshot(instance, warning_size)
-        Log.debug "Start creating snapshot for droplet id: #{instance.id} name: #{instance.name}."
+        Log.info "Start creating snapshot for droplet id: #{instance.id} name: #{instance.name}."
 
         today         = DateTime.now
         name          = "#{instance.name}_#{today.strftime('%Y_%m_%d')}"
@@ -120,7 +136,7 @@ module DoSnapshot
 
         Log.debug 'Wait until snapshot will be created.'
 
-        sleep 10 until get_event_status(event.event_id)
+        sleep delay until get_event_status(event.event_id)
 
         snapshot_size += 1
 
@@ -130,7 +146,38 @@ module DoSnapshot
         if snapshot_size > keep
           Log.warning warning_size if snapshot_size > keep
           self.notify = true
+
+          # Cleanup snapshots.
+          cleanup_snapshots instance, (snapshot_size - keep - 1) if clean
         end
+      rescue => e
+        case e.class
+        when SnapshotCleanupError
+          raise
+        else
+          raise SnapshotCreateError.new(instance.id), e.message, e.backtrace
+        end
+      end
+
+      # Cleanup our snapshots.
+      #
+      def cleanup_snapshots(instance, size)
+        Log.debug "Cleaning up snapshots for droplet id: #{instance.id} name: #{instance.name}."
+
+        (0..size).each do |i|
+          snapshot = instance.snapshots[i]
+          event = Digitalocean::Image.destroy(snapshot.id)
+
+          if !event
+            fail 'Something wrong with DigitalOcean or with your connection :)'
+          elsif event && !event.status.include?('OK')
+            fail event.message
+          end
+
+          Log.info "Snapshot name: #{snapshot.name} delete requested."
+        end
+      rescue => e
+        raise SnapshotCleanupError.new(instance.id), e.message, e.backtrace
       end
 
       # Looking for event status.
@@ -141,29 +188,6 @@ module DoSnapshot
         event = Digitalocean::Event.find(id)
         fail event.message unless event.status.include?('OK')
         event.event.percentage && event.event.percentage.include?('100') ? true : false
-      end
-
-      # Sending message via Hash params.
-      #
-      # Options:: -m to:mail@somehost.com from:from@host.com -t address:smtp.gmail.com user_name:someuser password:somepassword
-      #
-      def email_message
-        mail.symbolize_keys!
-        smtp.symbolize_keys!
-
-        mail[:subject] = 'DigitalOcean Snapshot maximum is reached.' unless mail[:subject]
-        mail[:body] = "Please cleanup your Digital Ocean account. \nSnapshot maximum is reached." unless mail[:body]
-        mail[:from] = 'noreply@someonelse.com' unless mail[:from]
-        mail[:via] = :smtp unless mail[:via]
-
-        smtp[:domain] = 'localhost.localdomain' unless smtp[:domain]
-        smtp[:port] = '25' unless smtp[:port]
-
-        mail[:via_options] = smtp
-
-        Log.debug 'Sending e-mail notification.'
-        # Look into your inbox :)
-        Pony.mail(mail)
       end
 
       # Set id's of Digital Ocean API.
