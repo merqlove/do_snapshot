@@ -1,5 +1,5 @@
 # Current version
 #
 module DoSnapshot
-  VERSION = '0.0.1'
+  VERSION = '0.0.2'
 end
