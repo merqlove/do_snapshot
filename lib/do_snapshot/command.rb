@@ -2,6 +2,7 @@ require 'digitalocean'
 require 'date'
 require 'pony'
 require 'core_ext/hash'
+require 'thread'
 
 module DoSnapshot
   # Our commands live here :)
@@ -15,7 +16,8 @@ module DoSnapshot
           send("#{key}=", option) unless skip.include? key
         end
 
-        self.notify = false
+        self.notify  = false
+        self.threads = []
 
         work_droplets
         email_message if notify && mail
@@ -33,6 +35,7 @@ module DoSnapshot
       attr_accessor :smtp
       attr_accessor :stop
       attr_accessor :notify
+      attr_accessor :threads
 
       # Getting droplets list from API.
       # And store into object.
@@ -60,6 +63,13 @@ module DoSnapshot
 
           prepare_instance instance.droplet
         end
+        thread_chain
+      end
+
+      # Threads review
+      #
+      def thread_chain
+        threads.each {|t| t.join}
       end
 
       # Preparing instance to take snapshot.
@@ -79,15 +89,17 @@ module DoSnapshot
 
         # Stopping instance.
         Log.debug 'Shutting down droplet.'
-        unless instance.status.include? 'off'
-          event = Digitalocean::Droplet.power_off(instance.id)
-          if event.status.include? 'OK'
-            sleep 1.3 until get_event_status(event.event_id)
+        threads << Thread.new do
+          unless instance.status.include? 'off'
+            event = Digitalocean::Droplet.power_off(instance.id)
+            if event.status.include? 'OK'
+              sleep 1.3 until get_event_status(event.event_id)
+            end
           end
-        end
 
-        # Create snapshot.
-        create_snapshot instance, warning_size
+          # Create snapshot.
+          create_snapshot instance, warning_size
+        end
       end
 
       # Trying to create a snapshot.

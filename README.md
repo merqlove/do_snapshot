@@ -4,6 +4,7 @@ You can use this gem to backup's DigitalOcean droplet's via snapshot.
 
 Here some features:
 
+- Multiple threads out of the box.
 - Binary for cron and command-line.
 - Mail notification when maximum of snapshots for droplet reached.
 - Custom mail settings (You can set [Pony](https://github.com/benprew/pony) mail settings).
