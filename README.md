@@ -36,16 +36,14 @@ Or install it yourself as:
 
 First you may need to set DigitalOcean API keys:
  
-```shell
-  export DIGITAL_OCEAN_CLIENT_ID = "SOMEID"
-  export DIGITAL_OCEAN_API_KEY = "SOMEKEY"
-```
+
+    $ export DIGITAL_OCEAN_CLIENT_ID = "SOMEID"
+    $ export DIGITAL_OCEAN_API_KEY = "SOMEKEY"
+
  
 If you want to set keys without environment, than set it via options:
 
-```shell
-  do_snapshot --digital-ocean-client-id YOURLONGAPICLIENTID --digital-ocean-api-key YOURLONGAPIKEY
-```
+    $ do_snapshot --digital-ocean-client-id YOURLONGAPICLIENTID --digital-ocean-api-key YOURLONGAPIKEY
 
 E-mail notifications disabled out of the box. 
 For working mailer you need to set e-mail settings via run options.
@@ -75,7 +73,8 @@ Description:
 
   Advanced options example for MAIL feature:
 
-  --mail to:mail@somehost.com from:from@host.com --smtp address:smtp.gmail.com user_name:someuser password:somepassword
+  --mail to:mail@somehost.com from:from@host.com 
+  --smtp address:smtp.gmail.com user_name:someuser password:somepassword
 
   For more details look here: [https://github.com/benprew/pony](https://github.com/benprew/pony)
 
