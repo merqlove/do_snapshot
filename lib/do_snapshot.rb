@@ -1,7 +1,6 @@
 require 'do_snapshot/version'
 require 'logger'
 
-
 # Used primary for creating snapshot's as backups for DigitalOcean
 #
 module DoSnapshot
