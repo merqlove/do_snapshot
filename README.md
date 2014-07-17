@@ -39,7 +39,8 @@ First you may need to set DigitalOcean API keys:
 ```shell
   export DIGITAL_OCEAN_CLIENT_ID = "SOMEID"
   export DIGITAL_OCEAN_API_KEY = "SOMEKEY"
-``` 
+```
+ 
 If you want to set keys without environment, than set it via options:
 
 ```shell
@@ -76,11 +77,11 @@ Description:
 
   --mail to:mail@somehost.com from:from@host.com --smtp address:smtp.gmail.com user_name:someuser password:somepassword
 
-  For more details look here: https://github.com/benprew/pony
+  For more details look here: [https://github.com/benprew/pony](https://github.com/benprew/pony)
 
   Example:
 
-  > $ do_snapshot --keep 5
+  > $ do_snapshot --keep 5 --quiet
 
   > $ do_snapshot --only 123456 1234567 --store 3
 

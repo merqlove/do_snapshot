@@ -10,9 +10,12 @@ module DoSnapshot
 
     def initialize(*args)
       super
-      if options.include?('log') && !options.include?('quiet')
+
+      # Use Thor log especially
+      Log.thor_log = Thor::Shell::Color.new unless options.include?('quiet')
+
+      if options.include?('log')
         Log.logger       = Logger.new(options['log'])
-        Log.thor_log     = Thor::Shell::Color.new
         Log.logger.level = options.include?('trace') ? Logger::DEBUG : Logger::INFO
       end
 
