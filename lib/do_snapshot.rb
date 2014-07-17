@@ -38,7 +38,6 @@ module DoSnapshot
 
       def log(type, message)
         buffer << message
-        message = "#{message}"
         logger.send(type, message) if logger
 
         say message, color(type) unless type == :debug && !debug?
