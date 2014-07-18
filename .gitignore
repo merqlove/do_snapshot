@@ -14,7 +14,10 @@ rdoc
 spec/reports
 test/tmp
 test/version_tmp
-tmp
+log/*
+!log/.keep
+tmp/*
+!tmp/.keep
 *.bundle
 *.so
 *.o
