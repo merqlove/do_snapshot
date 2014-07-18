@@ -99,15 +99,18 @@ module DoSnapshot
       def prepare_instance(instance)
         return unless instance
         Log.info "Preparing droplet id: #{instance.id} name: #{instance.name} to take snapshot."
+        return if too_much_snapshots(instance)
+        thread_runner(instance)
+      end
 
+      def too_much_snapshots(instance)
         # noinspection RubyResolve
         if instance.snapshots.size >= keep && stop
           Log.warning warning_size(instance.id, instance.name, keep)
           self.notify = true
-          return
+          return true
         end
-
-        thread_runner(instance)
+        false
       end
 
       def stop_droplet(instance)
@@ -133,13 +136,8 @@ module DoSnapshot
         Log.info "Snapshot name: #{name} created successfully."
         Log.info "Droplet id: #{instance.id} name: #{instance.name} snapshots: #{snapshot_size}."
 
-        if snapshot_size > keep
-          Log.warning warning_size(instance.id, instance.name, snapshot_size) if snapshot_size > keep
-          self.notify = true
-
-          # Cleanup snapshots.
-          cleanup_snapshots instance, (snapshot_size - keep - 1) if clean
-        end
+        # Cleanup snapshots.
+        cleanup_snapshots instance, snapshot_size if clean
       rescue => e
         case e.class
         when SnapshotCleanupError
@@ -152,6 +150,13 @@ module DoSnapshot
       # Cleanup our snapshots.
       #
       def cleanup_snapshots(instance, size)
+        return unless size > keep
+
+        Log.warning warning_size(instance.id, instance.name, size)
+
+        size = size - keep - 1
+        self.notify = true
+
         Log.debug "Cleaning up snapshots for droplet id: #{instance.id} name: #{instance.name}."
 
         api.cleanup_snapshots instance, size

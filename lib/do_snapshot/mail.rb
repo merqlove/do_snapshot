@@ -8,7 +8,7 @@ module DoSnapshot
   class Mail
     class << self
       attr_accessor :opts
-      attr_writer :smtp
+      attr_writer :smtp, :opts_default, :smtp_default
 
       def smtp
         @smtp ||= {}
@@ -34,18 +34,34 @@ module DoSnapshot
 
       protected
 
+      def opts_default
+        @opts_default ||= {
+          subject: 'Digital Ocean: maximum snapshots is reached.',
+          body: "Please cleanup your Digital Ocean account.\nSnapshot maximum is reached.",
+          from: 'noreply@someonelse.com',
+          to: 'to@someonelse.com',
+          via: :smtp
+        }
+      end
+
+      def smtp_default
+        @smtp_default ||= {
+          domain: 'localhost.localdomain',
+          port: '25'
+        }
+      end
+
       def opts_setup
-        opts[:subject] = 'Digital Ocean: maximum snapshots is reached.' unless opts[:subject]
-        opts[:body]    = "Please cleanup your Digital Ocean account.\nSnapshot maximum is reached." unless opts[:body]
-        opts[:from]    = 'noreply@someonelse.com' unless opts[:from]
-        opts[:to]      = 'to@someonelse.com' unless opts[:to]
-        opts[:via]     = :smtp unless opts[:via]
+        opts_default.each_pair do |key, value|
+          opts[key] = value unless opts.include? key
+        end
         opts[:body]    = "#{opts[:body]}\n\nTrace: #{DateTime.now}\n#{Log.buffer.join("\n")}"
       end
 
       def smtp_setup
-        smtp[:domain]  = 'localhost.localdomain' unless smtp[:domain]
-        smtp[:port]    = '25' unless smtp[:port]
+        smtp_default.each_pair do |key, value|
+          smtp[key] = value unless smtp.include? key
+        end
         opts[:via_options] = smtp
       end
     end
