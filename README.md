@@ -1,5 +1,8 @@
 # DoSnapshot
 
+[![Gem Version](https://badge.fury.io/rb/do_snapshot.svg)](http://badge.fury.io/rb/do_snapshot)
+[![Dependency Status](https://gemnasium.com/merqlove/do_snapshot.svg)](https://gemnasium.com/merqlove/do_snapshot)
+
 You can use this gem to backup's DigitalOcean droplet's via snapshot method.
 
 Here some features:
@@ -19,6 +22,10 @@ There not so much of dependencies:
 - `Digitalocean` for API requests.
 - `Thor` for CLI.
 - `Pony` for mail notifications.
+
+## Compatibility
+
+Ruby versions: MRI 1.9.3, MRI 2.0, MRI 2.1
 
 ## Installation
 
