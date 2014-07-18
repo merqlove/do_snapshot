@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>DoSnapshot by merqlove</title>
+  </head>
+
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>DoSnapshot</h1>
+          <h2>Snapshot creator for Digital Ocean droplets. Multi-threading. Auto-cleanup. Cron optimized.</h2>
+        </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/merqlove/do_snapshot/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/merqlove/do_snapshot/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/merqlove/do_snapshot" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <h1>
+<a name="dosnapshot" class="anchor" href="#dosnapshot"><span class="octicon octicon-link"></span></a>DoSnapshot</h1>
+
+<p>You can use this gem to backup's DigitalOcean droplet's via snapshot method.</p>
+
+<p>Here some features:</p>
+
+<ul>
+<li>Multiple threads out of the box. No matter how much droplet's you have.</li>
+<li>Auto-cleanup for old snapshots.</li>
+<li>Binary special for cron and command-line.</li>
+<li>Mail notifications when fail or maximum of snapshots is reached for one or multiple droplets.</li>
+<li>Custom mail settings (You can set <a href="https://github.com/benprew/pony">Pony</a> mail settings).</li>
+<li>Stop mode (when you don't want to create new snapshots when maximum is reached).</li>
+<li>Logging into selected directory.</li>
+<li>Verbose mode for research.</li>
+<li>Quiet mode for silence.</li>
+</ul><p>There not so much of dependencies:</p>
+
+<ul>
+<li>
+<code>Digitalocean</code> for API requests.</li>
+<li>
+<code>Thor</code> for CLI.</li>
+<li>
+<code>Pony</code> for mail notifications.</li>
+</ul><h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>Add this line to your application's Gemfile:</p>
+
+<pre><code>gem 'do_snapshot'
+</code></pre>
+
+<p>And then execute:</p>
+
+<pre><code>$ bundle
+</code></pre>
+
+<p>Or install it yourself as:</p>
+
+<pre><code>$ gem install do_snapshot
+</code></pre>
+
+<h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<p>First you may need to set DigitalOcean API keys: </p>
+
+<pre><code>$ export DIGITAL_OCEAN_CLIENT_ID="SOMEID"
+$ export DIGITAL_OCEAN_API_KEY="SOMEKEY"
+</code></pre>
+
+<p>If you want to set keys without environment, than set it via options when you run do_snapshot:</p>
+
+<pre><code>$ do_snapshot --digital-ocean-client-id YOURLONGAPICLIENTID --digital-ocean-api-key YOURLONGAPIKEY
+</code></pre>
+
+<h4>
+<a name="basic-usage" class="anchor" href="#basic-usage"><span class="octicon octicon-link"></span></a>Basic usage</h4>
+
+<p>Here we <code>keeping</code> only 5 <strong>latest</strong> snapshots and cleanup older after new one is created. If creation of snapshots failed no one will be deleted. By default we keeping <code>10</code> droplets.</p>
+
+<pre><code>$ do_snapshot --keep 5 -c
+</code></pre>
+
+<p>Keep latest 3 from selected droplets:</p>
+
+<pre><code>$ do_snapshot --only 123456 1234567 --keep 3
+</code></pre>
+
+<p>Working with all except selected droplets:</p>
+
+<pre><code>$ do_snapshot --exclude 123456 123457
+</code></pre>
+
+<p>Keep latest 5 snapshots, send mail notification instead of creating new one:</p>
+
+<pre><code>$ do_snapshot --keep 10 --stop --mail to:yourmail@example.com
+</code></pre>
+
+<p>E-mail notifications disabled out of the box. 
+For working mailer you need to set e-mail settings via run options.</p>
+
+<pre><code>--mail to:mail@somehost.com from:from@host.com --smtp address:smtp.gmail.com port:25 user_name:someuser password:somepassword
+</code></pre>
+
+<h4>
+<a name="cron-example" class="anchor" href="#cron-example"><span class="octicon octicon-link"></span></a>Cron example</h4>
+
+<pre><code>0 4 * * 7 /.../bin/do_snapshot -k 5 -m to:TO from:FROM -t address:HOST user_name:LOGIN password:PASSWORD port:2525 -q -c
+</code></pre>
+
+<h4>
+<a name="real-world-example" class="anchor" href="#real-world-example"><span class="octicon octicon-link"></span></a>Real world example</h4>
+
+<pre><code>$ bin/do_snapshot --only 123456 -k 3 -c -m to:TO from:FROM -t address:HOST user_name:LOGIN password:PASSWORD port:2525 -v
+
+Checking DigitalOcean Id's.
+Start performing operations
+Setting DigitalOcean Id's.
+Loading list of DigitalOcean droplets
+Working with list of DigitalOcean droplets
+Preparing droplet id: 123456 name: mrcr.ru to take snapshot.
+Shutting down droplet.
+Start creating snapshot for droplet id: 123456 name: mrcr.ru.
+Wait until snapshot will be created.
+Snapshot name: mrcr.ru_2014_07_18 created successfully.
+Droplet id: 123456 name: mrcr.ru snapshots: 4.
+For droplet with id: 123456 and name: mrcr.ru the maximum number 3 of snapshots is reached.
+Cleaning up snapshots for droplet id: 123456 name: mrcr.ru.
+Snapshot name: mrcr.ru_2014_07_17 delete requested.
+All operations has been finished.
+Sending e-mail notification.
+</code></pre>
+
+<h3>
+<a name="all-options" class="anchor" href="#all-options"><span class="octicon octicon-link"></span></a>All options:</h3>
+
+<pre><code>&gt; $ do_snapshot c  
+
+aliases: s, snap, create
+
+Options:
+  -o, [--only=123456 123456 123456]                              # Select some droplets.
+  -e, [--exclude=123456 123456 123456]                           # Except some droplets.
+  -k, [--keep=5]                                                 # How much snapshots you want to keep?
+                                                                 # Default: 10
+  -m, [--mail=to:yourmail@example.com]                           # Receive mail if fail or maximum is reached.
+  -t, [--smtp=user_name:yourmail@example.com password:password]  # SMTP options.
+  -l, [--log=/Users/someone/.do_snapshot/main.log]               # Log file path. By default logging is disabled.
+  -c, [--clean], [--no-clean]                                    # Cleanup snapshots after create. If you have more images than you want to `keep`, older will be deleted.
+  -s, [--stop], [--no-stop]                                      # Stop creating snapshots if maximum is reached.
+  -v, [--trace], [--no-trace]                                    # Verbose mode.
+  -q, [--quiet], [--no-quiet]                                    # Quiet mode. If don't need any messages in console.
+      [--digital-ocean-client-id=YOURLONGAPICLIENTID]            # DIGITAL_OCEAN_CLIENT_ID. if you can't use environment.
+      [--digital-ocean-api-key=YOURLONGAPIKEY]                   # DIGITAL_OCEAN_API_KEY. if you can't use environment.    
+
+Description:
+  `do_snapshot` able to create and cleanup snapshots on your droplets.
+
+  You can optionally specify parameters to select or exclude some droplets.   
+</code></pre>
+
+<h2>
+<a name="contributing" class="anchor" href="#contributing"><span class="octicon octicon-link"></span></a>Contributing</h2>
+
+<ol>
+<li>Fork it ( <a href="https://github.com/merqlove/do_snapshot/fork">https://github.com/merqlove/do_snapshot/fork</a> )</li>
+<li>Create your feature branch (<code>git checkout -b my-new-feature</code>)</li>
+<li>Commit your changes (<code>git commit -am 'Add some feature'</code>)</li>
+<li>Push to the branch (<code>git push origin my-new-feature</code>)</li>
+<li>Create a new Pull Request</li>
+</ol>
+        </section>
+
+        <footer>
+          DoSnapshot is maintained by <a href="https://github.com/merqlove">merqlove</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
+    </div>
+  </body>
+</html>
