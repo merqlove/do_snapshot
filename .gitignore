@@ -25,4 +25,4 @@ tmp/*
 mkmf.log
 .idea
 .irb_history
-
+.ruby-version
