@@ -74,7 +74,7 @@ For working mailer you need to set e-mail settings via run options.
 
 #### Real world example
 
-    $ bin/do_snapshot --only 123456 -k 3 -c -m to:TO from:FROM -t address:HOST user_name:LOGIN password:PASSWORD port:2525 -v                                  
+    $ bin/do_snapshot --only 123456 -k 3 -c -m to:TO from:FROM -t address:HOST user_name:LOGIN password:PASSWORD port:2525 -v
     
     Checking DigitalOcean Id's.
     Start performing operations

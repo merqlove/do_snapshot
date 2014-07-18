@@ -3,7 +3,7 @@ require 'thor'
 require 'logger'
 require 'date'
 require 'pony'
-require 'core_ext/hash'
+require 'do_snapshot/core_ext/hash'
 
 # Used primary for creating snapshot's as backups for DigitalOcean
 #
