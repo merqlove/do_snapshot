@@ -1,10 +1,13 @@
+require 'thor'
 require 'do_snapshot'
 require 'do_snapshot/command'
+require 'do_snapshot/mail'
+require 'do_snapshot/log'
 
 module DoSnapshot
   # CLI is here
   #
-  class CLI < Thor
+  class CLI < Thor # rubocop:disable ClassLength
     default_task :snap
 
     map %w( c s create )  => :snap
@@ -13,19 +16,13 @@ module DoSnapshot
     def initialize(*args)
       super
 
-      Log.quiet = options['quiet']
-      # Use Thor shell
-      Log.shell = shell unless Log.quiet
-      Log.verbose = options['trace']
-
-      logger if options.include?('log')
-
-      Log.mail = options['mail']
-      Log.smtp = options['smtp']
+      set_logger
+      set_mailer
 
       # Check for keys via options
-      ENV['DIGITAL_OCEAN_CLIENT_ID'] = options['digital_ocean_client_id'] if options.include? 'digital_ocean_client_id'
-      ENV['DIGITAL_OCEAN_API_KEY']   = options['digital_ocean_api_key'] if options.include? 'digital_ocean_api_key'
+      %w( digital_ocean_client_id digital_ocean_api_key ).each do |key|
+        ENV[key.upcase] = options[key] if options.include? key
+      end
 
       try_keys_first
     end
@@ -66,33 +63,81 @@ module DoSnapshot
 
     VERSION: #{DoSnapshot::VERSION}
     LONGDESC
+    method_option :only,
+                  type: :array,
+                  default: [],
+                  aliases: %w( -o ),
+                  banner: '123456 123456 123456',
+                  desc: 'Select some droplets.'
+    method_option :exclude,
+                  type: :array,
+                  default: [],
+                  aliases: %w( -e ),
+                  banner: '123456 123456 123456',
+                  desc: 'Except some droplets.'
+    method_option :keep,
+                  type: :numeric,
+                  default: 10,
+                  aliases: %w( -k ),
+                  banner: '5',
+                  desc: 'How much snapshots you want to keep?'
+    method_option :delay,
+                  type: :numeric,
+                  default: 10,
+                  aliases: %w( -d ),
+                  banner: '5',
+                  desc: 'Delay between snapshot operation status requests.'
+    method_option :mail,
+                  type: :hash,
+                  aliases: %w( -m ),
+                  banner: 'to:yourmail@example.com',
+                  desc: 'Receive mail if fail or maximum is reached.'
+    method_option :smtp,
+                  type: :hash,
+                  aliases: %w( -t ),
+                  banner: 'user_name:yourmail@example.com password:password',
+                  desc: 'SMTP options.'
+    method_option :log,
+                  type: :string,
+                  aliases: %w( -l ),
+                  banner: '/Users/someone/.do_snapshot/main.log',
+                  desc: 'Log file path. By default logging is disabled.'
+    method_option :clean,
+                  type: :boolean,
+                  aliases: %w( -c ),
+                  desc: 'Cleanup snapshots after create. If you have more images than you want to `keep`, older will be deleted.'
+    method_option :stop,
+                  type: :boolean,
+                  aliases: %w( -s),
+                  desc: 'Stop creating snapshots if maximum is reached.'
+    method_option :trace,
+                  type: :boolean,
+                  aliases: %w( -v ),
+                  desc: 'Verbose mode.'
+    method_option :quiet,
+                  type: :boolean,
+                  aliases: %w( -q ),
+                  desc: 'Quiet mode. If don\'t need any messages and in console.'
 
-    method_option :only,    type: :array,   default: [], aliases: %w( -o ), banner: '123456 123456 123456', desc: 'Select some droplets.'
-    method_option :exclude, type: :array,   default: [], aliases: %w( -e ), banner: '123456 123456 123456', desc: 'Except some droplets.'
-    method_option :keep,    type: :numeric, default: 10, aliases: %w( -k ), banner: '5', desc: 'How much snapshots you want to keep?'
-    method_option :delay,   type: :numeric, default: 10, aliases: %w( -d ), banner: '5', desc: 'Delay between snapshot operation status requests.'
-    method_option :mail,    type: :hash,    aliases: %w( -m ), banner: 'to:yourmail@example.com', desc: 'Receive mail if fail or maximum is reached.'
-    method_option :smtp,    type: :hash,    aliases: %w( -t ), banner: 'user_name:yourmail@example.com password:password', desc: 'SMTP options.'
-    method_option :log,     type: :string,  aliases: %w( -l ), banner: '/Users/someone/.do_snapshot/main.log', desc: 'Log file path. By default logging is disabled.'
-    method_option :clean,   type: :boolean, aliases: %w( -c ), desc: 'Cleanup snapshots after create. If you have more images than you want to `keep`, older will be deleted.'
-    method_option :stop,    type: :boolean, aliases: %w( -s),  desc: 'Stop creating snapshots if maximum is reached.'
-    method_option :trace,   type: :boolean, aliases: %w( -v ), desc: 'Verbose mode.'
-    method_option :quiet,   type: :boolean, aliases: %w( -q ), desc: 'Quiet mode. If don\'t need any messages and in console.'
-
-    method_option :digital_ocean_client_id, type: :string, banner: 'YOURLONGAPICLIENTID', desc: 'DIGITAL_OCEAN_CLIENT_ID. if you can\'t use environment.'
-    method_option :digital_ocean_api_key,   type: :string, banner: 'YOURLONGAPIKEY',      desc: 'DIGITAL_OCEAN_API_KEY. if you can\'t use environment.'
+    method_option :digital_ocean_client_id,
+                  type: :string,
+                  banner: 'YOURLONGAPICLIENTID',
+                  desc: 'DIGITAL_OCEAN_CLIENT_ID. if you can\'t use environment.'
+    method_option :digital_ocean_api_key,
+                  type: :string,
+                  banner: 'YOURLONGAPIKEY',
+                  desc: 'DIGITAL_OCEAN_API_KEY. if you can\'t use environment.'
 
     def snap
-      Command.execute options, %w( log trace digital_ocean_client_id digital_ocean_api_key )
+      Command.snap options, %w( log trace digital_ocean_client_id digital_ocean_api_key )
     rescue => e
-
-      Command.fail_power_on(e.id) if e && e.class == SnapshotCreateError && e.respond_to?('id')
+      Command.fail_power_on(e) if [SnapshotCreateError, DropletShutdownError].include?(e.class)
       Log.error e.message
       backtrace(e) if options.include? 'trace'
-      if Log.mail
-        Log.mail[:subject] = 'Digital Ocean: Error.'
-        Log.mail[:body] = 'Please check your droplets.'
-        Log.notify
+      if Mail.opts
+        Mail.opts[:subject] = 'Digital Ocean: Error.'
+        Mail.opts[:body] = 'Please check your droplets.'
+        Mail.notify
       end
     end
 
@@ -101,24 +146,38 @@ module DoSnapshot
       puts DoSnapshot::VERSION
     end
 
-    protected
-
-    def logger
-      Log.logger = Logger.new(options['log'])
-      Log.logger.level = Log.verbose ? Logger::DEBUG : Logger::INFO
-    end
-
-    def backtrace(e)
-      e.backtrace.each do |t|
-        Log.error t
+    no_commands do
+      def set_mailer
+        Mail.opts = options['mail']
+        Mail.smtp = options['smtp']
       end
-    end
 
-    # Check for DigitalOcean API keys
-    def try_keys_first
-      Log.debug 'Checking DigitalOcean Id\'s.'
-      fail Thor::Error, 'You must have DIGITAL_OCEAN_CLIENT_ID in environment or set via options.' if !ENV['DIGITAL_OCEAN_CLIENT_ID'] || ENV['DIGITAL_OCEAN_CLIENT_ID'].empty?
-      fail Thor::Error, 'You must have DIGITAL_OCEAN_API_KEY in environment or set via options.' if !ENV['DIGITAL_OCEAN_API_KEY'] || ENV['DIGITAL_OCEAN_API_KEY'].empty?
+      def set_logger
+        Log.quiet = options['quiet']
+        Log.verbose = options['trace']
+        # Use Thor shell
+        Log.shell = shell unless options['quiet']
+        init_logger if options.include?('log')
+      end
+
+      def init_logger
+        Log.logger = Logger.new(options['log'])
+        Log.logger.level = Log.verbose ? Logger::DEBUG : Logger::INFO
+      end
+
+      def backtrace(e)
+        e.backtrace.each do |t|
+          Log.error t
+        end
+      end
+
+      # Check for DigitalOcean API keys
+      def try_keys_first
+        Log.debug 'Checking DigitalOcean Id\'s.'
+        %w( DIGITAL_OCEAN_CLIENT_ID DIGITAL_OCEAN_API_KEY ).each do |key|
+          Log.fail Thor::Error, "You must have #{key} in environment or set it via options." if !ENV[key] || ENV[key].empty?
+        end
+      end
     end
   end
 end

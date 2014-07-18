@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = DoSnapshot::VERSION
   spec.authors       = ['Alexander Merkulov']
   spec.email         = ['sasha@merqlove.ru']
-  spec.summary       = %q{Snapshot creator for Digital Ocean droplets. Multi-threading. Auto-cleanup. Cron optimized.}
-  spec.description   = %q{Snapshot creator for Digital Ocean droplets. Multi-threading inside. Auto-cleanup feature. No matter how much droplets you have. Cron optimized.}
+  spec.summary       = 'Snapshot creator for Digital Ocean droplets. Multi-threading. Auto-cleanup. Cron optimized.'
+  spec.description   = 'Snapshot creator for Digital Ocean droplets. Multi-threading inside. Auto-cleanup feature. No matter how much droplets you have. Cron optimized.'
   spec.homepage      = 'http://github.com/merqlove/do_snapshot'
   spec.license       = 'MIT'
 

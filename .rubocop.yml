@@ -9,3 +9,6 @@ SingleSpaceBeforeFirstArg:
 
 TrailingComma:
   Enabled: false
+AllCops:
+  Exclude:
+    - '*.gemspec'

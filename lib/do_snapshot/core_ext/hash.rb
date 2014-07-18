@@ -25,12 +25,12 @@ class Hash
   end
 
   def symbolize_keys
-    transform_keys { |key| key.to_sym rescue key }
+    transform_keys { |key| key.to_sym rescue key } # rubocop:disable Style/RescueModifier
   end
 
   # Destructively convert all keys to symbols, as long as they respond
   # to +to_sym+. Same as +symbolize_keys+, but modifies +self+.
   def symbolize_keys!
-    transform_keys! { |key| key.to_sym rescue key }
+    transform_keys! { |key| key.to_sym rescue key } # rubocop:disable Style/RescueModifier
   end
 end

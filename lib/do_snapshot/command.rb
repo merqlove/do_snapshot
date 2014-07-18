@@ -1,12 +1,12 @@
-require 'digitalocean'
 require 'thread'
+require 'do_snapshot/api'
 
 module DoSnapshot
   # Our commands live here :)
   #
-  class Command
+  class Command # rubocop:disable ClassLength
     class << self
-      def execute(options, skip)
+      def snap(options, skip)
         return unless options
 
         options.each_pair do |key, option|
@@ -14,32 +14,29 @@ module DoSnapshot
         end
 
         Log.info 'Start performing operations'
-        work_droplets
+        work_with_droplets
         Log.info 'All operations has been finished.'
 
-        Log.notify if notify && !quiet
+        Mail.notify if notify && !quiet
       end
 
-      def fail_power_on(id)
-        return unless id
-
-        set_id
-        instance = Digitalocean::Droplet.find(id)
-        fail instance.message unless instance.status.include? 'OK'
-        if instance.droplet.status.include? 'active'
-          Log.info "Droplet id: #{id} failed to snapshot. But it still running."
-        else
-          Digitalocean::Droplet.power_on(id)
-          Log.info "Droplet id: #{id} failed to snapshot. POWER ON has been requested."
-        end
+      def fail_power_on(e)
+        return unless e && e.id
+        api.start_droplet(e.id)
+      rescue
+        raise DropletFindError, e.message, e.backtrace
       end
 
       protected
 
-      attr_accessor :droplets, :mail, :smtp, :exclude, :only
+      attr_accessor :droplets, :mail, :smtp, :exclude, :only, :api
       attr_accessor :delay, :keep, :quiet, :stop, :clean
 
-      attr_writer :notify, :threads
+      attr_writer :notify, :threads, :api
+
+      def api
+        @api ||= API.new(delay)
+      end
 
       def notify
         @notify ||= false
@@ -49,39 +46,51 @@ module DoSnapshot
         @threads ||= []
       end
 
+      # Working with list of droplets.
+      #
+      def work_with_droplets
+        load_droplets
+        dispatch_droplets
+        Log.debug 'Working with list of DigitalOcean droplets'
+        thread_chain
+      end
+
       # Getting droplets list from API.
       # And store into object.
       #
       def load_droplets
-        set_id
         Log.debug 'Loading list of DigitalOcean droplets'
-        droplets = Digitalocean::Droplet.all
-        fail droplets.message unless droplets.status.include? 'OK'
-        self.droplets = droplets.droplets
+        self.droplets = api.droplets.droplets
       end
 
-      # Working with received list of droplets.
+      # Dispatch received droplets, each by each.
       #
-      def work_droplets
-        load_droplets
-        Log.debug 'Working with list of DigitalOcean droplets'
+      def dispatch_droplets
         droplets.each do |droplet|
           id = droplet.id.to_s
           next if exclude.include? id
           next if !only.empty? && !only.include?(id)
 
-          instance = Digitalocean::Droplet.find(id)
-          fail instance.message unless instance.status.include? 'OK'
+          instance = api.droplet id
 
           prepare_instance instance.droplet
         end
-        thread_chain
       end
 
-      # Threads review
+      # Join threads
       #
       def thread_chain
         threads.each { |t| t.join }
+      end
+
+      # Run threads
+      #
+      def thread_runner(instance)
+        threads << Thread.new do
+          Log.debug 'Shutting down droplet.'
+          stop_droplet instance
+          create_snapshot instance
+        end
       end
 
       # Preparing instance to take snapshot.
@@ -91,52 +100,33 @@ module DoSnapshot
         return unless instance
         Log.info "Preparing droplet id: #{instance.id} name: #{instance.name} to take snapshot."
 
-        warning_size = "For droplet with id: #{instance.id} and name: #{instance.name} the maximum number #{keep} of snapshots is reached."
-
+        # noinspection RubyResolve
         if instance.snapshots.size >= keep && stop
-          Log.warning warning_size
+          Log.warning warning_size(instance.id, instance.name, keep)
           self.notify = true
           return
         end
 
-        # Stopping instance.
-        Log.debug 'Shutting down droplet.'
-        threads << Thread.new do
-          begin
-            unless instance.status.include? 'off'
-              event = Digitalocean::Droplet.power_off(instance.id)
-              if event.status.include? 'OK'
-                sleep delay until get_event_status(event.event_id)
-              end
-            end
-          rescue => e
-            raise DropletShutdownError.new(instance.id), e.message, e.backtrace
-          end
+        thread_runner(instance)
+      end
 
-          # Create snapshot.
-          create_snapshot instance, warning_size
-        end
+      def stop_droplet(instance)
+        api.stop_droplet(instance.id) unless instance.status.include? 'off'
       end
 
       # Trying to create a snapshot.
       #
-      def create_snapshot(instance, warning_size)
+      def create_snapshot(instance) # rubocop:disable MethodLength
         Log.info "Start creating snapshot for droplet id: #{instance.id} name: #{instance.name}."
 
         today         = DateTime.now
         name          = "#{instance.name}_#{today.strftime('%Y_%m_%d')}"
-        event         = Digitalocean::Droplet.snapshot(instance.id, name: name)
+        # noinspection RubyResolve
         snapshot_size = instance.snapshots.size
-
-        if !event
-          fail 'Something wrong with DigitalOcean or with your connection :)'
-        elsif event && !event.status.include?('OK')
-          fail event.message
-        end
 
         Log.debug 'Wait until snapshot will be created.'
 
-        sleep delay until get_event_status(event.event_id)
+        api.create_snapshot instance.id, name
 
         snapshot_size += 1
 
@@ -144,7 +134,7 @@ module DoSnapshot
         Log.info "Droplet id: #{instance.id} name: #{instance.name} snapshots: #{snapshot_size}."
 
         if snapshot_size > keep
-          Log.warning warning_size if snapshot_size > keep
+          Log.warning warning_size(instance.id, instance.name, snapshot_size) if snapshot_size > keep
           self.notify = true
 
           # Cleanup snapshots.
@@ -153,7 +143,7 @@ module DoSnapshot
       rescue => e
         case e.class
         when SnapshotCleanupError
-          raise
+          raise e.class, e.message, e.backtrace
         else
           raise SnapshotCreateError.new(instance.id), e.message, e.backtrace
         end
@@ -164,38 +154,13 @@ module DoSnapshot
       def cleanup_snapshots(instance, size)
         Log.debug "Cleaning up snapshots for droplet id: #{instance.id} name: #{instance.name}."
 
-        (0..size).each do |i|
-          snapshot = instance.snapshots[i]
-          event = Digitalocean::Image.destroy(snapshot.id)
-
-          if !event
-            fail 'Something wrong with DigitalOcean or with your connection :)'
-          elsif event && !event.status.include?('OK')
-            fail event.message
-          end
-
-          Log.info "Snapshot name: #{snapshot.name} delete requested."
-        end
+        api.cleanup_snapshots instance, size
       rescue => e
-        raise SnapshotCleanupError.new(instance.id), e.message, e.backtrace
+        raise SnapshotCleanupError, e.message, e.backtrace
       end
 
-      # Looking for event status.
-      #
-      # Before snapshot we to know that machine has powered off.
-      #
-      def get_event_status(id)
-        event = Digitalocean::Event.find(id)
-        fail event.message unless event.status.include?('OK')
-        event.event.percentage && event.event.percentage.include?('100') ? true : false
-      end
-
-      # Set id's of Digital Ocean API.
-      #
-      def set_id
-        Log.debug 'Setting DigitalOcean Id\'s.'
-        Digitalocean.client_id = ENV['DIGITAL_OCEAN_CLIENT_ID']
-        Digitalocean.api_key = ENV['DIGITAL_OCEAN_API_KEY']
+      def warning_size(id, name, keep)
+        "For droplet with id: #{id} and name: #{name} the maximum number #{keep} of snapshots is reached."
       end
     end
   end
