@@ -105,10 +105,9 @@ module DoSnapshot
 
       def too_much_snapshots(instance)
         # noinspection RubyResolve
-        if instance.snapshots.size >= keep && stop
-          Log.warning warning_size(instance.id, instance.name, keep)
-          self.notify = true
-          return true
+        if instance.snapshots.size >= keep
+          warning_size(instance.id, instance.name, keep)
+          return true if stop
         end
         false
       end
@@ -152,20 +151,19 @@ module DoSnapshot
       def cleanup_snapshots(instance, size)
         return unless size > keep
 
-        Log.warning warning_size(instance.id, instance.name, size)
-
-        size = size - keep - 1
-        self.notify = true
+        warning_size(instance.id, instance.name, size)
 
         Log.debug "Cleaning up snapshots for droplet id: #{instance.id} name: #{instance.name}."
 
-        api.cleanup_snapshots instance, size
+        api.cleanup_snapshots(instance, size - keep - 1)
       rescue => e
         raise SnapshotCleanupError, e.message, e.backtrace
       end
 
       def warning_size(id, name, keep)
-        "For droplet with id: #{id} and name: #{name} the maximum number #{keep} of snapshots is reached."
+        message = "For droplet with id: #{id} and name: #{name} the maximum number #{keep} of snapshots is reached."
+        Log.warning message
+        self.notify = true
       end
     end
   end
