@@ -2,6 +2,7 @@
 
 [![Gem Version](https://badge.fury.io/rb/do_snapshot.svg)](http://badge.fury.io/rb/do_snapshot)
 [![Dependency Status](https://gemnasium.com/merqlove/do_snapshot.svg)](https://gemnasium.com/merqlove/do_snapshot)
+[![Code Climate](https://codeclimate.com/github/merqlove/do_snapshot.png)](https://codeclimate.com/github/merqlove/do_snapshot)
 
 You can use this gem to backup's DigitalOcean droplet's via snapshot method.
 
