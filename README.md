@@ -1,7 +1,9 @@
 # DoSnapshot
 
 [![Gem Version](https://badge.fury.io/rb/do_snapshot.svg)](http://badge.fury.io/rb/do_snapshot)
+[![Build Status](https://travis-ci.org/merqlove/do_snapshot.svg?branch=master)](https://travis-ci.org/merqlove/do_snapshot)
 [![Dependency Status](https://gemnasium.com/merqlove/do_snapshot.svg)](https://gemnasium.com/merqlove/do_snapshot)
+[![Coverage Status](https://coveralls.io/repos/merqlove/do_snapshot/badge.png?branch=master)](https://coveralls.io/r/merqlove/do_snapshot?branch=master)
 [![Inline docs](http://inch-ci.org/github/merqlove/do_snapshot.png?branch=master)](http://inch-ci.org/github/merqlove/do_snapshot)
 [![Code Climate](https://codeclimate.com/github/merqlove/do_snapshot.png)](https://codeclimate.com/github/merqlove/do_snapshot)
 

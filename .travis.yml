@@ -6,3 +6,5 @@ rvm:
 notifications:
   email:
     - api@mrcr.ru
+script:
+    - bundle exec rubocop
