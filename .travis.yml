@@ -8,3 +8,4 @@ notifications:
     - api@mrcr.ru
 script:
     - bundle exec rubocop
+    - bundle exec rake
