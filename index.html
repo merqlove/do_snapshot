@@ -29,7 +29,10 @@
       <div class="inner clearfix">
         <section id="main-content">
           <p><a href="http://badge.fury.io/rb/do_snapshot"><img src="https://badge.fury.io/rb/do_snapshot.svg" alt="Gem Version"></a>
+<a href="https://travis-ci.org/merqlove/do_snapshot"><img src="https://travis-ci.org/merqlove/do_snapshot.svg?branch=master" alt="Build Status"></a>
 <a href="https://gemnasium.com/merqlove/do_snapshot"><img src="https://gemnasium.com/merqlove/do_snapshot.svg" alt="Dependency Status"></a>
+<a href="https://coveralls.io/r/merqlove/do_snapshot?branch=master"><img src="https://coveralls.io/repos/merqlove/do_snapshot/badge.png?branch=master" alt="Coverage Status"></a>
+<a href="http://inch-ci.org/github/merqlove/do_snapshot"><img src="http://inch-ci.org/github/merqlove/do_snapshot.png?branch=master" alt="Inline docs"></a>
 <a href="https://codeclimate.com/github/merqlove/do_snapshot"><img src="https://codeclimate.com/github/merqlove/do_snapshot.png" alt="Code Climate"></a></p>
 
 <p>You can use this gem to backup's DigitalOcean droplet's via snapshot method.</p>
@@ -43,6 +46,7 @@
 <li>Mail notifications when fail or maximum of snapshots is reached for one or multiple droplets.</li>
 <li>Custom mail settings (You can set <a href="https://github.com/benprew/pony">Pony</a> mail settings).</li>
 <li>Stop mode (when you don't want to create new snapshots when maximum is reached).</li>
+<li>Timeout for bad requests &amp; uncaught loops.</li>
 <li>Logging into selected directory.</li>
 <li>Verbose mode for research.</li>
 <li>Quiet mode for silence.</li>
@@ -58,7 +62,7 @@
 </ul><h2>
 <a name="compatibility" class="anchor" href="#compatibility"><span class="octicon octicon-link"></span></a>Compatibility</h2>
 
-<p>Ruby versions: MRI 1.9.3, MRI 2.0, MRI 2.1</p>
+<p>Ruby versions: 1.9.3 and higher.</p>
 
 <h2>
 <a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
@@ -162,6 +166,10 @@ Options:
   -e, [--exclude=123456 123456 123456]                           # Except some droplets.
   -k, [--keep=5]                                                 # How much snapshots you want to keep?
                                                                  # Default: 10
+  -d, [--delay=5]                                                # Delay between snapshot operation status requests.
+                                                                 # Default: 10                                                                    
+      [--timeout=250]                                            # Timeout in sec's for events like Power Off or Create Snapshot.
+                                                                 # Default: 180                                                                     
   -m, [--mail=to:yourmail@example.com]                           # Receive mail if fail or maximum is reached.
   -t, [--smtp=user_name:yourmail@example.com password:password]  # SMTP options.
   -l, [--log=/Users/someone/.do_snapshot/main.log]               # Log file path. By default logging is disabled.
