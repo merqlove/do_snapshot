@@ -1,12 +1,7 @@
-# $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
+# -*- encoding : utf-8 -*-
 require 'coveralls'
 Coveralls.wear! do
   add_filter '/spec/*'
-  add_filter '/bin/*'
-  add_filter '/lib/*/mail.rb'
-  add_filter '/lib/*/version.rb'
-  add_filter '/lib/*/core_ext/hash.rb'
-  add_filter '/lib/*/hash.rb'
 end
 
 require 'do_snapshot/cli'

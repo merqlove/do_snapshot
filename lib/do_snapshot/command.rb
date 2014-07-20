@@ -1,4 +1,5 @@
-require 'thread'
+# -*- encoding : utf-8 -*-
+# require 'thread'
 require 'do_snapshot/api'
 
 module DoSnapshot

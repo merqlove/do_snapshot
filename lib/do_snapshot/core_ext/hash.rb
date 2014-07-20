@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 # Rails symbolize keys methods for Hash
 #
 class Hash

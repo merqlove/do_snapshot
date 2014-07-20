@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 require 'thor'
 require 'do_snapshot'
 require 'do_snapshot/command'

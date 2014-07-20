@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 require 'date'
 require 'pony'
 require 'do_snapshot/core_ext/hash'

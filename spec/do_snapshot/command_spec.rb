@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 require 'spec_helper'
 
 describe DoSnapshot::Command do
@@ -115,6 +116,6 @@ describe DoSnapshot::Command do
 
   def snap_runner(options = nil)
     options ||= default_options
-    @cmd.snap(options, %i( log trace digital_ocean_client_id digital_ocean_api_key ))
+    @cmd.snap(options, [:log, :trace, :digital_ocean_client_id, :digital_ocean_api_key])
   end
 end
