@@ -2,6 +2,7 @@
 
 [![Gem Version](https://badge.fury.io/rb/do_snapshot.svg)](http://badge.fury.io/rb/do_snapshot)
 [![Dependency Status](https://gemnasium.com/merqlove/do_snapshot.svg)](https://gemnasium.com/merqlove/do_snapshot)
+[![Inline docs](http://inch-ci.org/github/merqlove/do_snapshot.png?branch=master)](http://inch-ci.org/github/merqlove/do_snapshot)
 [![Code Climate](https://codeclimate.com/github/merqlove/do_snapshot.png)](https://codeclimate.com/github/merqlove/do_snapshot)
 
 You can use this gem to backup's DigitalOcean droplet's via snapshot method.
@@ -14,6 +15,7 @@ Here some features:
 - Mail notifications when fail or maximum of snapshots is reached for one or multiple droplets.
 - Custom mail settings (You can set [Pony](https://github.com/benprew/pony) mail settings).
 - Stop mode (when you don't want to create new snapshots when maximum is reached).
+- Timeout for bad requests & uncaught loops.
 - Logging into selected directory.
 - Verbose mode for research.
 - Quiet mode for silence.
@@ -26,7 +28,7 @@ There not so much of dependencies:
 
 ## Compatibility
 
-Ruby versions: MRI 1.9.3, MRI 2.0, MRI 2.1
+Ruby versions: 1.9.3 and higher.
 
 ## Installation
 
@@ -112,6 +114,10 @@ For working mailer you need to set e-mail settings via run options.
       -e, [--exclude=123456 123456 123456]                           # Except some droplets.
       -k, [--keep=5]                                                 # How much snapshots you want to keep?
                                                                      # Default: 10
+      -d, [--delay=5]                                                # Delay between snapshot operation status requests.
+                                                                     # Default: 10                                                                    
+          [--timeout=250]                                            # Timeout in sec's for events like Power Off or Create Snapshot.
+                                                                     # Default: 180                                                                     
       -m, [--mail=to:yourmail@example.com]                           # Receive mail if fail or maximum is reached.
       -t, [--smtp=user_name:yourmail@example.com password:password]  # SMTP options.
       -l, [--log=/Users/someone/.do_snapshot/main.log]               # Log file path. By default logging is disabled.

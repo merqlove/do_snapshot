@@ -20,7 +20,7 @@ module DoSnapshot
         Mail.notify if notify && !quiet
       end
 
-      def fail_power_on(e)
+      def fail_power_off(e)
         return unless e && e.id
         api.start_droplet(e.id)
       rescue
@@ -29,13 +29,13 @@ module DoSnapshot
 
       protected
 
-      attr_accessor :droplets, :mail, :smtp, :exclude, :only, :api
-      attr_accessor :delay, :keep, :quiet, :stop, :clean
+      attr_accessor :droplets, :mail, :smtp, :exclude, :only
+      attr_accessor :delay, :timeout, :keep, :quiet, :stop, :clean
 
       attr_writer :notify, :threads, :api
 
       def api
-        @api ||= API.new(delay)
+        @api ||= API.new(delay: delay, timeout: timeout)
       end
 
       def notify
@@ -138,8 +138,8 @@ module DoSnapshot
         # Cleanup snapshots.
         cleanup_snapshots instance, snapshot_size if clean
       rescue => e
-        case e.class
-        when SnapshotCleanupError
+        case e.class.to_s
+        when 'DoSnapshot::SnapshotCleanupError'
           raise e.class, e.message, e.backtrace
         else
           raise SnapshotCreateError.new(instance.id), e.message, e.backtrace

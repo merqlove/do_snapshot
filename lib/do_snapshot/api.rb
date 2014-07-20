@@ -6,12 +6,17 @@ module DoSnapshot
   #
   class API
     attr_accessor :delay
+    attr_accessor :timeout
 
-    def initialize(delay)
+    def initialize(options)
       set_id
-      self.delay = delay
+      options.each_pair do |key, option|
+        send("#{key}=", option)
+      end
     end
 
+    # Get single droplet from DigitalOcean
+    #
     def droplet(id)
       # noinspection RubyResolve
       instance = Digitalocean::Droplet.find(id)
@@ -19,6 +24,8 @@ module DoSnapshot
       instance
     end
 
+    # Get droplets list from DigitalOcean
+    #
     def droplets
       # noinspection RubyResolve
       droplets = Digitalocean::Droplet.all
@@ -46,8 +53,11 @@ module DoSnapshot
     def stop_droplet(id)
       # noinspection RubyResolve,RubyResolve
       event = Digitalocean::Droplet.power_off(id)
+
+      fail event.message unless event.status.include? 'OK'
+
       # noinspection RubyResolve
-      wait_event(event.event_id) if event.status.include? 'OK'
+      wait_event(event.event_id)
     rescue => e
       raise DropletShutdownError.new(id), e.message, e.backtrace
     end
@@ -70,19 +80,19 @@ module DoSnapshot
 
     # Cleanup our snapshots.
     #
-    def cleanup_snapshots(instance, size)
+    def cleanup_snapshots(instance, size) # rubocop:disable MethodLength
       (0..size).each do |i|
         # noinspection RubyResolve
         snapshot = instance.snapshots[i]
         event = Digitalocean::Image.destroy(snapshot.id)
 
         if !event
-          fail 'Something wrong with DigitalOcean or with your connection :)'
+          Log.error "Destroy of snapshot #{snapshot.name} for droplet id: #{instance.id} name: #{instance.name} is failed."
         elsif event && !event.status.include?('OK')
-          fail event.message
+          Log.error event.message
+        else
+          Log.debug "Snapshot name: #{snapshot.name} delete requested."
         end
-
-        Log.debug "Snapshot name: #{snapshot.name} delete requested."
       end
     end
 
@@ -96,20 +106,25 @@ module DoSnapshot
       Digitalocean.api_key = ENV['DIGITAL_OCEAN_API_KEY']
     end
 
+    # Waiting for event exit
     def wait_event(id)
-      sleep delay until get_event_status(id)
+      time = Time.now.to_f
+      sleep delay until get_event_status(id, time)
     end
 
     # Looking for event status.
     # Before snapshot we to know that machine has powered off.
     #
-    def get_event_status(id)
+    def get_event_status(id, time)
+      return true if (Time.now.to_f - time) > timeout
       event = Digitalocean::Event.find(id)
       fail event.message unless event.status.include?('OK')
       # noinspection RubyResolve,RubyResolve
       event.event.percentage && event.event.percentage.include?('100') ? true : false
     end
 
+    # Request Power On for droplet
+    #
     def power_on(id)
       # noinspection RubyResolve
       event = Digitalocean::Droplet.power_on(id)

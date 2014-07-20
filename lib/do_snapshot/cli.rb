@@ -13,6 +13,8 @@ module DoSnapshot
     map %w( c s create )  => :snap
     map %w( -V ) => :version
 
+    # Overriding Thor method for custom initialization
+    #
     def initialize(*args)
       super
 
@@ -87,6 +89,11 @@ module DoSnapshot
                   aliases: %w( -d ),
                   banner: '5',
                   desc: 'Delay between snapshot operation status requests.'
+    method_option :timeout,
+                  type: :numeric,
+                  default: 180,
+                  banner: '250',
+                  desc: 'Timeout in sec\'s for events like Power Off or Create Snapshot.'
     method_option :mail,
                   type: :hash,
                   aliases: %w( -m ),
@@ -131,7 +138,7 @@ module DoSnapshot
     def snap
       Command.snap options, %w( log trace digital_ocean_client_id digital_ocean_api_key )
     rescue => e
-      Command.fail_power_on(e) if [SnapshotCreateError, DropletShutdownError].include?(e.class)
+      Command.fail_power_off(e) if [SnapshotCreateError, DropletShutdownError].include?(e.class)
       Log.error e.message
       backtrace(e) if options.include? 'trace'
       if Mail.opts
