@@ -41,30 +41,6 @@ shared_context 'spec' do
   let(:snapshot_uri)       { "#{droplets_api_base}/[id]/snapshot/?name=[name]&#{keys_uri}" }
   let(:event_find_uri)     { "#{events_api_base}/[id]/?#{keys_uri}" }
 
-  before(:each) do
-    $stdout.sync = true
-    $stderr.sync = true
-
-    ENV['DIGITAL_OCEAN_API_KEY']   = api_key
-    ENV['DIGITAL_OCEAN_CLIENT_ID'] = client_key
-
-    @cli = DoSnapshot::CLI.new
-
-    # Keep track of the old stderr / out
-    @orig_stderr = $stderr
-    @orig_stdout = $stdout
-
-    # Make them strings so we can manipulate and compare.
-    $stderr = StringIO.new
-    $stdout = StringIO.new
-  end
-
-  after(:each) do
-    # Reassign the stderr / out so rspec can have it back.
-    $stderr = @orig_stderr
-    $stdout = @orig_stdout
-  end
-
   def stub_all_api(droplets = nil, active = false) # rubocop:disable MethodLength
     drops = []
     droplets ||= [droplet_id]
@@ -110,5 +86,11 @@ shared_context 'spec' do
 
   before(:all) do
     WebMock.reset!
+  end
+
+  before(:each) do
+    stub_cleanup
+    ENV['DIGITAL_OCEAN_API_KEY']   = api_key
+    ENV['DIGITAL_OCEAN_CLIENT_ID'] = client_key
   end
 end

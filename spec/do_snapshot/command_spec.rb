@@ -46,6 +46,7 @@ describe DoSnapshot::Command do
     end
 
     # TODO: MUST HAVE! Now when this two works others can fail...
+    #
     # context 'when droplet failed for shutdown' do
     #   it 'raised with shutdown error' do
     #     fail = stub_droplet_stop_fail(droplet_id)
