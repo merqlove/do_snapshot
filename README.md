@@ -51,7 +51,7 @@ For **OSX** users ([Homebrew Tap](http://github.com/merqlove/homebrew-do-snapsho
     
     $ do_snapshot -V
     
-Standalone pack for **Unix/Linux** users: [Download](https://assets.merqlove.ru.s3.amazonaws.com/do_snapshot/dosnapshot.tgz)
+Standalone pack for **Unix/Linux** users: [Download](https://assets.merqlove.ru.s3.amazonaws.com/do_snapshot/do_snapshot.tgz)
  
     $ wget https://assets.merqlove.ru.s3.amazonaws.com/do_snapshot/do_snapshot.tgz # if not done.
     
@@ -59,6 +59,8 @@ Standalone pack for **Unix/Linux** users: [Download](https://assets.merqlove.ru.
     
     $ tar -xzf do_snapshot.tgz /usr/local/ && ln -s /usr/local/do_snapshot/bin/do_snapshot /usr/local/bin/do_snapshot 
     $ do_snapshot help      
+
+Standalone Zip pack for others: [Download](https://assets.merqlove.ru.s3.amazonaws.com/do_snapshot/do_snapshot.zip)
 
 Or add this line to Gemfile:
 
