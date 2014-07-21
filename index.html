@@ -35,39 +35,66 @@
 <a href="http://inch-ci.org/github/merqlove/do_snapshot"><img src="http://inch-ci.org/github/merqlove/do_snapshot.png?branch=master" alt="Inline docs"></a>
 <a href="https://codeclimate.com/github/merqlove/do_snapshot"><img src="https://codeclimate.com/github/merqlove/do_snapshot.png" alt="Code Climate"></a></p>
 
-<p>You can use this gem to backup's DigitalOcean droplet's via snapshot method.</p>
+<p>Use this tool to backup DigitalOcean droplet's via snapshot method, on the fly!</p>
 
 <p>Here some features:</p>
 
 <ul>
 <li>Multiple threads out of the box. No matter how much droplet's you have.</li>
-<li>Auto-cleanup for old snapshots.</li>
-<li>Binary special for cron and command-line.</li>
+<li>Snapshots Auto-Cleanup.</li>
+<li>Auto-Boot Droplet back if Snapshot Event is failed or bad connection exception.</li>
+<li>Binary special for cron and command-line. Homebrew, Standalone installers.</li>
 <li>Mail notifications when fail or maximum of snapshots is reached for one or multiple droplets.</li>
 <li>Custom mail settings (You can set <a href="https://github.com/benprew/pony">Pony</a> mail settings).</li>
 <li>Stop mode (when you don't want to create new snapshots when maximum is reached).</li>
-<li>Timeout for bad requests &amp; uncaught loops.</li>
+<li>Timeout option for long requests or uncaught loops. By default it 600 seconds, but you can change it by hand.</li>
 <li>Logging into selected directory.</li>
 <li>Verbose mode for research.</li>
 <li>Quiet mode for silence.</li>
-</ul><p>There not so much of dependencies:</p>
-
-<ul>
-<li>
-<code>Digitalocean</code> for API requests.</li>
-<li>
-<code>Thor</code> for CLI.</li>
-<li>
-<code>Pony</code> for mail notifications.</li>
 </ul><h2>
 <a name="compatibility" class="anchor" href="#compatibility"><span class="octicon octicon-link"></span></a>Compatibility</h2>
 
-<p>Ruby versions: 1.9.3 and higher.</p>
+<p>Ruby versions: 1.9.3 and higher. JRuby in 1.9 mode is also supported.</p>
 
-<h2>
+<p><img src="https://raw.githubusercontent.com/merqlove/do_snapshot/master/assets/example.png" alt="DoSnaphot example"></p>
+
+<h3>
+<a name="you-can-ask-me-why-you-made-this-tool" class="anchor" href="#you-can-ask-me-why-you-made-this-tool"><span class="octicon octicon-link"></span></a>You can ask me, "Why you made this tool?"</h3>
+
+<ul>
+<li>First. I needed stable tool, which can provide for me automatic Snapshot feature for all of my Droplets via Cron planner.</li>
+<li>I don't want to think how much snapshots for each droplet i have.</li>
+<li>I don't wont to sleep when my droplets Offline!!! And i wanted tool which can BOOT back droplets, which failed to snapshot.</li>
+<li>Also i want to understand what's going on if there some error. Mail is my choice. But logs also good.</li>
+<li>And ... sure ;) We want to do it fast as rocket! :)</li>
+<li>more more more...</li>
+<li>So this tool can save a lot of time for people.</li>
+</ul><h2>
 <a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
 
-<p>Add this line to your application's Gemfile:</p>
+<p>Install it yourself as:</p>
+
+<pre><code>$ gem install do_snapshot
+</code></pre>
+
+<p>For <strong>OSX</strong> users (<a href="http://github.com/merqlove/do_snapshot/tap">Homebrew Tap</a>):</p>
+
+<pre><code>$ brew tap merqlove/do-snapshot &amp;&amp; brew install do_snapshot
+
+$ do_snapshot -V
+</code></pre>
+
+<p>Standalone pack for <strong>Unix/Linux</strong> users: <a href="https://assets.merqlove.ru.s3.amazonaws.com/do_snapshot/dosnapshot.tgz">Download</a></p>
+
+<pre><code>$ wget https://assets.merqlove.ru.s3.amazonaws.com/do_snapshot/do_snapshot.tgz # if not done.
+
+# Example Install into /usr/local
+
+$ tar -xzf do_snapshot.tgz /usr/local/ &amp;&amp; ln -s /usr/local/do_snapshot/bin/do_snapshot /usr/local/bin/do_snapshot 
+$ do_snapshot help      
+</code></pre>
+
+<p>Or add this line to Gemfile:</p>
 
 <pre><code>gem 'do_snapshot'
 </code></pre>
@@ -75,11 +102,6 @@
 <p>And then execute:</p>
 
 <pre><code>$ bundle
-</code></pre>
-
-<p>Or install it yourself as:</p>
-
-<pre><code>$ gem install do_snapshot
 </code></pre>
 
 <h2>
@@ -96,8 +118,8 @@ $ export DIGITAL_OCEAN_API_KEY="SOMEKEY"
 <pre><code>$ do_snapshot --digital-ocean-client-id YOURLONGAPICLIENTID --digital-ocean-api-key YOURLONGAPIKEY
 </code></pre>
 
-<h4>
-<a name="basic-usage" class="anchor" href="#basic-usage"><span class="octicon octicon-link"></span></a>Basic usage</h4>
+<h3>
+<a name="how-to" class="anchor" href="#how-to"><span class="octicon octicon-link"></span></a>How-To</h3>
 
 <p>Here we <code>keeping</code> only 5 <strong>latest</strong> snapshots and cleanup older after new one is created. If creation of snapshots failed no one will be deleted. By default we keeping <code>10</code> droplets.</p>
 
@@ -119,20 +141,22 @@ $ export DIGITAL_OCEAN_API_KEY="SOMEKEY"
 <pre><code>$ do_snapshot --keep 10 --stop --mail to:yourmail@example.com
 </code></pre>
 
+<p><img src="https://raw.githubusercontent.com/merqlove/do_snapshot/master/assets/safe_mode.png" alt="DoSnapshot Safe Mode Example"></p>
+
 <p>E-mail notifications disabled out of the box. 
 For working mailer you need to set e-mail settings via run options.</p>
 
 <pre><code>--mail to:mail@somehost.com from:from@host.com --smtp address:smtp.gmail.com port:25 user_name:someuser password:somepassword
 </code></pre>
 
-<h4>
-<a name="cron-example" class="anchor" href="#cron-example"><span class="octicon octicon-link"></span></a>Cron example</h4>
+<h3>
+<a name="cron-example" class="anchor" href="#cron-example"><span class="octicon octicon-link"></span></a>Cron example</h3>
 
 <pre><code>0 4 * * 7 /.../bin/do_snapshot -k 5 -m to:TO from:FROM -t address:HOST user_name:LOGIN password:PASSWORD port:2525 -q -c
 </code></pre>
 
-<h4>
-<a name="real-world-example" class="anchor" href="#real-world-example"><span class="octicon octicon-link"></span></a>Real world example</h4>
+<h3>
+<a name="real-world-example" class="anchor" href="#real-world-example"><span class="octicon octicon-link"></span></a>Real world example</h3>
 
 <pre><code>$ bin/do_snapshot --only 123456 -k 3 -c -m to:TO from:FROM -t address:HOST user_name:LOGIN password:PASSWORD port:2525 -v
 
@@ -169,7 +193,7 @@ Options:
   -d, [--delay=5]                                                # Delay between snapshot operation status requests.
                                                                  # Default: 10                                                                    
       [--timeout=250]                                            # Timeout in sec's for events like Power Off or Create Snapshot.
-                                                                 # Default: 180                                                                     
+                                                                 # Default: 600                                                                     
   -m, [--mail=to:yourmail@example.com]                           # Receive mail if fail or maximum is reached.
   -t, [--smtp=user_name:yourmail@example.com password:password]  # SMTP options.
   -l, [--log=/Users/someone/.do_snapshot/main.log]               # Log file path. By default logging is disabled.
@@ -187,6 +211,16 @@ Description:
 </code></pre>
 
 <h2>
+<a name="dependencies" class="anchor" href="#dependencies"><span class="octicon octicon-link"></span></a>Dependencies:</h2>
+
+<ul>
+<li>
+<a href="https://github.com/erikhuda/thor">Thor</a> for CLI.</li>
+<li>
+<a href="https://github.com/scottmotte/digitalocean">Digitalocean</a> for API requests.</li>
+<li>
+<a href="https://github.com/benprew/pony">Pony</a> for mail notifications.</li>
+</ul><h2>
 <a name="contributing" class="anchor" href="#contributing"><span class="octicon octicon-link"></span></a>Contributing</h2>
 
 <ol>
