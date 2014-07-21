@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module DoSnapshot
   # Distributive files
   # Used part of Heroku script https://github.com/heroku/heroku

@@ -187,8 +187,4 @@ describe DoSnapshot::CLI do
     $stderr = @orig_stderr
     $stdout = @orig_stdout
   end
-
-  after(:all) do
-    "some"
-  end
 end

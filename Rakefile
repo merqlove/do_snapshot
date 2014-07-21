@@ -48,7 +48,7 @@ GEM_BLACKLIST = %w( bundler do_snapshot )
 
 def assemble_gems(target_dir = Dir.pwd)
   lines = `cd #{project_root} && bundle show `.strip.split("\n")
-  fail 'error running bundler' unless $?.success?
+  fail 'error running bundler' unless $?.success? # rubocop:disable Style/SpecialGlobalVars
   gems = `cd #{project_root} && export BUNDLE_WITHOUT=development && bundle show `.split("\n")
   gems.each do |line|
     next unless line =~ /^  \* (.*?) \((.*?)\)/
