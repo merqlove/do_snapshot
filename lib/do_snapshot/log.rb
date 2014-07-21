@@ -35,7 +35,7 @@ module DoSnapshot
         buffer << message
         logger.send(type, message) if logger
 
-        say message, color(type) unless type == :debug && !verbose
+        say message, color(type) unless (type == :debug && !verbose) || quiet
       end
 
       def say(message, color)

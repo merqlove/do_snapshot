@@ -47,14 +47,14 @@ end
 GEM_BLACKLIST = %w( bundler do_snapshot )
 
 def assemble_gems(target_dir = Dir.pwd)
-  lines = ` bundle show `.strip.split("\n")
-  fail 'error running bundler' unless $CHILD_STATUS.success?
-
-  ` env BUNDLE_WITHOUT="development" bundle show `.split("\n").each do |line|
+  lines = `cd #{project_root} && bundle show `.strip.split("\n")
+  fail 'error running bundler' unless $?.success?
+  gems = `cd #{project_root} && export BUNDLE_WITHOUT=development && bundle show `.split("\n")
+  gems.each do |line|
     next unless line =~ /^  \* (.*?) \((.*?)\)/
     next if GEM_BLACKLIST.include?(Regexp.last_match[1])
     puts "vendoring: #{Regexp.last_match[1]}-#{Regexp.last_match[2]}"
-    gem_dir = ` bundle show #{Regexp.last_match[1]} `.strip
+    gem_dir = ` cd #{project_root} && bundle show #{Regexp.last_match[1]} `.strip
     FileUtils.mkdir_p "#{target_dir}/vendor/gems"
     ` cp -R "#{gem_dir}" "#{target_dir}/vendor/gems" `
   end.compact
@@ -136,9 +136,11 @@ Dir[File.expand_path('../dist/**/*.rake', __FILE__)].each do |rake|
 end
 
 def poll_ci
-  require('json')
-  require('net/http')
-  data = JSON.parse(Net::HTTP.get('api.travis-ci.org', '/merqlove/do_snapshot.json'))
+  require 'json'
+  require 'net/http'
+  uri = URI.parse('https://api.travis-ci.org/repositories/merqlove/do_snapshot.json')
+  travis = Net::HTTP.get_response(uri)
+  data = JSON.parse(travis.body)
   case data['last_build_status']
     when nil
       print('.')
@@ -151,12 +153,12 @@ def poll_ci
   end
 end
 
-desc('Check current ci status and/or wait for build to finish.')
+desc 'Check current ci status and/or wait for build to finish.'
 task 'ci' do
   poll_ci
 end
 
-desc('Release the latest version')
+desc 'Release the latest version'
 task 'release' => %w( gem:release tgz:release zip:release manifest:update ) do
   puts("Released v#{version}")
 end

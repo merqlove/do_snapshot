@@ -171,7 +171,7 @@ describe DoSnapshot::CLI do
     $stdout.sync = true
     $stderr.sync = true
 
-    @cli = DoSnapshot::CLI.new
+    @cli = cli.new
 
     # Keep track of the old stderr / out
     @orig_stderr = $stderr
@@ -186,6 +186,9 @@ describe DoSnapshot::CLI do
     # Reassign the stderr / out so rspec can have it back.
     $stderr = @orig_stderr
     $stdout = @orig_stdout
-    # stub_cleanup
+  end
+
+  after(:all) do
+    "some"
   end
 end

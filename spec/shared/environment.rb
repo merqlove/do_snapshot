@@ -12,7 +12,7 @@ shared_context 'spec' do
   let(:image_id2)          { '5019903' }
   let(:cli_keys)           { Thor::CoreExt::HashWithIndifferentAccess.new(digital_ocean_client_id: 'NOTFOO', digital_ocean_client_bar: 'NOTBAR') }
   let(:snapshot_name)      { "foo_#{DateTime.now.strftime('%Y_%m_%d')}" }
-  let(:default_options)    { Hash[only: %w( 100823 ), exclude: %w(), keep: 3, trace: true, clean: true, delay: 0, timeout: 180] }
+  let(:default_options)    { Hash[only: %w( 100823 ), exclude: %w(), keep: 3, trace: true, clean: true, delay: 0, timeout: 600, droplets: nil, threads: []] }
   let(:no_exclude)         { [] }
   let(:exclude)            { %w( 100824 100825 ) }
   let(:no_only)            { [] }
@@ -23,7 +23,7 @@ shared_context 'spec' do
   let(:no_quiet)           { false }
   let(:clean)              { true }
   let(:no_clean)           { false }
-  let(:timeout)            { 180 }
+  let(:timeout)            { 600 }
   let(:delay)              { 0 }
   let(:mail_options)       { Thor::CoreExt::HashWithIndifferentAccess.new(to: 'mail@somehost.com', from: 'from@host.com') }
   let(:smtp_options)       { Thor::CoreExt::HashWithIndifferentAccess.new(address: 'smtp.gmail.com', port: '25', user_name: 'someuser', password: 'somepassword') }
@@ -88,8 +88,12 @@ shared_context 'spec' do
     WebMock.reset!
   end
 
+  after(:all) do
+    # sleep(1)
+  end
+
   before(:each) do
-    stub_cleanup
+    # stub_cleanup
     ENV['DIGITAL_OCEAN_API_KEY']   = api_key
     ENV['DIGITAL_OCEAN_CLIENT_ID'] = client_key
   end

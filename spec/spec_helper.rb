@@ -13,6 +13,8 @@ require 'shared/environment'
 require 'shared/uri_helpers'
 require 'do_snapshot/core_ext/hash'
 
+WebMock.disable_net_connect!(allow_localhost: true)
+
 RSpec.configure do |config|
   # Pretty tests
   config.color = true

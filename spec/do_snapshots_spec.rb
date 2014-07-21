@@ -4,7 +4,7 @@ require 'spec_helper'
 describe DoSnapshot do
   include_context 'spec'
 
-  subject(:log)         { DoSnapshot::Log }
+  subject(:log) { DoSnapshot::Log }
 
   describe DoSnapshot::DropletFindError do
     subject(:error) { described_class }
@@ -54,5 +54,11 @@ describe DoSnapshot do
       expect(log.buffer)
         .to include "Droplet id: #{droplet_id} is Failed to Snapshot."
     end
+  end
+
+  before(:each) do
+    log.buffer = %w()
+    log.verbose = false
+    log.quiet = true
   end
 end

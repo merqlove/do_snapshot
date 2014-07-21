@@ -11,7 +11,7 @@ module DoSnapshot
         return unless options
 
         options.each_pair do |key, option|
-          send("#{key}=", option) unless skip.include? key
+          send("#{key}=", option) unless skip.include?(key)
         end
 
         Log.info 'Start performing operations'
@@ -30,10 +30,10 @@ module DoSnapshot
 
       protected
 
-      attr_accessor :droplets, :mail, :smtp, :exclude, :only
-      attr_accessor :delay, :timeout, :keep, :quiet, :stop, :clean
+      attr_accessor :droplets, :exclude, :only
+      attr_accessor :keep, :quiet, :stop, :clean
 
-      attr_writer :notify, :threads, :api
+      attr_writer :notify, :delay, :timeout, :threads, :api
 
       def api
         @api ||= API.new(delay: delay, timeout: timeout)
@@ -45,6 +45,14 @@ module DoSnapshot
 
       def threads
         @threads ||= []
+      end
+
+      def timeout
+        @timeout ||= 600
+      end
+
+      def delay
+        @delay ||= 10
       end
 
       # Working with list of droplets.

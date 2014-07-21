@@ -1,3 +1,5 @@
+require 'digest'
+
 # Used part of Heroku script https://github.com/heroku/heroku
 #
 file pkg("do_snapshot-#{version}.tgz") => distribution_files("tgz") do |t|
@@ -7,21 +9,29 @@ file pkg("do_snapshot-#{version}.tgz") => distribution_files("tgz") do |t|
       assemble_gems
       assemble resource("tgz/do_snapshot"), "bin/do_snapshot", 0755
     end
+    ` chmod -R go+r do_snapshot `
+    ` tar czf #{t.name} do_snapshot `
+  end
+end
 
-    sh "chmod -R go+r do_snapshot"
-    sh "sudo chown -R 0:0 do_snapshot"
-    sh "tar czf #{t.name} do_snapshot"
-    sh "sudo chown -R $(whoami) do_snapshot"
+file pkg("do_snapshot-#{version}.tgz.sha256") => pkg("do_snapshot-#{version}.tgz") do |t|
+  File.open(t.name, "w") do |file|
+    file.puts Digest::SHA256.file(t.prerequisites.first).hexdigest
   end
 end
 
 task "tgz:build" => pkg("do_snapshot-#{version}.tgz")
+task "tgz:sign"  => pkg("do_snapshot-#{version}.tgz.sha256")
+
+def tgz_signature
+  File.read(pkg("do_snapshot-#{version}.tgz.sha256")).chomp
+end
 
 task "tgz:clean" do
   clean pkg("do_snapshot-#{version}.tgz")
 end
 
-task "tgz:release" => "tgz:build" do |t|
+task "tgz:release" => %w( tgz:build tgz:sign ) do |t|
   store pkg("do_snapshot-#{version}.tgz"), "do_snapshot/do_snapshot-#{version}.tgz"
   store pkg("do_snapshot-#{version}.tgz"), "do_snapshot/do_snapshot.tgz"
 end

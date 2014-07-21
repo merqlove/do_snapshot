@@ -1,4 +1,4 @@
-# DoSnapshot
+# DoSnapshot CLI
 
 [![Gem Version](https://badge.fury.io/rb/do_snapshot.svg)](http://badge.fury.io/rb/do_snapshot)
 [![Build Status](https://travis-ci.org/merqlove/do_snapshot.svg?branch=master)](https://travis-ci.org/merqlove/do_snapshot)
@@ -7,45 +7,67 @@
 [![Inline docs](http://inch-ci.org/github/merqlove/do_snapshot.png?branch=master)](http://inch-ci.org/github/merqlove/do_snapshot)
 [![Code Climate](https://codeclimate.com/github/merqlove/do_snapshot.png)](https://codeclimate.com/github/merqlove/do_snapshot)
 
-You can use this gem to backup's DigitalOcean droplet's via snapshot method.
+Use this tool to backup DigitalOcean droplet's via snapshot method, on the fly!
 
 Here some features:
 
 - Multiple threads out of the box. No matter how much droplet's you have.
-- Auto-cleanup for old snapshots.
-- Binary special for cron and command-line.
+- Snapshots Auto-Cleanup.
+- Auto-Boot Droplet back if Snapshot Event is failed or bad connection exception.
+- Binary special for cron and command-line. Homebrew, Standalone installers.
 - Mail notifications when fail or maximum of snapshots is reached for one or multiple droplets.
 - Custom mail settings (You can set [Pony](https://github.com/benprew/pony) mail settings).
 - Stop mode (when you don't want to create new snapshots when maximum is reached).
-- Timeout for bad requests & uncaught loops.
+- Timeout option for long requests or uncaught loops. By default it 600 seconds, but you can change it by hand.
 - Logging into selected directory.
 - Verbose mode for research.
 - Quiet mode for silence.
 
-There not so much of dependencies:
-
-- `Digitalocean` for API requests.
-- `Thor` for CLI.
-- `Pony` for mail notifications.
-
 ## Compatibility
 
-Ruby versions: 1.9.3 and higher.
+Ruby versions: 1.9.3 and higher. JRuby in 1.9 mode is also supported.
+
+![DoSnaphot example](https://raw.githubusercontent.com/merqlove/do_snapshot/assets/example.png)
+
+### You can ask me, "Why you made this tool?"
+
+- First. I needed stable tool, which can provide for me automatic Snapshot feature for all of my Droplets via Cron planner.
+- I don't want to think how much snapshots for each droplet i have.
+- I don't wont to sleep when my droplets Offline!!! And i wanted tool which can Staryt
+- Also i want to understand what's going on if there some error. Mail is my choice. But logs also good.
+- And ... sure ;) We want to do it fast as rocket! :)
+- more more more...
+- So this tool can save a lot of time for people.
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Install it yourself as:
+
+    $ gem install do_snapshot
+    
+For **OSX** users ([Homebrew Tap](http://github.com/merqlove/do_snapshot/tap)):
+
+    $ brew tap merqlove/do_snapshot/tap && brew install do_snapshot
+    
+    $ do_snapshot -V
+    
+Standalone pack for **Unix/Linux** users: [Download](https://assets.merqlove.ru.s3.amazonaws.com/do_snapshot/dosnapshot.tgz)
+ 
+    $ wget https://assets.merqlove.ru.s3.amazonaws.com/do_snapshot/do_snapshot.tgz # if not done.
+    
+    # Example Install into /usr/local
+    
+    $ tar -xzf do_snapshot.tgz /usr/local/ && ln -s /usr/local/do_snapshot/bin/do_snapshot /usr/local/bin/do_snapshot 
+    $ do_snapshot help      
+
+Or add this line to Gemfile:
 
     gem 'do_snapshot'
 
 And then execute:
 
     $ bundle
-
-Or install it yourself as:
-
-    $ gem install do_snapshot
-
+    
 ## Usage
 
 First you may need to set DigitalOcean API keys: 
@@ -57,7 +79,7 @@ If you want to set keys without environment, than set it via options when you ru
 
     $ do_snapshot --digital-ocean-client-id YOURLONGAPICLIENTID --digital-ocean-api-key YOURLONGAPIKEY
 
-#### Basic usage
+### How-To
  
 Here we `keeping` only 5 **latest** snapshots and cleanup older after new one is created. If creation of snapshots failed no one will be deleted. By default we keeping `10` droplets.
 
@@ -75,16 +97,18 @@ Keep latest 5 snapshots, send mail notification instead of creating new one:
   
     $ do_snapshot --keep 10 --stop --mail to:yourmail@example.com
     
+![DoSnapshot Safe Mode Example](https://raw.githubusercontent.com/merqlove/do_snapshot/assets/safe_mode.png)    
+    
 E-mail notifications disabled out of the box. 
 For working mailer you need to set e-mail settings via run options.
 
     --mail to:mail@somehost.com from:from@host.com --smtp address:smtp.gmail.com port:25 user_name:someuser password:somepassword
 
-#### Cron example
+### Cron example
 
     0 4 * * 7 /.../bin/do_snapshot -k 5 -m to:TO from:FROM -t address:HOST user_name:LOGIN password:PASSWORD port:2525 -q -c
 
-#### Real world example
+### Real world example
 
     $ bin/do_snapshot --only 123456 -k 3 -c -m to:TO from:FROM -t address:HOST user_name:LOGIN password:PASSWORD port:2525 -v
     
@@ -119,7 +143,7 @@ For working mailer you need to set e-mail settings via run options.
       -d, [--delay=5]                                                # Delay between snapshot operation status requests.
                                                                      # Default: 10                                                                    
           [--timeout=250]                                            # Timeout in sec's for events like Power Off or Create Snapshot.
-                                                                     # Default: 180                                                                     
+                                                                     # Default: 600                                                                     
       -m, [--mail=to:yourmail@example.com]                           # Receive mail if fail or maximum is reached.
       -t, [--smtp=user_name:yourmail@example.com password:password]  # SMTP options.
       -l, [--log=/Users/someone/.do_snapshot/main.log]               # Log file path. By default logging is disabled.
@@ -134,6 +158,12 @@ For working mailer you need to set e-mail settings via run options.
       `do_snapshot` able to create and cleanup snapshots on your droplets.
     
       You can optionally specify parameters to select or exclude some droplets.   
+
+## Dependencies:
+
+- [Thor](https://github.com/erikhuda/thor) for CLI.
+- [Digitalocean](https://github.com/scottmotte/digitalocean) for API requests.
+- [Pony](https://github.com/benprew/pony) for mail notifications.
 
 ## Contributing
 

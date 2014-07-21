@@ -92,7 +92,7 @@ module DoSnapshot
                   desc: 'Delay between snapshot operation status requests.'
     method_option :timeout,
                   type: :numeric,
-                  default: 180,
+                  default: 600,
                   banner: '250',
                   desc: 'Timeout in sec\'s for events like Power Off or Create Snapshot.'
     method_option :mail,
@@ -137,7 +137,7 @@ module DoSnapshot
                   desc: 'DIGITAL_OCEAN_API_KEY. if you can\'t use environment.'
 
     def snap
-      Command.snap options, %w( log trace digital_ocean_client_id digital_ocean_api_key )
+      Command.snap options, %w( log mail smtp trace digital_ocean_client_id digital_ocean_api_key )
     rescue => e
       Command.fail_power_off(e) if [SnapshotCreateError, DropletShutdownError].include?(e.class)
       Log.error e.message
