@@ -33,7 +33,7 @@ Ruby versions: 1.9.3 and higher. JRuby in 1.9 mode is also supported.
 
 - First. I needed stable tool, which can provide for me automatic Snapshot feature for all of my Droplets via Cron planner.
 - I don't want to think how much snapshots for each droplet i have.
-- I don't wont to sleep when my droplets Offline!!! And i wanted tool which can Staryt
+- I don't wont to sleep when my droplets Offline!!! And i wanted tool which can BOOT back droplets, which failed to snapshot.
 - Also i want to understand what's going on if there some error. Mail is my choice. But logs also good.
 - And ... sure ;) We want to do it fast as rocket! :)
 - more more more...
