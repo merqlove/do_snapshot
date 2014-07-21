@@ -31,5 +31,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'webmock', '>= 1.18'
   spec.add_development_dependency 'coveralls', '>= 0.7'
   spec.add_development_dependency 'rubyzip'
-  spec.add_development_dependency 'aws-s3'
+  spec.add_development_dependency 's3'
 end

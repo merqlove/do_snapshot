@@ -95,27 +95,27 @@ def resource(name)
 end
 
 def s3_connect
-  return if @s3_connected
+  return if @s3
 
-  require 'aws/s3'
+  require 's3'
 
   unless ENV['AWS_ACCESS_KEY_ID'] && ENV['AWS_SECRET_ACCESS_KEY']
     puts 'please set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY in your environment'
     exit 1
   end
 
-  AWS::S3::Base.establish_connection!(
+  @s3 = S3::Service.new(
       access_key_id: ENV['AWS_ACCESS_KEY_ID'],
       secret_access_key: ENV['AWS_SECRET_ACCESS_KEY']
   )
-
-  @s3_connected = true
 end
 
 def store(package_file, filename, bucket = 'assets.merqlove.ru')
   s3_connect
   puts "storing: #{filename}"
-  AWS::S3::S3Object.store(filename, File.open(package_file), bucket, access: :public_read)
+  release = @s3.bucket(bucket).objects.build(filename)
+  release.content = File.open(package_file)
+  release.save
 end
 
 def tempdir
