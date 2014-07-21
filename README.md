@@ -27,7 +27,7 @@ Here some features:
 
 Ruby versions: 1.9.3 and higher. JRuby in 1.9 mode is also supported.
 
-![DoSnaphot example](https://raw.githubusercontent.com/merqlove/do_snapshot/master/assets/example.png)
+<img src="https://raw.githubusercontent.com/merqlove/do_snapshot/master/assets/example.png" style="max-width:100%" alt="DoSnaphot example">
 
 ### You can ask me, "Why you made this tool?"
 
@@ -97,7 +97,7 @@ Keep latest 5 snapshots, send mail notification instead of creating new one:
   
     $ do_snapshot --keep 10 --stop --mail to:yourmail@example.com
     
-![DoSnapshot Safe Mode Example](https://raw.githubusercontent.com/merqlove/do_snapshot/master/assets/safe_mode.png)    
+<img src="https://raw.githubusercontent.com/merqlove/do_snapshot/master/assets/safe_mode.png" style="max-width:100%" alt="DoSnapshot Safe Mode Example">
     
 E-mail notifications disabled out of the box. 
 For working mailer you need to set e-mail settings via run options.
