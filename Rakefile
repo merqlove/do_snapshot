@@ -159,6 +159,6 @@ task 'ci' do
 end
 
 desc 'Release the latest version'
-task 'release' => %w( gem:release tgz:release zip:release manifest:update ) do
+task 'release' => %w( gem:release tgz:release zip:release brew:release manifest:update ) do
   puts("Released v#{version}")
 end
