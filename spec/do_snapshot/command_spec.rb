@@ -46,30 +46,23 @@ describe DoSnapshot::Command do
       end
     end
 
-    # TODO: MUST HAVE! Now when this two works others can fail...
-    # I think it's threading problem with RSpec
-    # context 'when droplet failed for shutdown' do
-    #   it 'raised with error' do
-    #     fail = stub_droplet_stop_fail(droplet_id)
-    #
-    #     expect { snap_runner }
-    #       .to raise_error(DoSnapshot::DropletShutdownError)
-    #
-    #     remove_request_stub(fail)
-    #   end
-    # end
+    context 'when droplet failed for shutdown' do
+      it 'raised with error' do
+        stub_droplet_stop_fail(droplet_id)
 
-    # context 'when no snapshot created' do
-    #   it 'raised with error' do
-    #     # no_snapshot =
-    #         stub_droplet_snapshot_fail(droplet_id, snapshot_name)
-    #
-    #     expect { snap_runner }
-    #       .to raise_error(DoSnapshot::SnapshotCreateError)
-    #
-    #     # remove_request_stub(no_snapshot)
-    #   end
-    # end
+        expect { snap_runner }
+          .to raise_error(DoSnapshot::DropletShutdownError)
+      end
+    end
+
+    context 'when no snapshot created' do
+      it 'raised with error' do
+        stub_droplet_snapshot_fail(droplet_id, snapshot_name)
+
+        expect { snap_runner }
+          .to raise_error(DoSnapshot::SnapshotCreateError)
+      end
+    end
   end
 
   describe  '.fail_power_off' do
@@ -106,7 +99,6 @@ describe DoSnapshot::Command do
   end
 
   before(:each) do
-    # @cmd = DoSnapshot::Command
     stub_all_api(nil, true)
     log.buffer = %w()
     log.verbose = false
@@ -115,6 +107,7 @@ describe DoSnapshot::Command do
 
   def snap_runner(options = nil)
     options ||= default_options
+    cmd.send('api=', nil)
     cmd.snap(options, [:log, :mail, :smtp, :trace, :digital_ocean_client_id, :digital_ocean_api_key])
   end
 end

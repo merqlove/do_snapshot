@@ -210,10 +210,6 @@ describe DoSnapshot::API do
         .to have_been_made
       end
     end
-
-    after(:all) do
-      WebMock.reset!
-    end
   end
 
   before(:each) do

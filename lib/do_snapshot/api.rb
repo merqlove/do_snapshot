@@ -117,7 +117,7 @@ module DoSnapshot
     # Before snapshot we to know that machine has powered off.
     #
     def get_event_status(id, time)
-      return true if (Time.now.to_f - time.to_f) > timeout
+      return true if (Time.now - time) > timeout
       event = Digitalocean::Event.find(id)
       fail event.message unless event.status.include?('OK')
       # noinspection RubyResolve,RubyResolve

@@ -31,9 +31,9 @@ module DoSnapshot
       protected
 
       attr_accessor :droplets, :exclude, :only
-      attr_accessor :keep, :quiet, :stop, :clean
+      attr_accessor :keep, :quiet, :stop, :clean, :timeout, :delay
 
-      attr_writer :notify, :delay, :timeout, :threads, :api
+      attr_writer :notify, :threads, :api
 
       def api
         @api ||= API.new(delay: delay, timeout: timeout)
@@ -45,14 +45,6 @@ module DoSnapshot
 
       def threads
         @threads ||= []
-      end
-
-      def timeout
-        @timeout ||= 600
-      end
-
-      def delay
-        @delay ||= 10
       end
 
       # Working with list of droplets.
@@ -80,6 +72,7 @@ module DoSnapshot
           next if exclude.include? id
           next if !only.empty? && !only.include?(id)
 
+          Log.debug "Droplet id: #{id} name: #{droplet.name} "
           instance = api.droplet id
 
           prepare_instance instance.droplet
