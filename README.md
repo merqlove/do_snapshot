@@ -47,7 +47,7 @@ Install it yourself as:
     
 For **OSX** users ([Homebrew Tap](http://github.com/merqlove/do_snapshot/tap)):
 
-    $ brew tap merqlove/do_snapshot/tap && brew install do_snapshot
+    $ brew tap merqlove/do-snapshot && brew install do_snapshot
     
     $ do_snapshot -V
     
