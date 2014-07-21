@@ -45,7 +45,7 @@ Install it yourself as:
 
     $ gem install do_snapshot
     
-For **OSX** users ([Homebrew Tap](http://github.com/merqlove/do_snapshot/tap)):
+For **OSX** users ([Homebrew Tap](http://github.com/merqlove/homebrew-do-snapshot)):
 
     $ brew tap merqlove/do-snapshot && brew install do_snapshot
     
