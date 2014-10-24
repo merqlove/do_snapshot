@@ -1,4 +1,5 @@
-# DoSnapshot CLI
+# DoSnapshot CLI 
+[Project Page at Digital Ocean](https://www.digitalocean.com/community/projects/dosnapshot), comment or vote for this project.
 
 [![Gem Version](https://badge.fury.io/rb/do_snapshot.svg)](http://badge.fury.io/rb/do_snapshot)
 [![Build Status](https://travis-ci.org/merqlove/do_snapshot.svg?branch=master)](https://travis-ci.org/merqlove/do_snapshot)
