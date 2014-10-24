@@ -177,6 +177,10 @@ For working mailer you need to set e-mail settings via run options.
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
 
+### Testing
+
+    $ rake spec 
+
 Copyright (c) 2014 Alexander Merkulov
 
 MIT License
