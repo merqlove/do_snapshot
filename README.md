@@ -110,7 +110,7 @@ For working mailer you need to set e-mail settings via run options.
 
 ### Cron example
 
-    0 4 * * 7 /.../bin/do_snapshot -k 5 -m to:TO from:FROM -t address:HOST user_name:LOGIN password:PASSWORD port:2525 -q -c
+    0 4 * * 7 . /.../.digitalocean_keys && /.../bin/do_snapshot -k 5 -m to:TO from:FROM -t address:HOST user_name:LOGIN password:PASSWORD port:2525 -q -c
 
 ### Real world example
 
