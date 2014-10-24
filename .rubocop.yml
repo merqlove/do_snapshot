@@ -12,4 +12,4 @@ TrailingComma:
 AllCops:
   Exclude:
     - '*.gemspec'
-    - '/dist/*'
+    - 'dist/*'

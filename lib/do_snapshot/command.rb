@@ -81,7 +81,7 @@ module DoSnapshot
       # Join threads
       #
       def thread_chain
-        threads.each { |t| t.join }
+        threads.each(&:join)
       end
 
       # Run threads

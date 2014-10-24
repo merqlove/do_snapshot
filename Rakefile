@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 # rubocop:disable Style/CaseIndentation
-# rubocop:disable Style/MethodLength
+# rubocop:disable Metrics/MethodLength
 # rubocop:disable Lint/UselessAssignment
 # rubocop:disable Lint/ShadowingOuterLocalVariable
 # rubocop:disable Style/MultilineTernaryOperator
