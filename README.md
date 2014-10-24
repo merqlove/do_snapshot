@@ -45,6 +45,10 @@ Install it yourself as:
 
     $ gem install do_snapshot
     
+Or System Wide Install (OSX, *nix):
+  
+    $ sudo gem install do_snapshot
+        
 For **OSX** users ([Homebrew Tap](http://github.com/merqlove/homebrew-do-snapshot)):
 
     $ brew tap merqlove/do-snapshot && brew install do_snapshot
@@ -61,18 +65,16 @@ Standalone pack for **Unix/Linux** users: [Download](https://assets.merqlove.ru.
     $ do_snapshot help      
 
 Standalone Zip pack for others: [Download](https://assets.merqlove.ru.s3.amazonaws.com/do_snapshot/do_snapshot.zip)
-
-Or add this line to Gemfile:
-
-    gem 'do_snapshot'
-
-And then execute:
-
-    $ bundle
     
 ## Usage
 
-First you may need to set DigitalOcean API keys: 
+Mainly it's pretty simple:
+
+    $ do_snapshot --only 123456 -k 5 -c -v
+
+### Setup
+
+How to set DigitalOcean API keys: 
 
     $ export DIGITAL_OCEAN_CLIENT_ID="SOMEID"
     $ export DIGITAL_OCEAN_API_KEY="SOMEKEY"
@@ -81,17 +83,17 @@ If you want to set keys without environment, than set it via options when you ru
 
     $ do_snapshot --digital-ocean-client-id YOURLONGAPICLIENTID --digital-ocean-api-key YOURLONGAPIKEY
 
-### How-To
+### How-To (Here is also [Longren Tutorial](https://longren.io/automate-making-snapshots-of-your-digitalocean-droplets/))
  
 Here we `keeping` only 5 **latest** snapshots and cleanup older after new one is created. If creation of snapshots failed no one will be deleted. By default we keeping `10` droplets.
 
     $ do_snapshot --keep 5 -c
   
-Keep latest 3 from selected droplets:
+Keep latest 3 from selected droplet:
   
-    $ do_snapshot --only 123456 1234567 --keep 3
+    $ do_snapshot --only 123456 --keep 3
   
-Working with all except selected droplets:
+Working with all except droplets:
   
     $ do_snapshot --exclude 123456 123457
   
@@ -174,3 +176,7 @@ For working mailer you need to set e-mail settings via run options.
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
+
+Copyright (c) 2014 Alexander Merkulov
+
+MIT License
