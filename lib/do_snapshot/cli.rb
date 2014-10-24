@@ -1,9 +1,9 @@
 # -*- encoding : utf-8 -*-
 require 'thor'
 require 'do_snapshot'
-require 'do_snapshot/command'
-require 'do_snapshot/mail'
-require 'do_snapshot/log'
+require_relative 'command'
+require_relative 'mail'
+require_relative 'log'
 
 module DoSnapshot
   # CLI is here

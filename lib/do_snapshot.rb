@@ -1,5 +1,5 @@
 # -*- encoding : utf-8 -*-
-require 'do_snapshot/version'
+require_relative 'do_snapshot/version'
 
 # Used primary for creating snapshot's as backups for DigitalOcean
 #

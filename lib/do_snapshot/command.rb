@@ -1,5 +1,5 @@
 # -*- encoding : utf-8 -*-
-require 'do_snapshot/api'
+require_relative 'api'
 
 module DoSnapshot
   # Our commands live here :)

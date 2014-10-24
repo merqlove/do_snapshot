@@ -8,10 +8,9 @@ end
 require 'do_snapshot/cli'
 require 'webmock/rspec'
 require 'digitalocean'
-require 'shared/api_helpers'
-require 'shared/uri_helpers'
-require 'shared/environment'
-require 'shared/uri_helpers'
+require_relative 'shared/api_helpers'
+require_relative 'shared/uri_helpers'
+require_relative 'shared/environment'
 require 'do_snapshot/core_ext/hash'
 
 WebMock.disable_net_connect!(allow_localhost: true)

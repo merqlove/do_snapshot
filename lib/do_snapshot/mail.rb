@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 require 'date'
 require 'pony'
-require 'do_snapshot/core_ext/hash'
+require_relative 'core_ext/hash'
 
 module DoSnapshot
   # Shared mailer.
