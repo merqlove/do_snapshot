@@ -114,7 +114,7 @@ def store(package_file, filename, bucket = 'assets.merqlove.ru')
   s3_connect
   puts "storing: #{filename}"
   release = @s3.bucket(bucket).objects.build(filename)
-  release.content = File.open(package_file)
+  release.content = File.read(package_file)
   release.save
 end
 
