@@ -20,8 +20,8 @@
     <header>
       <div class="inner">
         <h1>DoSnapshot</h1>
-        <h2>Snapshot maker for Digital Ocean droplets. Multi-threading. Auto-cleanup. Cron optimized.</h2>
-        <a href="https://github.com/merqlove/do_snapshot" class="button"><small>View project on</small>GitHub</a>
+        <h2>A command-line snapshot maker for your DigitalOcean droplets. Fully Automated. Multi-threaded.</h2>
+        <a href="https://github.com/merqlove/do_snapshot" class="button"><small>View project on</small> GitHub</a>
       </div>
     </header>
 
@@ -51,7 +51,9 @@
 <li>Logging into selected directory.</li>
 <li>Verbose mode for research.</li>
 <li>Quiet mode for silence.</li>
-</ul><h2>
+</ul>
+
+<h2>
 <a name="compatibility" class="anchor" href="#compatibility"><span class="octicon octicon-link"></span></a>Compatibility</h2>
 
 <p>Ruby versions: 1.9.3 and higher. JRuby in 1.9 mode is also supported.</p>
@@ -69,12 +71,19 @@
 <li>And ... sure ;) We want to do it fast as rocket! :)</li>
 <li>more more more...</li>
 <li>So this tool can save a lot of time for people.</li>
-</ul><h2>
+</ul>
+
+<h2>
 <a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
 
 <p>Install it yourself as:</p>
 
 <pre><code>$ gem install do_snapshot
+</code></pre>
+
+<p>Or System Wide Install (OSX, *nix):</p>
+
+<pre><code>$ sudo gem install do_snapshot
 </code></pre>
 
 <p>For <strong>OSX</strong> users (<a href="http://github.com/merqlove/homebrew-do-snapshot">Homebrew Tap</a>):</p>
@@ -96,20 +105,18 @@ $ do_snapshot help
 
 <p>Standalone Zip pack for others: <a href="https://assets.merqlove.ru.s3.amazonaws.com/do_snapshot/do_snapshot.zip">Download</a></p>
 
-<p>Or add this line to Gemfile:</p>
-
-<pre><code>gem 'do_snapshot'
-</code></pre>
-
-<p>And then execute:</p>
-
-<pre><code>$ bundle
-</code></pre>
-
 <h2>
 <a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
 
-<p>First you may need to set DigitalOcean API keys: </p>
+<p>Mainly it's pretty simple:</p>
+
+<pre><code>$ do_snapshot --only 123456 -k 5 -c -v
+</code></pre>
+
+<h3>
+<a name="setup" class="anchor" href="#setup"><span class="octicon octicon-link"></span></a>Setup</h3>
+
+<p>How to set DigitalOcean API keys: </p>
 
 <pre><code>$ export DIGITAL_OCEAN_CLIENT_ID="SOMEID"
 $ export DIGITAL_OCEAN_API_KEY="SOMEKEY"
@@ -121,19 +128,19 @@ $ export DIGITAL_OCEAN_API_KEY="SOMEKEY"
 </code></pre>
 
 <h3>
-<a name="how-to" class="anchor" href="#how-to"><span class="octicon octicon-link"></span></a>How-To</h3>
+<a name="how-to-here-is-also-longren-tutorial" class="anchor" href="#how-to-here-is-also-longren-tutorial"><span class="octicon octicon-link"></span></a>How-To (Here is also <a href="https://longren.io/automate-making-snapshots-of-your-digitalocean-droplets/">Longren Tutorial</a>)</h3>
 
 <p>Here we <code>keeping</code> only 5 <strong>latest</strong> snapshots and cleanup older after new one is created. If creation of snapshots failed no one will be deleted. By default we keeping <code>10</code> droplets.</p>
 
 <pre><code>$ do_snapshot --keep 5 -c
 </code></pre>
 
-<p>Keep latest 3 from selected droplets:</p>
+<p>Keep latest 3 from selected droplet:</p>
 
-<pre><code>$ do_snapshot --only 123456 1234567 --keep 3
+<pre><code>$ do_snapshot --only 123456 --keep 3
 </code></pre>
 
-<p>Working with all except selected droplets:</p>
+<p>Working with all except droplets:</p>
 
 <pre><code>$ do_snapshot --exclude 123456 123457
 </code></pre>
@@ -222,7 +229,9 @@ Description:
 <a href="https://github.com/scottmotte/digitalocean">Digitalocean</a> for API requests.</li>
 <li>
 <a href="https://github.com/benprew/pony">Pony</a> for mail notifications.</li>
-</ul><h2>
+</ul>
+
+<h2>
 <a name="contributing" class="anchor" href="#contributing"><span class="octicon octicon-link"></span></a>Contributing</h2>
 
 <ol>
@@ -232,6 +241,16 @@ Description:
 <li>Push to the branch (<code>git push origin my-new-feature</code>)</li>
 <li>Create a new Pull Request</li>
 </ol>
+
+<h3>
+<a name="testing" class="anchor" href="#testing"><span class="octicon octicon-link"></span></a>Testing</h3>
+
+<pre><code>$ rake spec 
+</code></pre>
+
+<p>Copyright (c) 2014 Alexander Merkulov</p>
+
+<p>MIT License</p>
         </section>
 
         <aside id="sidebar">
