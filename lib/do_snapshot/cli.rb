@@ -36,21 +36,15 @@ module DoSnapshot
 
     You can optionally specify parameters to select or exclude some droplets.
 
-    ### Advanced options example for MAIL feature:
-
-    --mail to:mail@somehost.com from:from@host.com --smtp address:smtp.gmail.com port:25 user_name:someuser password:somepassword
-
-    For more details look here: https://github.com/benprew/pony
-
     ### Examples
 
-    Keep latest 5 and cleanup older if maximum is reached:
+    Keep latest 5 and cleanup older if maximum is reached, verbose:
 
-    $ do_snapshot --keep 5 -c
+    $ do_snapshot -k 5 -c -v
 
-    Keep latest 3 from selected droplets:
+    Keep latest 3 from selected droplet:
 
-    $ do_snapshot --only 123456 1234567 --keep 3
+    $ do_snapshot --only 123456 --keep 3
 
     Working with all except selected droplets:
 
@@ -63,6 +57,12 @@ module DoSnapshot
     ### Cron example
 
     0 4 * * 7 /.../bin/do_snapshot -k 5 -m to:TO from:FROM -t address:HOST user_name:LOGIN password:PASSWORD port:2525 -q -c
+
+    ### Advanced options example for MAIL feature:
+
+    --mail to:mail@somehost.com from:from@host.com --smtp address:smtp.gmail.com port:25 user_name:someuser password:somepassword
+
+    For more details look here: https://github.com/benprew/pony
 
     VERSION: #{DoSnapshot::VERSION}
     LONGDESC
