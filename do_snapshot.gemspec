@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = DoSnapshot::VERSION
   spec.authors       = ['Alexander Merkulov']
   spec.email         = ['sasha@merqlove.ru']
-  spec.summary       = 'Snapshot creator for Digital Ocean droplets. Multi-threading. Auto-cleanup. Cron optimized.'
+  spec.summary       = 'A command-line snapshot maker for your DigitalOcean droplets. Fully Automated. Multi-threaded.'
   spec.description   = 'Snapshot creator for Digital Ocean droplets. Multi-threading inside. Auto-cleanup feature. No matter how much droplets you have. Cron optimized.'
   spec.homepage      = 'http://dosnapshot.merqlove.ru/'
   spec.license       = 'MIT'
@@ -25,9 +25,10 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rake', '>= 0.8.7'
   spec.add_development_dependency 'json'
   spec.add_development_dependency 'rubocop', '>= 0.24'
-  spec.add_development_dependency 'rspec-core', '>= 3.0'
-  spec.add_development_dependency 'rspec-expectations', '>= 3.0'
-  spec.add_development_dependency 'rspec-mocks', '>= 3.0'
+  spec.add_development_dependency 'rspec', '>= 3.1'
+  spec.add_development_dependency 'rspec-core', '>= 3.1'
+  spec.add_development_dependency 'rspec-expectations', '>= 3.1'
+  spec.add_development_dependency 'rspec-mocks', '>= 3.1'
   spec.add_development_dependency 'webmock', '>= 1.18'
   spec.add_development_dependency 'coveralls', '>= 0.7'
   spec.add_development_dependency 'rubyzip'
