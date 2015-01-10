@@ -87,13 +87,7 @@ module DoSnapshot
         snapshot = instance.snapshots[i]
         event = Digitalocean::Image.destroy(snapshot.id)
 
-        if !event
-          Log.error "Destroy of snapshot #{snapshot.name} for droplet id: #{instance.id} name: #{instance.name} is failed."
-        elsif event && !event.status.include?('OK')
-          Log.error event.message
-        else
-          Log.debug "Snapshot name: #{snapshot.name} delete requested."
-        end
+        after_cleanup(instance.id, instance.name, snapshot, event)
       end
     end
 
@@ -134,6 +128,16 @@ module DoSnapshot
         Log.info 'Power On has been requested.'
       else
         Log.error 'Power On failed to request.'
+      end
+    end
+
+    def after_cleanup(droplet_id, droplet_name, snapshot, event)
+      if !event
+        Log.error "Destroy of snapshot #{snapshot.name} for droplet id: #{droplet_id} name: #{droplet_name} is failed."
+      elsif event && !event.status.include?('OK')
+        Log.error event.message
+      else
+        Log.debug "Snapshot name: #{snapshot.name} delete requested."
       end
     end
   end

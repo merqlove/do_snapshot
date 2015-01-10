@@ -9,7 +9,6 @@ describe DoSnapshot::CLI do
   subject(:api)     { DoSnapshot::API }
 
   describe '.snap' do
-
     it 'with exclude' do
       excluded_droplets = %w( 100824 )
       stub_all_api(%w(100825 100823))

@@ -137,16 +137,13 @@ module DoSnapshot
                   desc: 'DIGITAL_OCEAN_API_KEY. if you can\'t use environment.'
 
     def snap
-      Command.snap options, %w( log mail smtp trace digital_ocean_client_id digital_ocean_api_key )
+      Command.load_options options, %w( log mail smtp trace digital_ocean_client_id digital_ocean_api_key )
+      Command.snap
     rescue => e
       Command.fail_power_off(e) if [SnapshotCreateError, DropletShutdownError].include?(e.class)
       Log.error e.message
       backtrace(e) if options.include? 'trace'
-      if Mail.opts
-        Mail.opts[:subject] = 'Digital Ocean: Error.'
-        Mail.opts[:body] = 'Please check your droplets.'
-        Mail.notify
-      end
+      send_error
     end
 
     desc 'version, -V', 'Shows the version of the currently installed DoSnapshot gem'
@@ -158,6 +155,14 @@ module DoSnapshot
       def set_mailer
         Mail.opts = options['mail']
         Mail.smtp = options['smtp']
+      end
+
+      def send_error
+        return unless Mail.opts
+
+        Mail.opts[:subject] = 'Digital Ocean: Error.'
+        Mail.opts[:body] = 'Please check your droplets.'
+        Mail.notify
       end
 
       def set_logger

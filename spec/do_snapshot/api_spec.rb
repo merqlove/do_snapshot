@@ -207,7 +207,7 @@ describe DoSnapshot::API do
         expect(a_request(:get, image_destroy_url))
           .to have_been_made
         expect(a_request(:get, image_destroy2_url))
-        .to have_been_made
+          .to have_been_made
       end
     end
   end

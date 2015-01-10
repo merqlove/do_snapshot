@@ -2,7 +2,6 @@
 require 'spec_helper'
 
 shared_context 'api_helpers' do
-
   # List of droplets
   #
   def stub_droplets

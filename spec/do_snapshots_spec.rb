@@ -30,7 +30,6 @@ describe DoSnapshot do
     subject(:error) { described_class }
 
     it 'should be' do
-
       expect { error.new }
         .not_to raise_error
     end

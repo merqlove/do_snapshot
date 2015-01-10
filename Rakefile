@@ -5,6 +5,7 @@
 # rubocop:disable Lint/ShadowingOuterLocalVariable
 # rubocop:disable Style/MultilineTernaryOperator
 # rubocop:disable Lint/HandleExceptions
+# rubocop:disable Metrics/AbcSize
 require 'rubygems'
 
 PROJECT_ROOT = File.expand_path('..', __FILE__)

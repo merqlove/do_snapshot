@@ -65,7 +65,47 @@ describe DoSnapshot::Command do
     end
   end
 
-  describe  '.fail_power_off' do
+  describe '.stop_droplet' do
+    it 'when raised with error' do
+      stub_droplet_stop_fail(droplet_id)
+      load_options
+      instance = cmd.api.droplet droplet_id
+      droplet = instance.droplet
+      expect { cmd.stop_droplet(droplet) }
+        .to raise_error(DoSnapshot::DropletShutdownError)
+    end
+
+    it 'when stopped' do
+      stub_droplet_stop(droplet_id)
+      load_options
+      instance = cmd.api.droplet droplet_id
+      droplet = instance.droplet
+      expect { cmd.stop_droplet(droplet) }
+        .not_to raise_error
+    end
+  end
+
+  describe '.create_snapshot' do
+    it 'when raised with error' do
+      stub_droplet_snapshot_fail(droplet_id, snapshot_name)
+      load_options
+      instance = cmd.api.droplet droplet_id
+      droplet = instance.droplet
+      expect { cmd.create_snapshot(droplet) }
+        .to raise_error(DoSnapshot::SnapshotCreateError)
+    end
+
+    it 'when snapshot is created' do
+      stub_droplet_snapshot(droplet_id, snapshot_name)
+      load_options
+      instance = cmd.api.droplet droplet_id
+      droplet = instance.droplet
+      expect { cmd.create_snapshot(droplet) }
+        .not_to raise_error
+    end
+  end
+
+  describe '.fail_power_off' do
     it 'when success' do
       stub_droplet_inactive(droplet_id)
 
@@ -83,7 +123,7 @@ describe DoSnapshot::Command do
       expect(log.buffer)
         .to include 'Droplet id: 100823 is Failed to Power Off.'
       expect(log.buffer)
-      .to include 'Droplet Not Found'
+        .to include 'Droplet Not Found'
     end
 
     it 'with start error' do
@@ -105,9 +145,14 @@ describe DoSnapshot::Command do
     log.quiet = true
   end
 
-  def snap_runner(options = nil)
+  def load_options(options = nil)
     options ||= default_options
     cmd.send('api=', nil)
-    cmd.snap(options, [:log, :mail, :smtp, :trace, :digital_ocean_client_id, :digital_ocean_api_key])
+    cmd.load_options(options, [:log, :mail, :smtp, :trace, :digital_ocean_client_id, :digital_ocean_api_key])
+  end
+
+  def snap_runner
+    load_options
+    cmd.snap
   end
 end
