@@ -84,12 +84,21 @@ shared_context 'spec' do
     end
   end
 
+  def reset_api_keys
+    ENV['DIGITAL_OCEAN_API_KEY']   = nil
+    ENV['DIGITAL_OCEAN_CLIENT_ID'] = nil
+  end
+
+  def set_api_keys
+    ENV['DIGITAL_OCEAN_API_KEY']   = api_key
+    ENV['DIGITAL_OCEAN_CLIENT_ID'] = client_key
+  end
+
   before(:all) do
     WebMock.reset!
   end
 
   before(:each) do
-    ENV['DIGITAL_OCEAN_API_KEY']   = api_key
-    ENV['DIGITAL_OCEAN_CLIENT_ID'] = client_key
+    set_api_keys
   end
 end

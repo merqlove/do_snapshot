@@ -26,8 +26,6 @@ module DoSnapshot
       %w( digital_ocean_client_id digital_ocean_api_key ).each do |key|
         ENV[key.upcase] = options[key] if options.include? key
       end
-
-      try_keys_first
     end
 
     desc 'c / s / snap / create', 'DEFAULT. Create and cleanup snapshot\'s'
@@ -137,6 +135,7 @@ module DoSnapshot
                   desc: 'DIGITAL_OCEAN_API_KEY. if you can\'t use environment.'
 
     def snap
+      try_keys_first
       Command.load_options options, %w( log mail smtp trace digital_ocean_client_id digital_ocean_api_key )
       Command.snap
     rescue => e
@@ -188,7 +187,7 @@ module DoSnapshot
       def try_keys_first
         Log.debug 'Checking DigitalOcean Id\'s.'
         %w( DIGITAL_OCEAN_CLIENT_ID DIGITAL_OCEAN_API_KEY ).each do |key|
-          Log.fail Thor::Error, "You must have #{key} in environment or set it via options." if !ENV[key] || ENV[key].empty?
+          Log.error "You must have #{key} in environment or set it via options." if ENV[key].blank?
         end
       end
     end

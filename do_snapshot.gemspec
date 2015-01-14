@@ -21,16 +21,4 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'digitalocean', '~> 1.2'
   spec.add_dependency 'thor', '~> 0.19'
   spec.add_dependency 'pony', '~> 1.1'
-
-  spec.add_development_dependency 'rake', '>= 0.8.7'
-  spec.add_development_dependency 'json'
-  spec.add_development_dependency 'rubocop', '>= 0.24'
-  spec.add_development_dependency 'rspec', '>= 3.1'
-  spec.add_development_dependency 'rspec-core', '>= 3.1'
-  spec.add_development_dependency 'rspec-expectations', '>= 3.1'
-  spec.add_development_dependency 'rspec-mocks', '>= 3.1'
-  spec.add_development_dependency 'webmock', '>= 1.18'
-  spec.add_development_dependency 'coveralls', '>= 0.7'
-  spec.add_development_dependency 'rubyzip'
-  spec.add_development_dependency 's3'
 end
