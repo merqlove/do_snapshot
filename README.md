@@ -1,4 +1,6 @@
 # DoSnapshot CLI 
+
+[![Join the chat at https://gitter.im/merqlove/do_snapshot](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/merqlove/do_snapshot?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [Project Page at Digital Ocean](https://www.digitalocean.com/community/projects/dosnapshot), comment or vote for this project.
 
 [![Gem Version](https://badge.fury.io/rb/do_snapshot.svg)](http://badge.fury.io/rb/do_snapshot)
