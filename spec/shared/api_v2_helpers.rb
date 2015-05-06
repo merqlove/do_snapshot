@@ -50,7 +50,7 @@ shared_context 'api_v2_helpers' do
     stub_with_id(droplet_stop_uri, id, 'v2/show_event_power_off_start', :post,
                  type: 'power_off'
 
-    )
+                )
   end
 
   def stub_droplet_stop_fail(id)
@@ -59,14 +59,14 @@ shared_context 'api_v2_helpers' do
                    type: 'power_off'
                  },
                  404
-    )
+                )
   end
 
   def stub_droplet_start(id)
     stub_with_id(droplet_start_uri, id, 'v2/show_event_power_on_start', :post,
                  type: 'power_on'
 
-    )
+                )
   end
 
   def stub_droplet_start_fail(id)
@@ -75,7 +75,7 @@ shared_context 'api_v2_helpers' do
                    type: 'power_on'
                  },
                  404
-    )
+                )
   end
 
   # Snapshot
@@ -85,7 +85,7 @@ shared_context 'api_v2_helpers' do
                       type: 'snapshot',
                       name: name
 
-    )
+                     )
   end
 
   def stub_droplet_snapshot_fail(id, name)
@@ -95,7 +95,7 @@ shared_context 'api_v2_helpers' do
                         name: name
                       },
                       404
-    )
+                     )
   end
 
   # Event status
