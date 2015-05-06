@@ -20,6 +20,7 @@ module DoSnapshot
       protected
 
       def set_id; end
+
       def check_keys; end
 
       # Waiting for event exit

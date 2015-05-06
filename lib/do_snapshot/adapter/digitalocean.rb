@@ -1,8 +1,5 @@
 # -*- encoding : utf-8 -*-
-begin
-  require 'digitalocean_c' unless defined?(::DigitaloceanC)
-rescue LoadError
-end
+require 'digitalocean_c' unless defined?(::DigitaloceanC)
 
 module DoSnapshot
   module Adapter

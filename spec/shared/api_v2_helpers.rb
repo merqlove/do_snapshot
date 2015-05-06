@@ -48,33 +48,33 @@ shared_context 'api_v2_helpers' do
   #
   def stub_droplet_stop(id)
     stub_with_id(droplet_stop_uri, id, 'v2/show_event_power_off_start', :post,
-      body: {
-        type: 'power_off'
-      }
+                 type: 'power_off'
+
     )
   end
 
   def stub_droplet_stop_fail(id)
     stub_with_id(droplet_stop_uri, id, 'v2/error_message', :post,
-      body: {
-        type: 'power_off'
-      }
+                 {
+                   type: 'power_off'
+                 },
+                 404
     )
   end
 
   def stub_droplet_start(id)
     stub_with_id(droplet_start_uri, id, 'v2/show_event_power_on_start', :post,
-      body: {
-        type: 'power_on'
-      }
+                 type: 'power_on'
+
     )
   end
 
   def stub_droplet_start_fail(id)
     stub_with_id(droplet_start_uri, id, 'v2/error_message', :post,
-      body: {
-        type: 'power_on'
-      }
+                 {
+                   type: 'power_on'
+                 },
+                 404
     )
   end
 
@@ -82,19 +82,19 @@ shared_context 'api_v2_helpers' do
   #
   def stub_droplet_snapshot(id, name)
     stub_with_id_name(snapshot_uri, id, name, 'v2/response_event', :post,
-      body: {
-        type: 'snapshot',
-        name: name
-      }
+                      type: 'snapshot',
+                      name: name
+
     )
   end
 
   def stub_droplet_snapshot_fail(id, name)
     stub_with_id_name(snapshot_uri, id, name, 'v2/error_message', :post,
-      body: {
-        type: 'snapshot',
-        name: name
-      }
+                      {
+                        type: 'snapshot',
+                        name: name
+                      },
+                      404
     )
   end
 
@@ -124,35 +124,29 @@ shared_context 'api_v2_helpers' do
 
   # Stub helpers
   #
-  def stub_with_id(request, id, fixture, type=:get, body=nil, status = 200)
+  def stub_with_id(request, id, fixture, type = :get, body = nil, status = 200) # rubocop:disable Metrics/ParameterLists
     return unless request && fixture && id
     stub_request_body(type, url_with_id(request, id), body)
-        .to_return(status: status, body: fixture(fixture))
+      .to_return(status: status, body: fixture(fixture))
   end
 
-  def stub_event_with_id(request, droplet_id, id, fixture, type=:get, body=nil, status = 200)
-    return unless request && fixture && id && droplet_id
-    stub_request_body(type, url_with_event_id(request, droplet_id, id), body)
-        .to_return(status: status, body: fixture(fixture))
-  end
-
-  def stub_without_id(request, fixture, type=:get, body=nil, status = 200)
+  def stub_without_id(request, fixture, type = :get, body = nil, status = 200)
     return unless request && fixture
     stub_request_body(type, request, body)
-        .to_return(status: status, body: fixture(fixture))
+      .to_return(status: status, body: fixture(fixture))
   end
 
-  def stub_with_id_name(request, id, name, fixture, type=:get, body=nil, status = 200)
+  def stub_with_id_name(request, id, name, fixture, type = :get, body = nil, status = 200) # rubocop:disable Metrics/ParameterLists
     return unless request && fixture && id && name
     stub_request_body(type, url_with_id_name(request, id, name), body)
-        .to_return(status: status, body: fixture(fixture))
+      .to_return(status: status, body: fixture(fixture))
   end
 
   # Body Helpers
   #
   def stub_request_body(type, request, body)
     stub_response = stub_request(type, request)
-    return stub_response.with(body) if body
+    return stub_response.with(body: body) if body
     stub_response
   end
 end

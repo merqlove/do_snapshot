@@ -1,8 +1,5 @@
 # -*- encoding : utf-8 -*-
-begin
-  require 'droplet_kit' unless defined?(::DropletKit)
-rescue LoadError
-end
+require 'droplet_kit' unless defined?(::DropletKit)
 
 module DoSnapshot
   module Adapter
@@ -20,7 +17,7 @@ module DoSnapshot
         fail DropletFindError unless response
         response
       rescue => e
-        fail DropletFindError, e.message
+        raise DropletFindError, e.message
       end
 
       # Get droplets list from DigitalOcean
@@ -31,7 +28,7 @@ module DoSnapshot
         fail DropletListError unless response
         response.each
       rescue => e
-        fail DropletListError, e.message
+        raise DropletListError, e.message
       end
 
       def snapshots(instance)
@@ -72,7 +69,7 @@ module DoSnapshot
         # noinspection RubyResolve
         wait_event(event.id)
       rescue => e
-        fail e.message, e.backtrace
+        raise e.message, e.backtrace
       end
 
       # Cleanup our snapshots.
@@ -129,7 +126,7 @@ module DoSnapshot
         # noinspection RubyResolve,RubyResolve
         action.status.include?('completed') ? true : false
       rescue => e
-        fail e.message, e.backtrace
+        raise e.message, e.backtrace
       end
 
       # Request Power On for droplet
