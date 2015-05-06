@@ -3,10 +3,11 @@ require 'spec_helper'
 
 describe DoSnapshot::CLI do
   include_context 'spec'
+  include_context 'api_v1_helpers'
 
   subject(:cli)     { described_class }
   subject(:command) { DoSnapshot::Command }
-  subject(:api)     { DoSnapshot::API }
+  subject(:api)     { DoSnapshot::Adapter::Digitalocean }
 
   describe '.initialize' do
     it 'with args & options' do

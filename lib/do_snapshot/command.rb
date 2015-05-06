@@ -1,5 +1,5 @@
 # -*- encoding : utf-8 -*-
-require_relative 'api'
+require_relative 'adapter'
 
 module DoSnapshot
   # Our commands live here :)
@@ -40,7 +40,7 @@ module DoSnapshot
         today         = DateTime.now
         name          = "#{droplet.name}_#{today.strftime('%Y_%m_%d')}"
         # noinspection RubyResolve
-        snapshot_size = droplet.snapshots.size
+        snapshot_size = api.snapshots(droplet).size
 
         Log.debug 'Wait until snapshot will be created.'
 
@@ -63,13 +63,13 @@ module DoSnapshot
       end
 
       def api
-        @api ||= API.new(delay: delay, timeout: timeout)
+        @api ||= DoSnapshot::Adapter.api(protocol, delay: delay, timeout: timeout)
       end
 
       protected
 
       attr_accessor :droplets, :exclude, :only
-      attr_accessor :keep, :quiet, :stop, :clean, :timeout, :delay
+      attr_accessor :keep, :quiet, :stop, :clean, :timeout, :delay, :protocol
 
       attr_writer :notify, :threads, :api
 
@@ -95,7 +95,7 @@ module DoSnapshot
       #
       def load_droplets
         Log.debug 'Loading list of DigitalOcean droplets'
-        self.droplets = api.droplets.droplets
+        self.droplets = api.droplets
       end
 
       # Dispatch received droplets, each by each.
@@ -130,8 +130,7 @@ module DoSnapshot
       #
       def prepare_droplet(id, name)
         Log.debug "Droplet id: #{id} name: #{name} "
-        instance = api.droplet id
-        droplet = instance.droplet
+        droplet = api.droplet id
 
         return unless droplet
         Log.info "Preparing droplet id: #{droplet.id} name: #{droplet.name} to take snapshot."
@@ -141,7 +140,7 @@ module DoSnapshot
 
       def too_much_snapshots(instance)
         # noinspection RubyResolve
-        return false unless instance.snapshots.size >= keep
+        return false unless api.snapshots(instance).size >= keep
         warning_size(instance.id, instance.name, keep)
         stop ? true : false
       end

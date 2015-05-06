@@ -23,7 +23,7 @@ module DoSnapshot
       set_mailer
 
       # Check for keys via options
-      %w( digital_ocean_client_id digital_ocean_api_key ).each do |key|
+      %w( digital_ocean_client_id digital_ocean_api_key digital_ocean_access_token ).each do |key|
         ENV[key.upcase] = options[key] if options.include? key
       end
     end
@@ -35,6 +35,14 @@ module DoSnapshot
     You can optionally specify parameters to select or exclude some droplets.
 
     ### Examples
+
+    Select api version (1, 2):
+
+    $ do_snapshot -a 2
+
+    Set DigitalOcean keys:
+
+    $ do_snapshot --digital_ocean_api_token SOMELONGTOKEN
 
     Keep latest 5 and cleanup older if maximum is reached, verbose:
 
@@ -64,6 +72,12 @@ module DoSnapshot
 
     VERSION: #{DoSnapshot::VERSION}
     LONGDESC
+    method_option :protocol,
+                  type: :numeric,
+                  default: 1,
+                  aliases: %w( -p ),
+                  banner: '1',
+                  desc: 'Select api version.'
     method_option :only,
                   type: :array,
                   default: [],
@@ -90,7 +104,7 @@ module DoSnapshot
                   desc: 'Delay between snapshot operation status requests.'
     method_option :timeout,
                   type: :numeric,
-                  default: 600,
+                  default: 3600,
                   banner: '250',
                   desc: 'Timeout in sec\'s for events like Power Off or Create Snapshot.'
     method_option :mail,
@@ -109,6 +123,7 @@ module DoSnapshot
                   banner: '/Users/someone/.do_snapshot/main.log',
                   desc: 'Log file path. By default logging is disabled.'
     method_option :clean,
+                  default: true,
                   type: :boolean,
                   aliases: %w( -c ),
                   desc: 'Cleanup snapshots after create. If you have more images than you want to `keep`, older will be deleted.'
@@ -125,6 +140,10 @@ module DoSnapshot
                   aliases: %w( -q ),
                   desc: 'Quiet mode. If don\'t need any messages and in console.'
 
+    method_option :digital_ocean_access_token,
+                  type: :string,
+                  banner: 'YOURLONGAPITOKEN',
+                  desc: 'DIGITAL_OCEAN_ACCESS_TOKEN. if you can\'t use environment.'
     method_option :digital_ocean_client_id,
                   type: :string,
                   banner: 'YOURLONGAPICLIENTID',
@@ -135,8 +154,7 @@ module DoSnapshot
                   desc: 'DIGITAL_OCEAN_API_KEY. if you can\'t use environment.'
 
     def snap
-      try_keys_first
-      Command.load_options options, %w( log mail smtp trace digital_ocean_client_id digital_ocean_api_key )
+      Command.load_options options, %w( log mail smtp trace digital_ocean_client_id digital_ocean_api_key digital_ocean_access_token )
       Command.snap
     rescue => e
       Command.fail_power_off(e) if [SnapshotCreateError, DropletShutdownError].include?(e.class)
@@ -180,14 +198,6 @@ module DoSnapshot
       def backtrace(e)
         e.backtrace.each do |t|
           Log.error t
-        end
-      end
-
-      # Check for DigitalOcean API keys
-      def try_keys_first
-        Log.debug 'Checking DigitalOcean Id\'s.'
-        %w( DIGITAL_OCEAN_CLIENT_ID DIGITAL_OCEAN_API_KEY ).each do |key|
-          Log.error "You must have #{key} in environment or set it via options." if ENV[key].blank?
         end
       end
     end

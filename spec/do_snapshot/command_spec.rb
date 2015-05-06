@@ -4,6 +4,7 @@ require 'spec_helper'
 describe DoSnapshot::Command do
   include_context 'spec'
   include_context 'uri_helpers'
+  include_context 'api_v1_helpers'
 
   subject(:cmd)     { DoSnapshot::Command }
   subject(:log)     { DoSnapshot::Log }
@@ -69,8 +70,7 @@ describe DoSnapshot::Command do
     it 'when raised with error' do
       stub_droplet_stop_fail(droplet_id)
       load_options
-      instance = cmd.api.droplet droplet_id
-      droplet = instance.droplet
+      droplet = cmd.api.droplet droplet_id
       expect { cmd.stop_droplet(droplet) }
         .to raise_error(DoSnapshot::DropletShutdownError)
     end
@@ -78,8 +78,7 @@ describe DoSnapshot::Command do
     it 'when stopped' do
       stub_droplet_stop(droplet_id)
       load_options
-      instance = cmd.api.droplet droplet_id
-      droplet = instance.droplet
+      droplet = cmd.api.droplet droplet_id
       expect { cmd.stop_droplet(droplet) }
         .not_to raise_error
     end
@@ -89,8 +88,7 @@ describe DoSnapshot::Command do
     it 'when raised with error' do
       stub_droplet_snapshot_fail(droplet_id, snapshot_name)
       load_options
-      instance = cmd.api.droplet droplet_id
-      droplet = instance.droplet
+      droplet = cmd.api.droplet droplet_id
       expect { cmd.create_snapshot(droplet) }
         .to raise_error(DoSnapshot::SnapshotCreateError)
     end
@@ -98,8 +96,7 @@ describe DoSnapshot::Command do
     it 'when snapshot is created' do
       stub_droplet_snapshot(droplet_id, snapshot_name)
       load_options
-      instance = cmd.api.droplet droplet_id
-      droplet = instance.droplet
+      droplet = cmd.api.droplet droplet_id
       expect { cmd.create_snapshot(droplet) }
         .not_to raise_error
     end

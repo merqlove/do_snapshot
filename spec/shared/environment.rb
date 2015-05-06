@@ -6,13 +6,14 @@ shared_context 'spec' do
 
   let(:client_key)         { 'foo' }
   let(:api_key)            { 'bar' }
+  let(:access_token)       { 'sometoken' }
   let(:event_id)           { '7501' }
   let(:droplet_id)         { '100823' }
   let(:image_id)           { '5019770' }
   let(:image_id2)          { '5019903' }
-  let(:cli_keys)           { Thor::CoreExt::HashWithIndifferentAccess.new(digital_ocean_client_id: 'NOTFOO', digital_ocean_client_bar: 'NOTBAR') }
+  let(:cli_keys)           { Thor::CoreExt::HashWithIndifferentAccess.new(digital_ocean_client_id: 'NOTFOO', digital_ocean_client_key: 'NOTBAR', digital_ocean_access_token: 'NOTTOK') }
   let(:snapshot_name)      { "foo_#{DateTime.now.strftime('%Y_%m_%d')}" }
-  let(:default_options)    { Hash[only: %w( 100823 ), exclude: %w(), keep: 3, stop: false, trace: true, clean: true, delay: 0, timeout: 600, droplets: nil, threads: []] }
+  let(:default_options)    { Hash[protocol: 1, only: %w( 100823 ), exclude: %w(), keep: 3, stop: false, trace: true, clean: true, delay: 0, timeout: 600, droplets: nil, threads: []] }
   let(:no_exclude)         { [] }
   let(:exclude)            { %w( 100824 100825 ) }
   let(:no_only)            { [] }
@@ -28,18 +29,6 @@ shared_context 'spec' do
   let(:mail_options)       { Thor::CoreExt::HashWithIndifferentAccess.new(to: 'mail@somehost.com', from: 'from@host.com') }
   let(:smtp_options)       { Thor::CoreExt::HashWithIndifferentAccess.new(address: 'smtp.gmail.com', port: '25', user_name: 'someuser', password: 'somepassword') }
   let(:log)                { Thor::CoreExt::HashWithIndifferentAccess.new(log: "#{project_path}/log/test.log") }
-  let(:api_base)           { 'https://api.digitalocean.com/v1' }
-  let(:keys_uri)           { "api_key=#{api_key}&client_id=#{client_key}" }
-  let(:droplets_api_base)  { "#{api_base}/droplets" }
-  let(:events_api_base)    { "#{api_base}/events" }
-  let(:images_api_base)    { "#{api_base}/images" }
-  let(:image_destroy_uri)  { "#{images_api_base}/[id]/destroy/?#{keys_uri}" }
-  let(:droplets_uri)       { "#{droplets_api_base}/?#{keys_uri}" }
-  let(:droplet_find_uri)   { "#{droplets_api_base}/[id]?#{keys_uri}" }
-  let(:droplet_stop_uri)   { "#{droplets_api_base}/[id]/power_off/?#{keys_uri}" }
-  let(:droplet_start_uri)  { "#{droplets_api_base}/[id]/power_on/?#{keys_uri}" }
-  let(:snapshot_uri)       { "#{droplets_api_base}/[id]/snapshot/?name=[name]&#{keys_uri}" }
-  let(:event_find_uri)     { "#{events_api_base}/[id]/?#{keys_uri}" }
 
   def stub_all_api(droplets = nil, active = false) # rubocop:disable MethodLength
     drops = []
@@ -87,11 +76,13 @@ shared_context 'spec' do
   def reset_api_keys
     ENV['DIGITAL_OCEAN_API_KEY']   = nil
     ENV['DIGITAL_OCEAN_CLIENT_ID'] = nil
+    ENV['DIGITAL_OCEAN_ACCESS_TOKEN'] = nil
   end
 
   def set_api_keys
     ENV['DIGITAL_OCEAN_API_KEY']   = api_key
     ENV['DIGITAL_OCEAN_CLIENT_ID'] = client_key
+    ENV['DIGITAL_OCEAN_ACCESS_TOKEN'] = access_token
   end
 
   before(:all) do

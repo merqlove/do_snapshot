@@ -1,8 +1,9 @@
 # -*- encoding : utf-8 -*-
 require 'spec_helper'
 
-describe DoSnapshot::API do
+describe DoSnapshot::Adapter::Digitalocean do
   include_context 'spec'
+  include_context 'api_v1_helpers'
 
   subject(:api) { described_class }
   subject(:log) { DoSnapshot::Log }
@@ -178,7 +179,7 @@ describe DoSnapshot::API do
         stub_image_destroy(image_id2)
 
         droplet = instance.droplet(droplet_id)
-        expect { instance.cleanup_snapshots(droplet.droplet, 1) }
+        expect { instance.cleanup_snapshots(droplet, 1) }
           .not_to raise_error
         expect(log.buffer)
           .to include 'Snapshot name: mrcr.ru_2014_07_19 delete requested.'
@@ -197,7 +198,7 @@ describe DoSnapshot::API do
         stub_image_destroy_fail(image_id2)
 
         droplet = instance.droplet(droplet_id)
-        expect { instance.cleanup_snapshots(droplet.droplet, 1) }
+        expect { instance.cleanup_snapshots(droplet, 1) }
           .not_to raise_error
         expect(log.buffer)
           .to include 'Some Message'
