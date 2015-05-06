@@ -28,7 +28,8 @@
     <div id="content-wrapper">
       <div class="inner clearfix">
         <section id="main-content">
-          <p><a href="https://www.digitalocean.com/community/projects/dosnapshot">Project Page at Digital Ocean</a>, comment or vote for this project.</p>
+          <p><a href="https://gitter.im/merqlove/do_snapshot?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge&amp;utm_content=badge"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Join the chat at https://gitter.im/merqlove/do_snapshot"></a>
+<a href="https://www.digitalocean.com/community/projects/dosnapshot">Project Page at Digital Ocean</a>, comment or vote for this project.</p>
 
 <p><a href="http://badge.fury.io/rb/do_snapshot"><img src="https://badge.fury.io/rb/do_snapshot.svg" alt="Gem Version"></a>
 <a href="https://travis-ci.org/merqlove/do_snapshot"><img src="https://travis-ci.org/merqlove/do_snapshot.svg?branch=master" alt="Build Status"></a>
@@ -56,14 +57,14 @@
 </ul>
 
 <h2>
-<a name="compatibility" class="anchor" href="#compatibility"><span class="octicon octicon-link"></span></a>Compatibility</h2>
+<a id="compatibility" class="anchor" href="#compatibility" aria-hidden="true"><span class="octicon octicon-link"></span></a>Compatibility</h2>
 
 <p>Ruby versions: 1.9.3 and higher. JRuby in 1.9 mode is also supported.</p>
 
 <p><img src="https://raw.githubusercontent.com/merqlove/do_snapshot/master/assets/example.png" alt="DoSnaphot example"></p>
 
 <h3>
-<a name="you-can-ask-me-why-you-made-this-tool" class="anchor" href="#you-can-ask-me-why-you-made-this-tool"><span class="octicon octicon-link"></span></a>You can ask me, "Why you made this tool?"</h3>
+<a id="you-can-ask-me-why-you-made-this-tool" class="anchor" href="#you-can-ask-me-why-you-made-this-tool" aria-hidden="true"><span class="octicon octicon-link"></span></a>You can ask me, "Why you made this tool?"</h3>
 
 <ul>
 <li>First. I needed stable tool, which can provide for me automatic Snapshot feature for all of my Droplets via Cron planner.</li>
@@ -76,7 +77,7 @@
 </ul>
 
 <h2>
-<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
 
 <p>Install it yourself as:</p>
 
@@ -108,7 +109,7 @@ $ do_snapshot help
 <p>Standalone Zip pack for others: <a href="https://assets.merqlove.ru.s3.amazonaws.com/do_snapshot/do_snapshot.zip">Download</a></p>
 
 <h2>
-<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
 
 <p>Mainly it's pretty simple:</p>
 
@@ -116,9 +117,12 @@ $ do_snapshot help
 </code></pre>
 
 <h3>
-<a name="setup" class="anchor" href="#setup"><span class="octicon octicon-link"></span></a>Setup</h3>
+<a id="setup" class="anchor" href="#setup" aria-hidden="true"><span class="octicon octicon-link"></span></a>Setup</h3>
 
-<p>How to set DigitalOcean API keys: </p>
+<h3>
+<a id="digitalocean-api-v1" class="anchor" href="#digitalocean-api-v1" aria-hidden="true"><span class="octicon octicon-link"></span></a>Digitalocean API V1:</h3>
+
+<p>You'll need to generate an access token in Digital Ocean's control panel at <a href="https://cloud.digitalocean.com/api_access">https://cloud.digitalocean.com/api_access</a></p>
 
 <pre><code>$ export DIGITAL_OCEAN_CLIENT_ID="SOMEID"
 $ export DIGITAL_OCEAN_API_KEY="SOMEKEY"
@@ -130,11 +134,29 @@ $ export DIGITAL_OCEAN_API_KEY="SOMEKEY"
 </code></pre>
 
 <h3>
-<a name="how-to-here-is-also-longren-tutorial" class="anchor" href="#how-to-here-is-also-longren-tutorial"><span class="octicon octicon-link"></span></a>How-To (Here is also <a href="https://longren.io/automate-making-snapshots-of-your-digitalocean-droplets/">Longren Tutorial</a>)</h3>
+<a id="digitalocean-api-v2" class="anchor" href="#digitalocean-api-v2" aria-hidden="true"><span class="octicon octicon-link"></span></a>Digitalocean API V2:</h3>
+
+<p>You'll need to generate an access token in Digital Ocean's control panel at <a href="https://cloud.digitalocean.com/settings/applications">https://cloud.digitalocean.com/settings/applications</a></p>
+
+<pre><code>$ export DIGITAL_OCEAN_ACCESS_TOKEN="SOMETOKEN"
+</code></pre>
+
+<p>If you want to set keys without environment, than set it via options when you run do_snapshot:</p>
+
+<pre><code>$ do_snapshot --digital-ocean-access-token YOURLONGTOKEN    
+</code></pre>
+
+<h3>
+<a id="how-to-here-is-also-longren-tutorial" class="anchor" href="#how-to-here-is-also-longren-tutorial" aria-hidden="true"><span class="octicon octicon-link"></span></a>How-To (Here is also <a href="https://longren.io/automate-making-snapshots-of-your-digitalocean-droplets/">Longren Tutorial</a>)</h3>
 
 <p>Here we <code>keeping</code> only 5 <strong>latest</strong> snapshots and cleanup older after new one is created. If creation of snapshots failed no one will be deleted. By default we keeping <code>10</code> droplets.</p>
 
 <pre><code>$ do_snapshot --keep 5 -c
+</code></pre>
+
+<p>Using API V2:</p>
+
+<pre><code>$ do_snapshot -p 2
 </code></pre>
 
 <p>Keep latest 3 from selected droplet:</p>
@@ -161,13 +183,13 @@ For working mailer you need to set e-mail settings via run options.</p>
 </code></pre>
 
 <h3>
-<a name="cron-example" class="anchor" href="#cron-example"><span class="octicon octicon-link"></span></a>Cron example</h3>
+<a id="cron-example" class="anchor" href="#cron-example" aria-hidden="true"><span class="octicon octicon-link"></span></a>Cron example</h3>
 
 <pre><code>0 4 * * 7 . /.../.digitalocean_keys &amp;&amp; /.../bin/do_snapshot -k 5 -m to:TO from:FROM -t address:HOST user_name:LOGIN password:PASSWORD port:2525 -q -c
 </code></pre>
 
 <h3>
-<a name="real-world-example" class="anchor" href="#real-world-example"><span class="octicon octicon-link"></span></a>Real world example</h3>
+<a id="real-world-example" class="anchor" href="#real-world-example" aria-hidden="true"><span class="octicon octicon-link"></span></a>Real world example</h3>
 
 <pre><code>$ bin/do_snapshot --only 123456 -k 3 -c -m to:TO from:FROM -t address:HOST user_name:LOGIN password:PASSWORD port:2525 -v
 
@@ -190,13 +212,15 @@ Sending e-mail notification.
 </code></pre>
 
 <h3>
-<a name="all-options" class="anchor" href="#all-options"><span class="octicon octicon-link"></span></a>All options:</h3>
+<a id="all-options" class="anchor" href="#all-options" aria-hidden="true"><span class="octicon octicon-link"></span></a>All options:</h3>
 
 <pre><code>&gt; $ do_snapshot c  
 
 aliases: s, snap, create
 
 Options:
+  -p, [--protocol=1]                                             # Select api version.
+                                                                 # Default: 1
   -o, [--only=123456 123456 123456]                              # Select some droplets.
   -e, [--exclude=123456 123456 123456]                           # Except some droplets.
   -k, [--keep=5]                                                 # How much snapshots you want to keep?
@@ -204,7 +228,7 @@ Options:
   -d, [--delay=5]                                                # Delay between snapshot operation status requests.
                                                                  # Default: 10                                                                    
       [--timeout=250]                                            # Timeout in sec's for events like Power Off or Create Snapshot.
-                                                                 # Default: 600                                                                     
+                                                                 # Default: 3600                                                                     
   -m, [--mail=to:yourmail@example.com]                           # Receive mail if fail or maximum is reached.
   -t, [--smtp=user_name:yourmail@example.com password:password]  # SMTP options.
   -l, [--log=/Users/someone/.do_snapshot/main.log]               # Log file path. By default logging is disabled.
@@ -212,6 +236,7 @@ Options:
   -s, [--stop], [--no-stop]                                      # Stop creating snapshots if maximum is reached.
   -v, [--trace], [--no-trace]                                    # Verbose mode.
   -q, [--quiet], [--no-quiet]                                    # Quiet mode. If don't need any messages in console.
+      [--digital-ocean-access-token=YOURLONGAPITOKEN]            # DIGITAL_OCEAN_ACCESS_TOKEN. if you can't use environment.
       [--digital-ocean-client-id=YOURLONGAPICLIENTID]            # DIGITAL_OCEAN_CLIENT_ID. if you can't use environment.
       [--digital-ocean-api-key=YOURLONGAPIKEY]                   # DIGITAL_OCEAN_API_KEY. if you can't use environment.    
 
@@ -222,7 +247,7 @@ Description:
 </code></pre>
 
 <h2>
-<a name="dependencies" class="anchor" href="#dependencies"><span class="octicon octicon-link"></span></a>Dependencies:</h2>
+<a id="dependencies" class="anchor" href="#dependencies" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dependencies:</h2>
 
 <ul>
 <li>
@@ -234,7 +259,7 @@ Description:
 </ul>
 
 <h2>
-<a name="contributing" class="anchor" href="#contributing"><span class="octicon octicon-link"></span></a>Contributing</h2>
+<a id="contributing" class="anchor" href="#contributing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contributing</h2>
 
 <ol>
 <li>Fork it ( <a href="https://github.com/merqlove/do_snapshot/fork">https://github.com/merqlove/do_snapshot/fork</a> )</li>
@@ -245,7 +270,7 @@ Description:
 </ol>
 
 <h3>
-<a name="testing" class="anchor" href="#testing"><span class="octicon octicon-link"></span></a>Testing</h3>
+<a id="testing" class="anchor" href="#testing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Testing</h3>
 
 <pre><code>$ rake spec 
 </code></pre>
