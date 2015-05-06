@@ -73,23 +73,37 @@ Mainly it's pretty simple:
 
     $ do_snapshot --only 123456 -k 5 -c -v
 
-### Setup
+### Setup 
 
-How to set DigitalOcean API keys: 
+### Digitalocean API V1:
+You'll need to generate an access token in Digital Ocean's control panel at https://cloud.digitalocean.com/api_access
 
     $ export DIGITAL_OCEAN_CLIENT_ID="SOMEID"
     $ export DIGITAL_OCEAN_API_KEY="SOMEKEY"
- 
+    
 If you want to set keys without environment, than set it via options when you run do_snapshot:
 
     $ do_snapshot --digital-ocean-client-id YOURLONGAPICLIENTID --digital-ocean-api-key YOURLONGAPIKEY
+    
+### Digitalocean API V2:
+You'll need to generate an access token in Digital Ocean's control panel at https://cloud.digitalocean.com/settings/applications
+    
+    $ export DIGITAL_OCEAN_ACCESS_TOKEN="SOMETOKEN"
+    
+If you want to set keys without environment, than set it via options when you run do_snapshot:
+    
+    $ do_snapshot --digital-ocean-client-id YOURLONGAPICLIENTID --digital-ocean-api-key YOURLONGAPIKEY    
 
 ### How-To (Here is also [Longren Tutorial](https://longren.io/automate-making-snapshots-of-your-digitalocean-droplets/))
  
 Here we `keeping` only 5 **latest** snapshots and cleanup older after new one is created. If creation of snapshots failed no one will be deleted. By default we keeping `10` droplets.
 
     $ do_snapshot --keep 5 -c
+
+Using API V2:
   
+    $ do_snapshot -p 2
+    
 Keep latest 3 from selected droplet:
   
     $ do_snapshot --only 123456 --keep 3
@@ -141,6 +155,8 @@ For working mailer you need to set e-mail settings via run options.
     aliases: s, snap, create
     
     Options:
+      -p, [--protocol=1]                                             # Select api version.
+                                                                     # Default: 1
       -o, [--only=123456 123456 123456]                              # Select some droplets.
       -e, [--exclude=123456 123456 123456]                           # Except some droplets.
       -k, [--keep=5]                                                 # How much snapshots you want to keep?
@@ -148,7 +164,7 @@ For working mailer you need to set e-mail settings via run options.
       -d, [--delay=5]                                                # Delay between snapshot operation status requests.
                                                                      # Default: 10                                                                    
           [--timeout=250]                                            # Timeout in sec's for events like Power Off or Create Snapshot.
-                                                                     # Default: 600                                                                     
+                                                                     # Default: 3600                                                                     
       -m, [--mail=to:yourmail@example.com]                           # Receive mail if fail or maximum is reached.
       -t, [--smtp=user_name:yourmail@example.com password:password]  # SMTP options.
       -l, [--log=/Users/someone/.do_snapshot/main.log]               # Log file path. By default logging is disabled.
@@ -156,6 +172,7 @@ For working mailer you need to set e-mail settings via run options.
       -s, [--stop], [--no-stop]                                      # Stop creating snapshots if maximum is reached.
       -v, [--trace], [--no-trace]                                    # Verbose mode.
       -q, [--quiet], [--no-quiet]                                    # Quiet mode. If don't need any messages in console.
+          [--digital-ocean-access-token=YOURLONGAPITOKEN]            # DIGITAL_OCEAN_ACCESS_TOKEN. if you can't use environment.
           [--digital-ocean-client-id=YOURLONGAPICLIENTID]            # DIGITAL_OCEAN_CLIENT_ID. if you can't use environment.
           [--digital-ocean-api-key=YOURLONGAPIKEY]                   # DIGITAL_OCEAN_API_KEY. if you can't use environment.    
     
