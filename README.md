@@ -186,7 +186,8 @@ For working mailer you need to set e-mail settings via run options.
 ## Dependencies:
 
 - [Thor](https://github.com/erikhuda/thor) for CLI.
-- [Digitalocean](https://github.com/scottmotte/digitalocean) for API requests.
+- [Digitalocean](https://github.com/scottmotte/digitalocean) for API V1 requests.
+- [DropletKit](https://github.com/digitalocean/droplet_kit) for API V2 requests.
 - [Pony](https://github.com/benprew/pony) for mail notifications.
 
 ## Contributing
@@ -201,6 +202,6 @@ For working mailer you need to set e-mail settings via run options.
 
     $ rake spec 
 
-Copyright (c) 2014 Alexander Merkulov
+Copyright (c) 2015 Alexander Merkulov
 
 MIT License
