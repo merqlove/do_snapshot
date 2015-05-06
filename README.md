@@ -92,7 +92,7 @@ You'll need to generate an access token in Digital Ocean's control panel at http
     
 If you want to set keys without environment, than set it via options when you run do_snapshot:
     
-    $ do_snapshot --digital-ocean-client-id YOURLONGAPICLIENTID --digital-ocean-api-key YOURLONGAPIKEY    
+    $ do_snapshot --digital-ocean-access-token YOURLONGTOKEN    
 
 ### How-To (Here is also [Longren Tutorial](https://longren.io/automate-making-snapshots-of-your-digitalocean-droplets/))
  
