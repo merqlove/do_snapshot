@@ -13,3 +13,4 @@ AllCops:
   Exclude:
     - '*.gemspec'
     - 'dist/**/*'
+    - 'Rakefile'

@@ -74,7 +74,7 @@ module DoSnapshot
 
       # Cleanup our snapshots.
       #
-      def cleanup_snapshots(instance, size) # rubocop:disable MethodLength
+      def cleanup_snapshots(instance, size)
         (0..size).each do |i|
           # noinspection RubyResolve
           snapshot = instance.snapshot_ids[i]

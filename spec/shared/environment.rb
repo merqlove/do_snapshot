@@ -30,7 +30,7 @@ shared_context 'spec' do
   let(:smtp_options)       { Thor::CoreExt::HashWithIndifferentAccess.new(address: 'smtp.gmail.com', port: '25', user_name: 'someuser', password: 'somepassword') }
   let(:log)                { Thor::CoreExt::HashWithIndifferentAccess.new(log: "#{project_path}/log/test.log") }
 
-  def stub_all_api(droplets = nil, active = false) # rubocop:disable MethodLength
+  def stub_all_api(droplets = nil, active = false)
     drops = []
     droplets ||= [droplet_id]
     droplets.each do |droplet|
