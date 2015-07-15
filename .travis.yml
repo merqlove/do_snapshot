@@ -10,3 +10,4 @@ notifications:
 script:
     - bundle exec rubocop
     - bundle exec rake
+sudo: false
