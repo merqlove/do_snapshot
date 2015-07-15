@@ -36,7 +36,7 @@ module DoSnapshot
         instance = droplet(id)
 
         if instance.status.include? 'active'
-          Log.error 'Droplet is still running.'
+          log.error 'Droplet is still running.'
         else
           power_on id
         end
@@ -85,9 +85,9 @@ module DoSnapshot
       end
 
       def check_keys
-        Log.debug 'Checking DigitalOcean Id\'s.'
+        log.debug 'Checking DigitalOcean Id\'s.'
         %w( DIGITAL_OCEAN_CLIENT_ID DIGITAL_OCEAN_API_KEY ).each do |key|
-          Log.error "You must have #{key} in environment or set it via options." if ENV[key].blank?
+          log.error "You must have #{key} in environment or set it via options." if ENV[key].blank?
         end
       end
 
@@ -96,7 +96,7 @@ module DoSnapshot
       # Set id's of Digital Ocean API.
       #
       def set_id
-        Log.debug 'Setting DigitalOcean Id\'s.'
+        log.debug 'Setting DigitalOcean Id\'s.'
         ::DigitaloceanC.client_id = ENV['DIGITAL_OCEAN_CLIENT_ID']
         ::DigitaloceanC.api_key = ENV['DIGITAL_OCEAN_API_KEY']
       end
@@ -105,15 +105,18 @@ module DoSnapshot
       # Before snapshot we to know that machine has powered off.
       #
       def get_event_status(id, time)
-        if (Time.now - time) > @timeout
-          Log.debug "Event #{id} finished by timeout #{time}"
-          return true
-        end
+        return true if timeout?(id, time)
 
         event = ::DigitaloceanC::Event.find(id)
         fail event.message unless event.status.include?('OK')
         # noinspection RubyResolve,RubyResolve
         event.event.percentage && event.event.percentage.include?('100') ? true : false
+      end
+
+      def timeout?(id, time)
+        return false unless (Time.now - time) > @timeout
+        log.debug "Event #{id} finished by timeout #{time}"
+        true
       end
 
       # Request Power On for droplet
@@ -123,9 +126,9 @@ module DoSnapshot
         event = ::DigitaloceanC::Droplet.power_on(id)
         case event && event.status
         when 'OK'
-          Log.info 'Power On has been requested.'
+          log.info 'Power On has been requested.'
         else
-          Log.error 'Power On failed to request.'
+          log.error 'Power On failed to request.'
         end
       end
     end

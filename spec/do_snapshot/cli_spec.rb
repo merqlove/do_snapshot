@@ -6,7 +6,6 @@ describe DoSnapshot::CLI do
   include_context 'api_v1_helpers'
 
   subject(:cli)     { described_class }
-  subject(:command) { DoSnapshot::Command }
   subject(:api)     { DoSnapshot::Adapter::Digitalocean }
 
   describe '.initialize' do
@@ -28,7 +27,7 @@ describe DoSnapshot::CLI do
         stub_all_api(%w(100825 100823))
         hash_attribute_eq_no_stub(exclude: excluded_droplets, only: %w())
 
-        expect(command.send('exclude'))
+        expect(@cli.command.send('exclude'))
           .to eq excluded_droplets
       end
 
@@ -37,7 +36,7 @@ describe DoSnapshot::CLI do
         stub_all_api(selected_droplets)
         hash_attribute_eq_no_stub(only: selected_droplets)
 
-        expect(command.send('only'))
+        expect(@cli.command.send('only'))
           .to eq selected_droplets
       end
 
@@ -93,19 +92,19 @@ describe DoSnapshot::CLI do
       end
 
       it 'with mail' do
-        hash_attribute_eq(mail_options)
+        hash_attribute_eq(mail: mail_options)
       end
 
       it 'with no mail' do
-        without_hash_attribute_eq(mail_options)
+        without_hash_attribute_eq(mail: mail_options)
       end
 
       it 'with smtp' do
-        hash_attribute_eq(smtp_options)
+        hash_attribute_eq(smtp: smtp_options)
       end
 
       it 'with no smtp' do
-        without_hash_attribute_eq(smtp_options)
+        without_hash_attribute_eq(smtp: smtp_options)
       end
 
       it 'with log' do
@@ -153,9 +152,9 @@ describe DoSnapshot::CLI do
       stub_all_api
       options = default_options.merge!(:"#{name}" => value)
       @cli.options = @cli.options.merge(options)
-      @cli.snap
+      @cli.update_command
 
-      expect(command.send(name))
+      expect(@cli.command.send(name))
         .to eq value
     end
 
@@ -163,7 +162,7 @@ describe DoSnapshot::CLI do
       stub_all_api
       options = default_options.merge!(hash)
       @cli.options = @cli.options.merge(options)
-      @cli.snap
+      @cli.update_command
     end
 
     def with_hash_attribute_eq(hash)
@@ -181,11 +180,11 @@ describe DoSnapshot::CLI do
     def hash_attribute_eq_no_stub(hash)
       options = default_options.merge!(hash)
       @cli.options = @cli.options.merge(options)
-      @cli.snap
+      @cli.update_command
     end
 
     def set_api_attribute(options = { delay: delay, timeout: timeout }) # rubocop:disable Style/AccessorMethodName
-      command.send('api=', api.new(options))
+      @cli.command.send('api=', api.new(options))
     end
 
     before(:each) do

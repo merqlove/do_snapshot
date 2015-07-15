@@ -2,17 +2,63 @@
 require 'date'
 require 'pony'
 require_relative 'core_ext/hash'
+require_relative 'log'
 
 module DoSnapshot
   # Shared mailer.
   #
-  class Mail
+  module Mail
+    def mailer
+      UniversalMailer
+    end
+
+    # UniversalMailer is module to deal with singleton methods.
+    # Used to give classes access only for selected methods
+    #
+    module UniversalMailer
+      module_function
+
+      def notify
+        Mail.notify
+      end
+    end
+
     class << self
-      attr_accessor :opts
-      attr_writer :smtp, :opts_default, :smtp_default
+      include DoSnapshot::Log
+
+      attr_writer :mailer, :opts_default, :smtp_default
+
+      def load_options(options = {})
+        options.each { |key, option| send("#{key}=", option) }
+      end
+
+      def reset_options
+        @opts = opts_default
+        @smtp = smtp_default
+      end
+
+      def mailer
+        @mailer ||= Pony.method(:mail)
+      end
 
       def smtp
-        @smtp ||= {}
+        @smtp ||= smtp_default.dup
+      end
+
+      def opts
+        @opts ||= opts_default.dup
+      end
+
+      def smtp=(options)
+        options.each_pair do |key, value|
+          smtp[key.to_sym] = value
+        end if options
+      end
+
+      def opts=(options)
+        options.each_pair do |key, value|
+          opts[key.to_sym] = value
+        end if options
       end
 
       # Sending message via Hash params.
@@ -20,17 +66,10 @@ module DoSnapshot
       # Options:: --mail to:mail@somehost.com from:from@host.com --smtp address:smtp.gmail.com user_name:someuser password:somepassword
       #
       def notify
-        return unless opts
-
-        opts.symbolize_keys!
-        smtp.symbolize_keys!
-
-        opts_setup
-        smtp_setup
-
-        Log.debug 'Sending e-mail notification.'
+        setup_notify
+        log.debug 'Sending e-mail notification.'
         # Look into your inbox :)
-        Pony.mail(opts)
+        mailer.call(opts)
       end
 
       protected
@@ -52,17 +91,8 @@ module DoSnapshot
         }
       end
 
-      def opts_setup
-        opts_default.each_pair do |key, value|
-          opts[key] = value unless opts.include? key
-        end
-        opts[:body]    = "#{opts[:body]}\n\nTrace: #{DateTime.now}\n#{Log.buffer.join("\n")}"
-      end
-
-      def smtp_setup
-        smtp_default.each_pair do |key, value|
-          smtp[key] = value unless smtp.include? key
-        end
+      def setup_notify
+        opts[:body] = "#{opts[:body]}\n\nTrace: #{DateTime.now}\n#{Log.buffer.join("\n")}"
         opts[:via_options] = smtp
       end
     end

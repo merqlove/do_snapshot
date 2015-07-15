@@ -1,14 +1,17 @@
 # -*- encoding : utf-8 -*-
 require 'thor'
 require 'do_snapshot'
-require_relative 'command'
-require_relative 'mail'
 require_relative 'log'
+require_relative 'mail'
+require_relative 'command'
 
 module DoSnapshot
   # CLI is here
   #
   class CLI < Thor # rubocop:disable ClassLength
+    include DoSnapshot::Log
+    include DoSnapshot::Mail
+
     default_task :snap
 
     map %w( c s create )  => :snap
@@ -154,11 +157,10 @@ module DoSnapshot
                   desc: 'DIGITAL_OCEAN_API_KEY. if you can\'t use environment.'
 
     def snap
-      Command.load_options options, %w( log mail smtp trace digital_ocean_client_id digital_ocean_api_key digital_ocean_access_token )
-      Command.snap
+      command.snap
     rescue => e
-      Command.fail_power_off(e) if [SnapshotCreateError, DropletShutdownError].include?(e.class)
-      Log.error e.message
+      command.fail_power_off(e) if [SnapshotCreateError, DropletShutdownError].include?(e.class)
+      log.error e.message
       backtrace(e) if options.include? 'trace'
       send_error
     end
@@ -169,22 +171,30 @@ module DoSnapshot
     end
 
     no_commands do
+      def command
+        @command ||= Command.new(options,
+                                 %w( log smtp mail trace digital_ocean_client_id digital_ocean_api_key digital_ocean_access_token ))
+      end
+
+      def update_command
+        command.load_options(options,
+                             %w( log smtp mail trace digital_ocean_client_id digital_ocean_api_key digital_ocean_access_token ))
+      end
+
       def set_mailer
-        Mail.opts = options['mail']
-        Mail.smtp = options['smtp']
+        Mail.load_options(opts: options['mail'], smtp: options['smtp'])
       end
 
       def send_error
-        return unless Mail.opts
+        return unless mailer.opts
 
         Mail.opts[:subject] = 'Digital Ocean: Error.'
         Mail.opts[:body] = 'Please check your droplets.'
-        Mail.notify
+        mailer.notify
       end
 
       def set_logger
-        Log.quiet = options['quiet']
-        Log.verbose = options['trace']
+        Log.load_options(quiet: options['quiet'], verbose: options['trace'])
         # Use Thor shell
         Log.shell = shell unless options['quiet']
         init_logger if options.include?('log')
@@ -197,7 +207,7 @@ module DoSnapshot
 
       def backtrace(e)
         e.backtrace.each do |t|
-          Log.error t
+          log.error t
         end
       end
     end

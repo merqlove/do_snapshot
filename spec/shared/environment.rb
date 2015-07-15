@@ -4,6 +4,10 @@ require 'spec_helper'
 shared_context 'spec' do
   include_context 'api_helpers'
 
+  def do_not_send_email
+    allow(Pony).to receive(:deliver)
+  end
+
   let(:client_key)         { 'foo' }
   let(:api_key)            { 'bar' }
   let(:access_token)       { 'sometoken' }
@@ -11,7 +15,7 @@ shared_context 'spec' do
   let(:droplet_id)         { '100823' }
   let(:image_id)           { '5019770' }
   let(:image_id2)          { '5019903' }
-  let(:cli_keys)           { Thor::CoreExt::HashWithIndifferentAccess.new(digital_ocean_client_id: 'NOTFOO', digital_ocean_client_key: 'NOTBAR', digital_ocean_access_token: 'NOTTOK') }
+  let(:cli_keys)           { Thor::CoreExt::HashWithIndifferentAccess.new(digital_ocean_client_id: 'NOTFOO', digital_ocean_api_key: 'NOTBAR', digital_ocean_access_token: 'NOTTOK') }
   let(:snapshot_name)      { "foo_#{DateTime.now.strftime('%Y_%m_%d')}" }
   let(:default_options)    { Hash[protocol: 1, only: %w( 100823 ), exclude: %w(), keep: 3, stop: false, trace: true, clean: true, delay: 0, timeout: 600, droplets: nil, threads: []] }
   let(:no_exclude)         { [] }
@@ -90,6 +94,7 @@ shared_context 'spec' do
   end
 
   before(:each) do
+    do_not_send_email
     set_api_keys
   end
 end

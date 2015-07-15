@@ -22,7 +22,7 @@ module DoSnapshot
   #
   class DropletShutdownError < RequestActionError
     def initialize(*args)
-      Log.error "Droplet id: #{args[0]} is Failed to Power Off."
+      Log.log :error, "Droplet id: #{args[0]} is Failed to Power Off."
       super
     end
   end
@@ -32,7 +32,7 @@ module DoSnapshot
   #
   class SnapshotCreateError < RequestActionError
     def initialize(*args)
-      Log.error "Droplet id: #{args[0]} is Failed to Snapshot."
+      Log.log :error, "Droplet id: #{args[0]} is Failed to Snapshot."
       super
     end
   end
@@ -42,7 +42,7 @@ module DoSnapshot
   #
   class DropletFindError < RequestError
     def initialize(*args)
-      Log.error 'Droplet Not Found'
+      Log.log :error, 'Droplet Not Found'
       super
     end
   end
@@ -52,7 +52,7 @@ module DoSnapshot
   #
   class DropletListError < RequestError
     def initialize(*args)
-      Log.error 'Droplet Listing is failed to retrieve'
+      Log.log :error, 'Droplet Listing is failed to retrieve'
       super
     end
   end

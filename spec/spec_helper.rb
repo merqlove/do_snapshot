@@ -2,7 +2,6 @@
 require 'coveralls'
 Coveralls.wear! do
   add_filter '/spec/*'
-  add_filter '/lib/do_snapshot/mail.rb'
 end
 
 require 'do_snapshot/cli'

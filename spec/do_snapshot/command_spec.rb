@@ -6,7 +6,7 @@ describe DoSnapshot::Command do
   include_context 'uri_helpers'
   include_context 'api_v1_helpers'
 
-  subject(:cmd)     { DoSnapshot::Command }
+  subject(:cmd)     { DoSnapshot::Command.new }
   subject(:log)     { DoSnapshot::Log }
 
   describe '.snap' do
@@ -144,7 +144,6 @@ describe DoSnapshot::Command do
 
   def load_options(options = nil)
     options ||= default_options
-    cmd.send('api=', nil)
     cmd.load_options(options, [:log, :mail, :smtp, :trace, :digital_ocean_client_id, :digital_ocean_api_key])
   end
 

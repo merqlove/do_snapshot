@@ -6,10 +6,11 @@ module DoSnapshot
     # Operating with Digital Ocean.
     #
     class Abstract
-      attr_accessor :delay
-      attr_accessor :timeout
+      include DoSnapshot::Log
 
-      def initialize(options)
+      attr_accessor :delay, :timeout
+
+      def initialize(options = {})
         check_keys
         set_id
         options.each_pair do |key, option|
@@ -25,18 +26,18 @@ module DoSnapshot
 
       # Waiting for event exit
       def wait_event(id)
-        Log.debug "Event Id: #{id}"
+        log.debug "Event Id: #{id}"
         time = Time.now
         sleep(delay) until get_event_status(id, time)
       end
 
       def after_cleanup(droplet_id, droplet_name, snapshot, event)
         if !event
-          Log.error "Destroy of snapshot #{snapshot.name} for droplet id: #{droplet_id} name: #{droplet_name} is failed."
+          log.error "Destroy of snapshot #{snapshot.name} for droplet id: #{droplet_id} name: #{droplet_name} is failed."
         elsif event && !event.status.include?('OK')
-          Log.error event.message
+          log.error event.message
         else
-          Log.debug "Snapshot name: #{snapshot.name} delete requested."
+          log.debug "Snapshot name: #{snapshot.name} delete requested."
         end
       end
     end
