@@ -4,6 +4,7 @@ require 'spec_helper'
 shared_context 'api_v2_helpers' do
   let(:api_base)           { 'https://api.digitalocean.com/v2' }
   let(:droplets_api_base)  { "#{api_base}/droplets" }
+  let(:api_access_token)   { "Bearer #{access_token}" }
   let(:events_api_base)    { "#{api_base}/droplets/[droplet_id]/actions" }
   let(:actions_api_base)   { "#{api_base}/actions" }
   let(:images_api_base)    { "#{api_base}/images" }
@@ -146,6 +147,7 @@ shared_context 'api_v2_helpers' do
   #
   def stub_request_body(type, request, body)
     stub_response = stub_request(type, request)
+                      .with(headers: { 'Authorization'=>api_access_token } )
     return stub_response.with(body: body) if body
     stub_response
   end

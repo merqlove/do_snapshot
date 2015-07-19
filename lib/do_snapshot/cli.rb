@@ -3,14 +3,14 @@ require 'thor'
 require 'do_snapshot'
 require_relative 'log'
 require_relative 'mail'
+require_relative 'helpers'
 require_relative 'command'
 
 module DoSnapshot
   # CLI is here
   #
   class CLI < Thor # rubocop:disable ClassLength
-    include DoSnapshot::Log
-    include DoSnapshot::Mail
+    include DoSnapshot::Helpers
 
     default_task :snap
 
@@ -22,6 +22,7 @@ module DoSnapshot
     def initialize(*args)
       super
 
+      setup_config
       set_logger
       set_mailer
 
@@ -158,11 +159,16 @@ module DoSnapshot
 
     def snap
       command.snap
+    rescue DoSnapshot::NoTokenError, DoSnapshot::NoKeysError => e
+      logger.error e.message
+      send_error
+      fail e
     rescue => e
       command.fail_power_off(e) if [SnapshotCreateError, DropletShutdownError].include?(e.class)
-      log.error e.message
+      logger.error e.message
       backtrace(e) if options.include? 'trace'
       send_error
+      fail e
     end
 
     desc 'version, -V', 'Shows the version of the currently installed DoSnapshot gem'
@@ -172,42 +178,46 @@ module DoSnapshot
 
     no_commands do
       def command
-        @command ||= Command.new(options,
-                                 %w( log smtp mail trace digital_ocean_client_id digital_ocean_api_key digital_ocean_access_token ))
+        @command ||= Command.new(options, command_filter)
       end
 
       def update_command
-        command.load_options(options,
-                             %w( log smtp mail trace digital_ocean_client_id digital_ocean_api_key digital_ocean_access_token ))
+        command.load_options(options, command_filter)
+      end
+
+      def command_filter
+        %w( log smtp mail trace digital_ocean_client_id digital_ocean_api_key digital_ocean_access_token )
+      end
+
+      def setup_config
+        DoSnapshot.configure do |config|
+          config.logger = ::Logger.new(options['log']) if options['log']
+          config.logger_level = Logger::DEBUG if config.verbose
+          config.verbose = options['trace']
+          config.quiet = options['quiet']
+          config.mailer = Mail.new(opts: options['mail'], smtp: options['smtp'])
+        end
       end
 
       def set_mailer
-        Mail.load_options(opts: options['mail'], smtp: options['smtp'])
+        DoSnapshot.mailer = DoSnapshot.config.mailer
       end
 
       def send_error
-        return unless mailer.opts
+        return unless DoSnapshot.mailer.opts
 
-        Mail.opts[:subject] = 'Digital Ocean: Error.'
-        Mail.opts[:body] = 'Please check your droplets.'
+        DoSnapshot.mailer.opts[:subject] = 'Digital Ocean: Error.'
+        DoSnapshot.mailer.opts[:body] = 'Please check your droplets.'
         mailer.notify
       end
 
       def set_logger
-        Log.load_options(quiet: options['quiet'], verbose: options['trace'])
-        # Use Thor shell
-        Log.shell = shell unless options['quiet']
-        init_logger if options.include?('log')
-      end
-
-      def init_logger
-        Log.logger = Logger.new(options['log'])
-        Log.logger.level = Log.verbose ? Logger::DEBUG : Logger::INFO
+        DoSnapshot.logger = Log.new(shell: shell)
       end
 
       def backtrace(e)
         e.backtrace.each do |t|
-          log.error t
+          logger.error t
         end
       end
     end

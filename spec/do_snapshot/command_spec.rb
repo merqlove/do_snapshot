@@ -14,7 +14,7 @@ describe DoSnapshot::Command do
       it 'sends message' do
         expect { snap_runner }
           .not_to raise_error
-        expect(log.buffer)
+        expect(DoSnapshot.logger.buffer)
           .to include 'All operations has been finished.'
       end
     end
@@ -108,7 +108,7 @@ describe DoSnapshot::Command do
 
       expect { cmd.fail_power_off(DoSnapshot::DropletShutdownError.new(droplet_id)) }
         .not_to raise_error
-      expect(log.buffer)
+      expect(DoSnapshot.logger.buffer)
         .to include 'Power On has been requested.'
     end
 
@@ -117,9 +117,9 @@ describe DoSnapshot::Command do
 
       expect { cmd.fail_power_off(DoSnapshot::DropletShutdownError.new(droplet_id)) }
         .to raise_error
-      expect(log.buffer)
+      expect(DoSnapshot.logger.buffer)
         .to include 'Droplet id: 100823 is Failed to Power Off.'
-      expect(log.buffer)
+      expect(DoSnapshot.logger.buffer)
         .to include 'Droplet Not Found'
     end
 
@@ -130,16 +130,16 @@ describe DoSnapshot::Command do
 
       expect { cmd.fail_power_off(DoSnapshot::DropletShutdownError.new(droplet_id)) }
         .not_to raise_error
-      expect(log.buffer)
+      expect(DoSnapshot.logger.buffer)
         .to include 'Power On failed to request.'
     end
   end
 
   before(:each) do
     stub_all_api(nil, true)
-    log.buffer = %w()
-    log.verbose = false
-    log.quiet = true
+    DoSnapshot.logger.buffer = %w()
+    DoSnapshot.logger.verbose = false
+    DoSnapshot.logger.quiet = true
   end
 
   def load_options(options = nil)

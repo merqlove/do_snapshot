@@ -1,12 +1,45 @@
 # -*- encoding : utf-8 -*-
 require_relative 'do_snapshot/version'
+require_relative 'do_snapshot/configuration'
 
 # Used primary for creating snapshot's as backups for DigitalOcean
 #
 module DoSnapshot
+  class << self
+    attr_accessor :logger, :mailer
+
+    def configure
+      yield(config)
+    end
+
+    def reconfigure
+      @config = Configuration.new
+      yield(config)
+    end
+
+    def config
+      @config ||= Configuration.new
+    end
+
+    def cleanup
+      logger.close if logger
+      @logger = nil
+      @mailer = nil
+      @config = nil
+    end
+  end
+
   # Standard Request Exception. When we don't need droplet instance id.
   #
   class RequestError < StandardError; end
+
+  # Every call must have keys in environment or via params.
+  #
+  class NoKeysError < StandardError; end
+
+  # Every call must have token in environment or via params.
+  #
+  class NoTokenError < StandardError; end
 
   # Base Exception for cases when we need id for log and/or something actions.
   #
@@ -22,7 +55,7 @@ module DoSnapshot
   #
   class DropletShutdownError < RequestActionError
     def initialize(*args)
-      Log.log :error, "Droplet id: #{args[0]} is Failed to Power Off."
+      DoSnapshot.logger.error "Droplet id: #{args[0]} is Failed to Power Off."
       super
     end
   end
@@ -32,7 +65,7 @@ module DoSnapshot
   #
   class SnapshotCreateError < RequestActionError
     def initialize(*args)
-      Log.log :error, "Droplet id: #{args[0]} is Failed to Snapshot."
+      DoSnapshot.logger.error "Droplet id: #{args[0]} is Failed to Snapshot."
       super
     end
   end
@@ -42,7 +75,7 @@ module DoSnapshot
   #
   class DropletFindError < RequestError
     def initialize(*args)
-      Log.log :error, 'Droplet Not Found'
+      DoSnapshot.logger.error 'Droplet Not Found'
       super
     end
   end
@@ -52,7 +85,7 @@ module DoSnapshot
   #
   class DropletListError < RequestError
     def initialize(*args)
-      Log.log :error, 'Droplet Listing is failed to retrieve'
+      DoSnapshot.logger.error 'Droplet Listing is failed to retrieve'
       super
     end
   end

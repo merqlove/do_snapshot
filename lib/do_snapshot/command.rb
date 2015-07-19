@@ -5,19 +5,18 @@ module DoSnapshot
   # Our commands live here :)
   #
   class Command # rubocop:disable ClassLength
-    include DoSnapshot::Log
-    include DoSnapshot::Mail
+    include DoSnapshot::Helpers
 
     def initialize(*args)
       load_options(*args)
     end
 
     def snap
-      log.info 'Start performing operations'
+      logger.info 'Start performing operations'
       work_with_droplets
-      log.info 'All operations has been finished.'
+      logger.info 'All operations has been finished.'
 
-      mailer.notify if notify && !quiet
+      mailer.notify if mailer && notify && !quiet
     end
 
     def fail_power_off(e)
@@ -41,28 +40,28 @@ module DoSnapshot
     end
 
     def stop_droplet(droplet)
-      log.debug 'Shutting down droplet.'
+      logger.debug 'Shutting down droplet.'
       api.stop_droplet(droplet.id) unless droplet.status.include? 'off'
     end
 
     # Trying to create a snapshot.
     #
     def create_snapshot(droplet) # rubocop:disable MethodLength,Metrics/AbcSize
-      log.info "Start creating snapshot for droplet id: #{droplet.id} name: #{droplet.name}."
+      logger.info "Start creating snapshot for droplet id: #{droplet.id} name: #{droplet.name}."
 
       today         = DateTime.now
       name          = "#{droplet.name}_#{today.strftime('%Y_%m_%d')}"
       # noinspection RubyResolve
       snapshot_size = api.snapshots(droplet).size
 
-      log.debug 'Wait until snapshot will be created.'
+      logger.debug 'Wait until snapshot will be created.'
 
       api.create_snapshot droplet.id, name
 
       snapshot_size += 1
 
-      log.info "Snapshot name: #{name} created successfully."
-      log.info "Droplet id: #{droplet.id} name: #{droplet.name} snapshots: #{snapshot_size}."
+      logger.info "Snapshot name: #{name} created successfully."
+      logger.info "Droplet id: #{droplet.id} name: #{droplet.name} snapshots: #{snapshot_size}."
 
       # Cleanup snapshots.
       cleanup_snapshots droplet, snapshot_size if clean
@@ -99,7 +98,7 @@ module DoSnapshot
     def work_with_droplets
       load_droplets
       dispatch_droplets
-      log.debug 'Working with list of DigitalOcean droplets'
+      logger.debug 'Working with list of DigitalOcean droplets'
       thread_chain
     end
 
@@ -107,7 +106,7 @@ module DoSnapshot
     # And store into object.
     #
     def load_droplets
-      log.debug 'Loading list of DigitalOcean droplets'
+      logger.debug 'Loading list of DigitalOcean droplets'
       self.droplets = api.droplets
     end
 
@@ -142,11 +141,11 @@ module DoSnapshot
     # Droplet instance must be powered off first!
     #
     def prepare_droplet(id, name)
-      log.debug "Droplet id: #{id} name: #{name} "
+      logger.debug "Droplet id: #{id} name: #{name} "
       droplet = api.droplet id
 
       return unless droplet
-      log.info "Preparing droplet id: #{droplet.id} name: #{droplet.name} to take snapshot."
+      logger.info "Preparing droplet id: #{droplet.id} name: #{droplet.name} to take snapshot."
       return if too_much_snapshots(droplet)
       thread_runner(droplet)
     end
@@ -165,7 +164,7 @@ module DoSnapshot
 
       warning_size(droplet.id, droplet.name, size)
 
-      log.debug "Cleaning up snapshots for droplet id: #{droplet.id} name: #{droplet.name}."
+      logger.debug "Cleaning up snapshots for droplet id: #{droplet.id} name: #{droplet.name}."
 
       api.cleanup_snapshots(droplet, size - keep - 1)
     rescue => e
@@ -176,7 +175,7 @@ module DoSnapshot
     #
     def warning_size(id, name, keep)
       message = "For droplet with id: #{id} and name: #{name} the maximum number #{keep} of snapshots is reached."
-      log.warn message
+      logger.warn message
       @notify = true
     end
   end

@@ -10,6 +10,6 @@ bin_file = Pathname.new(__FILE__).realpath
 # add self to libpath
 $LOAD_PATH.unshift File.expand_path('../../lib', bin_file)
 
-require 'do_snapshot/cli'
+require 'do_snapshot/runner'
 
-DoSnapshot::CLI.start(ARGV)
+DoSnapshot::Runner.new(ARGV.dup).execute!

@@ -42,7 +42,7 @@ module DoSnapshot
         instance = droplet(id)
 
         if instance.status && instance.status.include?('active')
-          log.error 'Droplet is still running.'
+          logger.error 'Droplet is still running.'
         else
           power_on id
         end
@@ -81,7 +81,7 @@ module DoSnapshot
           event = client.images.delete(id: snapshot)
 
           unless event.is_a?(TrueClass)
-            log.debug event
+            logger.debug event
             event = false
           end
 
@@ -90,16 +90,16 @@ module DoSnapshot
       end
 
       def check_keys
-        log.debug 'Checking DigitalOcean Access Token.'
+        logger.debug 'Checking DigitalOcean Access Token.'
         %w( DIGITAL_OCEAN_ACCESS_TOKEN ).each do |key|
-          log.error "You must have #{key} in environment or set it via options." if ENV[key].blank?
+          fail DoSnapshot::NoTokenError, "You must have #{key} in environment or set it via options." if ENV[key].blank?
         end
       end
 
       # Set id's of Digital Ocean API.
       #
       def set_id
-        log.debug 'Setting DigitalOcean Access Token.'
+        logger.debug 'Setting DigitalOcean Access Token.'
         @client = ::DropletKit::Client.new(access_token: ENV['DIGITAL_OCEAN_ACCESS_TOKEN'])
       end
 
@@ -107,9 +107,9 @@ module DoSnapshot
 
       def after_cleanup(droplet_id, droplet_name, snapshot, event)
         if !event
-          log.error "Destroy of snapshot #{snapshot} for droplet id: #{droplet_id} name: #{droplet_name} is failed."
+          logger.error "Destroy of snapshot #{snapshot} for droplet id: #{droplet_id} name: #{droplet_name} is failed."
         else
-          log.debug "Snapshot: #{snapshot} delete requested."
+          logger.debug "Snapshot: #{snapshot} delete requested."
         end
       end
 
@@ -118,7 +118,7 @@ module DoSnapshot
       #
       def get_event_status(id, time)
         if (Time.now - time) > @timeout
-          log.debug "Event #{id} finished by timeout #{time}"
+          logger.debug "Event #{id} finished by timeout #{time}"
           return true
         end
 
@@ -135,9 +135,9 @@ module DoSnapshot
         # noinspection RubyResolve
         event = client.droplet_actions.power_on(droplet_id: id)
         if event.status.include?('in-progress')
-          log.info 'Power On has been requested.'
+          logger.info 'Power On has been requested.'
         else
-          log.error 'Power On failed to request.'
+          logger.error 'Power On failed to request.'
         end
       end
     end

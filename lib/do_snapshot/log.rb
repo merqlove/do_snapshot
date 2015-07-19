@@ -4,60 +4,65 @@ require 'logger'
 module DoSnapshot
   # Shared logger
   #
-  module Log
-    def log
-      UniversalLogger
+  class Log
+    attr_reader :shell
+    attr_accessor :quiet, :verbose
+    attr_writer :buffer, :instance
+
+    def initialize(options={})
+      @verbose = DoSnapshot.config.verbose
+      @quiet   = DoSnapshot.config.quiet
+      options.each { |key, option| instance_variable_set(:"@#{key}", option) }
+      instance.level = DoSnapshot.config.logger_level if instance
     end
 
-    # UniversalLogger is module to deal with singleton methods.
-    # Used to give classes access only for selected methods
-    #
-    module UniversalLogger
-      %i(info warn error debug).each do |type|
-        define_singleton_method(type) { |message| Log.log type, message }
-      end
+    def instance
+      @instance ||= DoSnapshot.config.logger
     end
 
-    class << self
-      attr_accessor :logger, :shell, :quiet, :verbose
-      attr_writer   :buffer
+    def buffer
+      @buffer ||= %w()
+    end
 
-      def load_options(options = {})
-        options.each { |key, option| send("#{key}=", option) }
-      end
+    def shell=(shell)
+      @shell = shell unless quiet
+    end
 
-      def buffer
-        @buffer ||= %w()
-      end
+    def close
+      instance.close if instance
+    end
 
-      def log(type, message)
-        buffer << message
-        logger.send(type, message) if logger
+    %w(debug info warn error fatal unknown).each_with_index do |name, severity|
+      define_method(:"#{name}") { |*args, &block| log severity, *args, &block }
+    end
 
-        say message, color(type) unless print?(type)
-      end
+    def log(severity, message = nil, progname = nil , &block)
+      buffer << message
+      instance.add(severity, message, progname, &block) if instance
 
-      protected
+      say message, color(severity) unless print?(severity)
+    end
 
-      def print?(type)
-        (type == :debug && !verbose) || quiet
-      end
+    protected
 
-      def say(message, color)
-        shell.say message, color if shell
-      end
+    def print?(type)
+      (type == :debug && !verbose) || quiet
+    end
 
-      def color(type)
-        case type
-        when :debug
-          :white
-        when :error
-          :red
-        when :warn
-          :yellow
-        else
-          :green
-        end
+    def say(message, color)
+      shell.say message, color if shell
+    end
+
+    def color(severity)
+      case severity
+      when 0
+        :white
+      when 3
+        :red
+      when 2
+        :yellow
+      else
+        :green
       end
     end
   end

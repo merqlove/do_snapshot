@@ -6,6 +6,7 @@ end
 
 require 'do_snapshot/cli'
 require 'webmock/rspec'
+require 'fileutils'
 require 'digitalocean_c'
 require_relative 'shared/api_helpers'
 require_relative 'shared/api_v1_helpers'
@@ -16,6 +17,8 @@ require 'do_snapshot/core_ext/hash'
 
 WebMock.disable_net_connect!(allow_localhost: true)
 WebMock.disable!(except: [:net_http])
+
+Dir.glob(::File.expand_path('../support/*.rb', __FILE__)).each { |f| require_relative f }
 
 RSpec.configure do |config|
   # Pretty tests
@@ -33,5 +36,3 @@ end
 def fixture(fixture_name)
   Pathname.new(project_path + '/spec/fixtures/digitalocean/').join("#{fixture_name}.json").read
 end
-
-Dir[File.expand_path(File.join(File.dirname(__FILE__), 'support', '**', '*.rb'))].each { |f| require f }

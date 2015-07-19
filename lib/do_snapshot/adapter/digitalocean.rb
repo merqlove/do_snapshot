@@ -36,7 +36,7 @@ module DoSnapshot
         instance = droplet(id)
 
         if instance.status.include? 'active'
-          log.error 'Droplet is still running.'
+          logger.error 'Droplet is still running.'
         else
           power_on id
         end
@@ -85,10 +85,9 @@ module DoSnapshot
       end
 
       def check_keys
-        log.debug 'Checking DigitalOcean Id\'s.'
-        %w( DIGITAL_OCEAN_CLIENT_ID DIGITAL_OCEAN_API_KEY ).each do |key|
-          log.error "You must have #{key} in environment or set it via options." if ENV[key].blank?
-        end
+        logger.debug 'Checking DigitalOcean Id\'s.'
+        errors = %w( DIGITAL_OCEAN_CLIENT_ID DIGITAL_OCEAN_API_KEY ).map { |key| key if ENV[key].blank? }.compact
+        fail DoSnapshot::NoKeysError, "You must have #{errors.join(', ')} in environment or set it via options." if errors.size > 0
       end
 
       protected
@@ -96,7 +95,7 @@ module DoSnapshot
       # Set id's of Digital Ocean API.
       #
       def set_id
-        log.debug 'Setting DigitalOcean Id\'s.'
+        logger.debug 'Setting DigitalOcean Id\'s.'
         ::DigitaloceanC.client_id = ENV['DIGITAL_OCEAN_CLIENT_ID']
         ::DigitaloceanC.api_key = ENV['DIGITAL_OCEAN_API_KEY']
       end
@@ -115,7 +114,7 @@ module DoSnapshot
 
       def timeout?(id, time)
         return false unless (Time.now - time) > @timeout
-        log.debug "Event #{id} finished by timeout #{time}"
+        logger.debug "Event #{id} finished by timeout #{time}"
         true
       end
 
@@ -126,9 +125,9 @@ module DoSnapshot
         event = ::DigitaloceanC::Droplet.power_on(id)
         case event && event.status
         when 'OK'
-          log.info 'Power On has been requested.'
+          logger.info 'Power On has been requested.'
         else
-          log.error 'Power On failed to request.'
+          logger.error 'Power On failed to request.'
         end
       end
     end

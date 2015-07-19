@@ -5,7 +5,6 @@ describe DoSnapshot::Adapter::Abstract do
   include_context 'spec'
 
   subject(:api) { described_class }
-  subject(:log) { DoSnapshot::Log }
 
   describe '.initialize' do
     describe '#delay' do
@@ -19,11 +18,5 @@ describe DoSnapshot::Adapter::Abstract do
       let(:instance) { api.new(timeout: timeout) }
       it('with custom timeout') { expect(instance.timeout).to eq timeout  }
     end
-  end
-
-  before(:each) do
-    log.buffer = %w()
-    log.verbose = false
-    log.quiet = true
   end
 end

@@ -41,7 +41,7 @@ describe DoSnapshot::Adapter::Digitalocean do
 
         expect { instance.droplet(droplet_id) }
           .to raise_error
-        expect(log.buffer)
+        expect(DoSnapshot.logger.buffer)
           .to include 'Droplet Not Found'
 
         expect(a_request(:get, droplet_url))
@@ -63,7 +63,7 @@ describe DoSnapshot::Adapter::Digitalocean do
         stub_droplets_fail
 
         expect { instance.droplets }.to raise_error
-        expect(log.buffer)
+        expect(DoSnapshot.logger.buffer)
           .to include 'Droplet Listing is failed to retrieve'
 
         expect(a_request(:get, droplets_uri))
@@ -77,7 +77,7 @@ describe DoSnapshot::Adapter::Digitalocean do
         stub_droplet_start(droplet_id)
 
         instance.start_droplet(droplet_id)
-        expect(log.buffer).to include 'Power On has been requested.'
+        expect(DoSnapshot.logger.buffer).to include 'Power On has been requested.'
 
         expect(a_request(:get, droplet_start_url))
           .to have_been_made
@@ -90,7 +90,7 @@ describe DoSnapshot::Adapter::Digitalocean do
 
         expect { instance.start_droplet(droplet_id) }
           .not_to raise_error
-        expect(log.buffer)
+        expect(DoSnapshot.logger.buffer)
           .to include 'Droplet is still running.'
 
         expect(a_request(:get, droplet_url))
@@ -126,7 +126,7 @@ describe DoSnapshot::Adapter::Digitalocean do
 
         expect { instance.stop_droplet(droplet_id) }
           .to raise_error
-        expect(log.buffer)
+        expect(DoSnapshot.logger.buffer)
           .to include 'Droplet id: 100823 is Failed to Power Off.'
 
         expect(a_request(:get, droplet_stop_url))
@@ -181,7 +181,7 @@ describe DoSnapshot::Adapter::Digitalocean do
         droplet = instance.droplet(droplet_id)
         expect { instance.cleanup_snapshots(droplet, 1) }
           .not_to raise_error
-        expect(log.buffer)
+        expect(DoSnapshot.logger.buffer)
           .to include 'Snapshot name: mrcr.ru_2014_07_19 delete requested.'
 
         expect(a_request(:get, droplet_url))
@@ -200,7 +200,7 @@ describe DoSnapshot::Adapter::Digitalocean do
         droplet = instance.droplet(droplet_id)
         expect { instance.cleanup_snapshots(droplet, 1) }
           .not_to raise_error
-        expect(log.buffer)
+        expect(DoSnapshot.logger.buffer)
           .to include 'Some Message'
 
         expect(a_request(:get, droplet_url))
@@ -211,11 +211,5 @@ describe DoSnapshot::Adapter::Digitalocean do
           .to have_been_made
       end
     end
-  end
-
-  before(:each) do
-    log.buffer = %w()
-    log.verbose = false
-    log.quiet = true
   end
 end

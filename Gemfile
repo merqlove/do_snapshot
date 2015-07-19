@@ -9,6 +9,7 @@ group :development do
 end
 
 group :test, :development do
+  gem 'aruba', '~> 0.8'
   gem 'json', '~> 1.8.1'
   gem 'rake', '>= 0.8.7'
   gem 'rspec', '~> 3.1.0'
