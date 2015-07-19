@@ -146,8 +146,7 @@ shared_context 'api_v2_helpers' do
   # Body Helpers
   #
   def stub_request_body(type, request, body)
-    stub_response = stub_request(type, request)
-                      .with(headers: { 'Authorization'=>api_access_token } )
+    stub_response = stub_request(type, request).with(headers: { 'Authorization' => api_access_token })
     return stub_response.with(body: body) if body
     stub_response
   end

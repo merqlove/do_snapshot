@@ -160,15 +160,10 @@ module DoSnapshot
     def snap
       command.snap
     rescue DoSnapshot::NoTokenError, DoSnapshot::NoKeysError => e
-      logger.error e.message
-      send_error
-      fail e
+      error_simple(e)
     rescue => e
       command.fail_power_off(e) if [SnapshotCreateError, DropletShutdownError].include?(e.class)
-      logger.error e.message
-      backtrace(e) if options.include? 'trace'
-      send_error
-      fail e
+      error_with_backtrace(e)
     end
 
     desc 'version, -V', 'Shows the version of the currently installed DoSnapshot gem'
@@ -177,6 +172,19 @@ module DoSnapshot
     end
 
     no_commands do
+      def error_simple(e)
+        logger.error e.message
+        send_error
+        fail e
+      end
+
+      def error_with_backtrace(e)
+        logger.error e.message
+        backtrace(e) if options.include? 'trace'
+        send_error
+        fail e
+      end
+
       def command
         @command ||= Command.new(options, command_filter)
       end
@@ -189,7 +197,7 @@ module DoSnapshot
         %w( log smtp mail trace digital_ocean_client_id digital_ocean_api_key digital_ocean_access_token )
       end
 
-      def setup_config
+      def setup_config # rubocop:disable Metrics/AbcSize
         DoSnapshot.configure do |config|
           config.logger = ::Logger.new(options['log']) if options['log']
           config.logger_level = Logger::DEBUG if config.verbose

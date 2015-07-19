@@ -181,7 +181,7 @@ RSpec.describe DoSnapshot::Runner, type: :aruba do
 
               expect(last_command).to have_exit_status(1)
               expect(all_stdout)
-                  .to include(t_wrong_keys('digital_ocean_access_token'))
+                .to include(t_wrong_keys('digital_ocean_access_token'))
             end
           end
         end
@@ -208,7 +208,7 @@ RSpec.describe DoSnapshot::Runner, type: :aruba do
 
               expect(last_command).to have_exit_status(1)
               expect(all_stdout)
-                  .to include(t_wrong_keys(%w( digital_ocean_client_id digital_ocean_api_key ).join(', ')))
+                .to include(t_wrong_keys(%w( digital_ocean_client_id digital_ocean_api_key ).join(', ')))
             end
           end
         end
@@ -229,7 +229,7 @@ RSpec.describe DoSnapshot::Runner, type: :aruba do
       it 'shows a help message' do
         run 'do_snapshot help'
         expect(all_stdout)
-            .to match('Commands:')
+          .to match('Commands:')
       end
 
       it 'shows a help message for specific commands' do
@@ -243,7 +243,7 @@ RSpec.describe DoSnapshot::Runner, type: :aruba do
 
           expect(last_command).to have_exit_status(0)
           expect(all_stdout)
-              .not_to include(t_wrong_keys(%w( digital_ocean_client_id digital_ocean_api_key ).join(', ')))
+            .not_to include(t_wrong_keys(%w( digital_ocean_client_id digital_ocean_api_key ).join(', ')))
         end
       end
     end
@@ -305,14 +305,14 @@ RSpec.describe DoSnapshot::Runner, type: :aruba do
     end
   end
 
-  def options_line(options = default_options_cli)
+  def options_line(options = default_options_cli) # rubocop:disable Metrics/PerceivedComplexity,Metrics/MethodLength,Metrics/AbcSize,Metrics/CyclomaticComplexity
     options.map do |key, value|
       if value.is_a?(String)
         "--#{key}=#{value}"
       elsif value.is_a?(FalseClass)
         "--no-#{key}"
       elsif value.is_a?(Numeric)
-        "--#{key}=#{value.to_s}"
+        "--#{key}=#{value}"
       elsif value.is_a?(Array)
         if value.size > 0
           "--#{key}=#{value.join(' ')}"
@@ -321,7 +321,7 @@ RSpec.describe DoSnapshot::Runner, type: :aruba do
         end
       elsif value.is_a?(Hash)
         if value.size > 0
-          items = value.map{ |param, setting| "#{param}:#{setting}" }.join(' ')
+          items = value.map { |param, setting| "#{param}:#{setting}" }.join(' ')
           "--#{key}=#{items}"
         else
           nil

@@ -9,7 +9,7 @@ module DoSnapshot
     attr_accessor :quiet, :verbose
     attr_writer :buffer, :instance
 
-    def initialize(options={})
+    def initialize(options = {})
       @verbose = DoSnapshot.config.verbose
       @quiet   = DoSnapshot.config.quiet
       options.each { |key, option| instance_variable_set(:"@#{key}", option) }
@@ -36,7 +36,7 @@ module DoSnapshot
       define_method(:"#{name}") { |*args, &block| log severity, *args, &block }
     end
 
-    def log(severity, message = nil, progname = nil , &block)
+    def log(severity, message = nil, progname = nil, &block)
       buffer << message
       instance.add(severity, message, progname, &block) if instance
 

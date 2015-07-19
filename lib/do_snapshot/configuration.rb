@@ -1,4 +1,6 @@
 module DoSnapshot
+  # Configuration class. Used to share config across application.
+  #
   class Configuration
     attr_accessor :logger
     attr_accessor :logger_level

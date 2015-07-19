@@ -8,35 +8,35 @@ shared_context 'spec' do
     allow(Pony).to receive(:deliver) { |mail| mail }
   end
 
-  let(:client_key)         { 'foo' }
-  let(:api_key)            { 'bar' }
-  let(:access_token)       { 'sometoken' }
-  let(:event_id)           { '7501' }
-  let(:droplet_id)         { '100823' }
-  let(:image_id)           { '5019770' }
-  let(:image_id2)          { '5019903' }
-  let(:cli_env_nil)        { Hash['DIGITAL_OCEAN_CLIENT_ID' => nil, 'DIGITAL_OCEAN_API_KEY' => nil, 'DIGITAL_OCEAN_ACCESS_TOKEN' => nil] }
-  let(:cli_keys)           { Thor::CoreExt::HashWithIndifferentAccess.new(digital_ocean_client_id: client_key, digital_ocean_api_key: api_key, digital_ocean_access_token: access_token) }
-  let(:cli_keys_other)     { Thor::CoreExt::HashWithIndifferentAccess.new(digital_ocean_client_id: 'NOTFOO', digital_ocean_api_key: 'NOTBAR', digital_ocean_access_token: 'NOTTOK') }
-  let(:snapshot_name)      { "foo_#{DateTime.now.strftime('%Y_%m_%d')}" }
-  let(:default_options)    { Hash[protocol: 1, only: %w( 100823 ), exclude: %w(), keep: 3, stop: false, trace: true, clean: true, delay: 0, timeout: 600, droplets: nil, threads: []] }
-  let(:default_options_cli){ default_options.reject { |key, _| %w( droplets threads ).include?(key.to_s) } }
-  let(:no_exclude)         { [] }
-  let(:exclude)            { %w( 100824 100825 ) }
-  let(:no_only)            { [] }
-  let(:only)               { %w( 100823 100824 ) }
-  let(:stop)               { true }
-  let(:no_stop)            { false }
-  let(:quiet)              { true }
-  let(:no_quiet)           { false }
-  let(:clean)              { true }
-  let(:no_clean)           { false }
-  let(:timeout)            { 600 }
-  let(:delay)              { 0 }
-  let(:log_path)           { "#{project_path}/log/test.log" }
-  let(:mail_options)       { Thor::CoreExt::HashWithIndifferentAccess.new(to: 'mail@somehost.com', from: 'from@host.com') }
-  let(:smtp_options)       { Thor::CoreExt::HashWithIndifferentAccess.new(address: 'smtp.gmail.com', port: '25', user_name: 'someuser', password: 'somepassword') }
-  let(:log)                { Thor::CoreExt::HashWithIndifferentAccess.new(log: log_path) }
+  let(:client_key)          { 'foo' }
+  let(:api_key)             { 'bar' }
+  let(:access_token)        { 'sometoken' }
+  let(:event_id)            { '7501' }
+  let(:droplet_id)          { '100823' }
+  let(:image_id)            { '5019770' }
+  let(:image_id2)           { '5019903' }
+  let(:cli_env_nil)         { Hash['DIGITAL_OCEAN_CLIENT_ID' => nil, 'DIGITAL_OCEAN_API_KEY' => nil, 'DIGITAL_OCEAN_ACCESS_TOKEN' => nil] }
+  let(:cli_keys)            { Thor::CoreExt::HashWithIndifferentAccess.new(digital_ocean_client_id: client_key, digital_ocean_api_key: api_key, digital_ocean_access_token: access_token) }
+  let(:cli_keys_other)      { Thor::CoreExt::HashWithIndifferentAccess.new(digital_ocean_client_id: 'NOTFOO', digital_ocean_api_key: 'NOTBAR', digital_ocean_access_token: 'NOTTOK') }
+  let(:snapshot_name)       { "foo_#{DateTime.now.strftime('%Y_%m_%d')}" }
+  let(:default_options)     { Hash[protocol: 1, only: %w( 100823 ), exclude: %w(), keep: 3, stop: false, trace: true, clean: true, delay: 0, timeout: 600, droplets: nil, threads: []] }
+  let(:default_options_cli) { default_options.reject { |key, _| %w( droplets threads ).include?(key.to_s) } }
+  let(:no_exclude)          { [] }
+  let(:exclude)             { %w( 100824 100825 ) }
+  let(:no_only)             { [] }
+  let(:only)                { %w( 100823 100824 ) }
+  let(:stop)                { true }
+  let(:no_stop)             { false }
+  let(:quiet)               { true }
+  let(:no_quiet)            { false }
+  let(:clean)               { true }
+  let(:no_clean)            { false }
+  let(:timeout)             { 600 }
+  let(:delay)               { 0 }
+  let(:log_path)            { "#{project_path}/log/test.log" }
+  let(:mail_options)        { Thor::CoreExt::HashWithIndifferentAccess.new(to: 'mail@somehost.com', from: 'from@host.com') }
+  let(:smtp_options)        { Thor::CoreExt::HashWithIndifferentAccess.new(address: 'smtp.gmail.com', port: '25', user_name: 'someuser', password: 'somepassword') }
+  let(:log)                 { Thor::CoreExt::HashWithIndifferentAccess.new(log: log_path) }
 
   def stub_all_api(droplets = nil, active = false)
     drops = []
