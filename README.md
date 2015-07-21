@@ -185,6 +185,10 @@ For working mailer you need to set e-mail settings via run options.
     
       You can optionally specify parameters to select or exclude some droplets.   
 
+## Donating:
+Support this project and others by [merqlove](https://gratipay.com/~merqlove/) via [gratipay](https://gratipay.com/~merqlove/).  
+[![Support via Gratipay](https://cdn.rawgit.com/gratipay/gratipay-badge/2.3.0/dist/gratipay.png)](https://gratipay.com/merqlove/)
+
 ## Dependencies:
 
 - [Thor](https://github.com/erikhuda/thor) for CLI.
