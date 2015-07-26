@@ -141,7 +141,7 @@ module DoSnapshot
     # Droplet instance must be powered off first!
     #
     def prepare_droplet(id, name)
-      logger.debug "Droplet id: #{id} name: #{name} "
+      logger.debug "Droplet id: #{id} name: #{name}\n"
       droplet = api.droplet id
 
       return unless droplet
