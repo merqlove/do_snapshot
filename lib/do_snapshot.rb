@@ -1,4 +1,6 @@
 # -*- encoding : utf-8 -*-
+require 'active_support/multibyte' # ActiveSupport 3.2 & Mail gem fix to work together.
+
 require_relative 'do_snapshot/version'
 require_relative 'do_snapshot/configuration'
 
