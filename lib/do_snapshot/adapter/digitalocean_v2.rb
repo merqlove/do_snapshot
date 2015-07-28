@@ -41,11 +41,9 @@ module DoSnapshot
         # noinspection RubyResolve
         instance = droplet(id)
 
-        if instance.status && instance.status.include?('active')
-          logger.error 'Droplet is still running.'
-        else
-          power_on id
-        end
+        return power_on(id) unless instance.status && instance.status.include?('active')
+
+        logger.error "Droplet #{id} is still running. Skipping."
       end
 
       # Power Off request for Droplet
@@ -68,8 +66,6 @@ module DoSnapshot
 
         # noinspection RubyResolve
         wait_event(event.id)
-      rescue => e
-        raise e.message, e.backtrace
       end
 
       # Cleanup our snapshots.
@@ -117,16 +113,11 @@ module DoSnapshot
       # Before snapshot we to know that machine has powered off.
       #
       def get_event_status(id, time)
-        if (Time.now - time) > @timeout
-          logger.debug "Event #{id} finished by timeout #{time}"
-          return true
-        end
+        return true if timeout?(id, time)
 
         action = client.actions.find(id: id)
         # noinspection RubyResolve,RubyResolve
         action.status.include?('completed') ? true : false
-      rescue => e
-        raise e.message, e.backtrace
       end
 
       # Request Power On for droplet

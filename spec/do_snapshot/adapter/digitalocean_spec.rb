@@ -91,7 +91,7 @@ describe DoSnapshot::Adapter::Digitalocean do
         expect { instance.start_droplet(droplet_id) }
           .not_to raise_error
         expect(DoSnapshot.logger.buffer)
-          .to include 'Droplet is still running.'
+          .to include "Droplet #{droplet_id} is still running. Skipping."
 
         expect(a_request(:get, droplet_url))
           .to have_been_made

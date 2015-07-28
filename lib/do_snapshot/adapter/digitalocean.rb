@@ -35,11 +35,9 @@ module DoSnapshot
         # noinspection RubyResolve
         instance = droplet(id)
 
-        if instance.status.include? 'active'
-          logger.error 'Droplet is still running.'
-        else
-          power_on id
-        end
+        return power_on(id) unless instance.status.include? 'active'
+
+        logger.error "Droplet #{id} is still running. Skipping."
       end
 
       # Power Off request for Droplet
@@ -110,12 +108,6 @@ module DoSnapshot
         fail event.message unless event.status.include?('OK')
         # noinspection RubyResolve,RubyResolve
         event.event.percentage && event.event.percentage.include?('100') ? true : false
-      end
-
-      def timeout?(id, time)
-        return false unless (Time.now - time) > @timeout
-        logger.debug "Event #{id} finished by timeout #{time}"
-        true
       end
 
       # Request Power On for droplet

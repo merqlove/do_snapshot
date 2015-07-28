@@ -40,6 +40,12 @@ module DoSnapshot
           logger.debug "Snapshot name: #{snapshot.name} delete requested."
         end
       end
+
+      def timeout?(id, time)
+        return false unless (Time.now - time) > @timeout
+        logger.debug "Event #{id} finished by timeout #{time}"
+        true
+      end
     end
   end
 end

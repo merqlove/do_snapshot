@@ -42,6 +42,10 @@ module DoSnapshot
     def stop_droplet(droplet)
       logger.debug 'Shutting down droplet.'
       api.stop_droplet(droplet.id) unless droplet.status.include? 'off'
+      true
+    rescue => e
+      logger.error e.message
+      false
     end
 
     # Trying to create a snapshot.
@@ -132,8 +136,7 @@ module DoSnapshot
     #
     def thread_runner(droplet)
       threads << Thread.new do
-        stop_droplet droplet
-        create_snapshot droplet
+        create_snapshot droplet if stop_droplet(droplet)
       end
     end
 

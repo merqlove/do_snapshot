@@ -52,7 +52,9 @@ describe DoSnapshot::Command do
         stub_droplet_stop_fail(droplet_id)
 
         expect { snap_runner }
-          .to raise_error(DoSnapshot::DropletShutdownError)
+          .not_to raise_error
+        expect(DoSnapshot.logger.buffer)
+          .to include "Droplet id: #{droplet_id} is Failed to Power Off."
       end
     end
 
@@ -64,6 +66,17 @@ describe DoSnapshot::Command do
           .to raise_error(DoSnapshot::SnapshotCreateError)
       end
     end
+
+    context 'when droplet not stopped' do
+      it 'skipped droplet' do
+        stub_droplet_stop_fail(droplet_id)
+
+        expect { snap_runner }
+          .not_to raise_error
+        expect(DoSnapshot.logger.buffer)
+          .to include "Droplet id: #{droplet_id} is Failed to Power Off."
+      end
+    end
   end
 
   describe '.stop_droplet' do
@@ -72,7 +85,9 @@ describe DoSnapshot::Command do
       load_options
       droplet = cmd.api.droplet droplet_id
       expect { cmd.stop_droplet(droplet) }
-        .to raise_error(DoSnapshot::DropletShutdownError)
+        .not_to raise_error
+      expect(cmd.stop_droplet(droplet))
+        .to be_falsey
     end
 
     it 'when stopped' do
@@ -81,6 +96,8 @@ describe DoSnapshot::Command do
       droplet = cmd.api.droplet droplet_id
       expect { cmd.stop_droplet(droplet) }
         .not_to raise_error
+      expect(cmd.stop_droplet(droplet))
+        .to be_truthy
     end
   end
 
