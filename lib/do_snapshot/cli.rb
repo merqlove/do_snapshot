@@ -203,7 +203,7 @@ module DoSnapshot
           config.logger_level = Logger::DEBUG if config.verbose
           config.verbose = options['trace']
           config.quiet = options['quiet']
-          config.mailer = Mail.new(opts: options['mail'], smtp: options['smtp'])
+          config.mailer = Mail.new(opts: options['mail'], smtp: options['smtp']) if options['mail']
         end
       end
 

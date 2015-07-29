@@ -49,7 +49,7 @@ module DoSnapshot
         fail event.message unless event.status.include? 'OK'
 
         # noinspection RubyResolve
-        wait_event(event.event_id)
+        wait_shutdown(id)
       rescue => e
         raise DropletShutdownError.new(id), e.message, e.backtrace
       end

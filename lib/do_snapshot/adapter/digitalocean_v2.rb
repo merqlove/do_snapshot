@@ -50,10 +50,10 @@ module DoSnapshot
       #
       def stop_droplet(id)
         # noinspection RubyResolve,RubyResolve
-        event = client.droplet_actions.power_off(droplet_id: id)
+        client.droplet_actions.power_off(droplet_id: id)
 
         # noinspection RubyResolve
-        wait_event(event.id)
+        wait_shutdown(id)
       rescue => e
         raise DropletShutdownError.new(id), e.message, e.backtrace
       end

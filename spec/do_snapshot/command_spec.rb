@@ -18,6 +18,7 @@ RSpec.describe DoSnapshot::Command do
     describe '.snap' do
       context 'when success' do
         it 'sends message' do
+          stub_droplet_inactive(droplet_id)
           expect { snap_runner }
             .not_to raise_error
           expect(DoSnapshot.logger.buffer)
@@ -27,6 +28,7 @@ RSpec.describe DoSnapshot::Command do
 
       context 'when snapshot not cleanup' do
         it 'sends message' do
+          stub_droplet_inactive(droplet_id)
           stub_image_destroy_fail(image_id)
           stub_image_destroy_fail(image_id2)
 
@@ -98,6 +100,7 @@ RSpec.describe DoSnapshot::Command do
       end
 
       it 'when stopped' do
+        stub_droplet_inactive(droplet_id)
         stub_droplet_stop(droplet_id)
         load_options
         droplet = cmd.api.droplet droplet_id

@@ -134,7 +134,7 @@ RSpec.describe DoSnapshot::Runner, type: :aruba do
           hash_attribute_eq
 
           expect(last_command).to have_exit_status(0)
-          expect(all_stdout).to include(t_sending_email)
+          expect(all_stdout).not_to include(t_sending_email)
         end
 
         it 'with smtp' do
