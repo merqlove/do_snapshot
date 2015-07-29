@@ -24,6 +24,16 @@ RSpec.describe DoSnapshot do
     end
   end
 
+  describe DoSnapshot::EventError do
+    subject(:error) { described_class }
+
+    it 'should work' do
+      error.new(event_id)
+      expect(DoSnapshot.logger.buffer)
+        .to include "Event id: #{event_id} is failed!"
+    end
+  end
+
   describe DoSnapshot::DropletListError do
     subject(:error) { described_class }
 
