@@ -64,7 +64,7 @@ module DoSnapshot
         # noinspection RubyResolve,RubyResolve
         event = client.droplet_actions.snapshot(droplet_id: id, name: name)
 
-        fail DoSnapshot::SnapshotCreateError.new(id), e.name unless event && event.respond_to?(:id)
+        fail DoSnapshot::SnapshotCreateError.new(id), name unless event && event.respond_to?(:id)
 
         # noinspection RubyResolve
         wait_event(event.id)
