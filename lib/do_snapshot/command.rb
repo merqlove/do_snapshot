@@ -51,6 +51,8 @@ module DoSnapshot
     # Trying to create a snapshot.
     #
     def create_snapshot(droplet) # rubocop:disable MethodLength,Metrics/AbcSize
+      fail DropletPowerError.new(droplet.id) unless api.inactive?(droplet.id)
+
       logger.info "Start creating snapshot for droplet id: #{droplet.id} name: #{droplet.name}."
 
       today         = DateTime.now
@@ -73,6 +75,8 @@ module DoSnapshot
       case e.class.to_s
       when 'DoSnapshot::SnapshotCleanupError'
         raise e.class, e.message, e.backtrace
+      when 'DoSnapshot::DropletPowerError'
+        return
       else
         raise SnapshotCreateError.new(droplet.id), e.message, e.backtrace
       end

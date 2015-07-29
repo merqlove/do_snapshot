@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 require 'spec_helper'
 
-describe DoSnapshot::Adapter::DigitaloceanV2 do
+RSpec.describe DoSnapshot::Adapter::DigitaloceanV2 do
   include_context 'spec'
   include_context 'api_v2_helpers'
 
@@ -42,7 +42,7 @@ describe DoSnapshot::Adapter::DigitaloceanV2 do
         stub_droplet_fail(droplet_id)
 
         expect { instance.droplet(droplet_id) }
-          .to raise_error
+          .to raise_error(DoSnapshot::DropletFindError)
         expect(DoSnapshot.logger.buffer)
           .to include 'Droplet Not Found'
 
@@ -64,7 +64,7 @@ describe DoSnapshot::Adapter::DigitaloceanV2 do
       it 'with error' do
         stub_droplets_fail
 
-        expect { instance.droplets }.to raise_error
+        expect { instance.droplets }.to raise_error(DoSnapshot::DropletListError)
         expect(DoSnapshot.logger.buffer)
           .to include 'Droplet Listing is failed to retrieve'
 
@@ -103,7 +103,7 @@ describe DoSnapshot::Adapter::DigitaloceanV2 do
         stub_droplet_fail(droplet_id)
 
         expect { instance.start_droplet(droplet_id) }
-          .to raise_error
+          .to raise_error(DoSnapshot::DropletFindError)
 
         expect(a_request(:get, droplet_url))
           .to have_been_made
@@ -127,7 +127,7 @@ describe DoSnapshot::Adapter::DigitaloceanV2 do
         stub_droplet_stop_fail(droplet_id)
 
         expect { instance.stop_droplet(droplet_id) }
-          .to raise_error
+          .to raise_error(DoSnapshot::DropletShutdownError)
         expect(DoSnapshot.logger.buffer)
           .to include 'Droplet id: 100823 is Failed to Power Off.'
 
@@ -154,7 +154,7 @@ describe DoSnapshot::Adapter::DigitaloceanV2 do
         stub_droplet_snapshot_fail(droplet_id, snapshot_name)
 
         expect { instance.create_snapshot(droplet_id, snapshot_name) }
-          .to raise_error
+          .to raise_error(DoSnapshot::SnapshotCreateError)
 
         expect(a_request(:post, droplet_snapshot_url))
           .to have_been_made
@@ -165,12 +165,28 @@ describe DoSnapshot::Adapter::DigitaloceanV2 do
         stub_event_fail(event_id)
 
         expect { instance.create_snapshot(droplet_id, snapshot_name) }
-          .to raise_error
+          .to raise_error(DoSnapshot::EventError)
 
         expect(a_request(:post, droplet_snapshot_url))
           .to have_been_made
         expect(a_request(:get, action_find_url))
           .to have_been_made
+      end
+    end
+
+    describe '.inactive?' do
+      it 'when inactive' do
+        stub_droplet_inactive(droplet_id)
+
+        expect(instance.inactive?(droplet_id))
+          .to be_truthy
+      end
+
+      it 'when active' do
+        stub_droplet(droplet_id)
+
+        expect(instance.inactive?(droplet_id))
+          .to be_falsey
       end
     end
 

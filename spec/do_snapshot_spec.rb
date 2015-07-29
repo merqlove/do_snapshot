@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 require 'spec_helper'
 
-describe DoSnapshot do
+RSpec.describe DoSnapshot do
   include_context 'spec'
 
   describe DoSnapshot::DropletFindError do
@@ -11,6 +11,16 @@ describe DoSnapshot do
       error.new
       expect(DoSnapshot.logger.buffer)
         .to include 'Droplet Not Found'
+    end
+  end
+
+  describe DoSnapshot::DropletPowerError do
+    subject(:error) { described_class }
+
+    it 'should work' do
+      error.new(droplet_id)
+      expect(DoSnapshot.logger.buffer)
+        .to include "Droplet id: #{droplet_id} must be Powered Off!"
     end
   end
 

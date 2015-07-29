@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe DoSnapshot::Configuration do
+RSpec.describe DoSnapshot::Configuration do
   subject(:cli) { described_class }
 
   it { expect(cli.new).to respond_to(:logger) }

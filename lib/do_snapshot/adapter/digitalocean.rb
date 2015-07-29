@@ -61,13 +61,21 @@ module DoSnapshot
         event = ::DigitaloceanC::Droplet.snapshot(id, name: name)
 
         if !event
-          fail 'Something wrong with DigitalOcean or with your connection :)'
+          fail DoSnapshot::SnapshotCreateError.new(id), 'Something wrong with DigitalOcean or with your connection :)'
         elsif event && !event.status.include?('OK')
-          fail event.message
+          fail DoSnapshot::SnapshotCreateError.new(id), event.message
         end
 
         # noinspection RubyResolve
         wait_event(event.event_id)
+      end
+
+      # Checking if droplet is powered off.
+      #
+      def inactive?(id)
+        instance = droplet(id)
+
+        instance.status.include?('off')
       end
 
       # Cleanup our snapshots.
@@ -105,7 +113,7 @@ module DoSnapshot
         return true if timeout?(id, time)
 
         event = ::DigitaloceanC::Event.find(id)
-        fail event.message unless event.status.include?('OK')
+        fail DoSnapshot::EventError.new(id), event.message unless event.status.include?('OK')
         # noinspection RubyResolve,RubyResolve
         event.event.percentage && event.event.percentage.include?('100') ? true : false
       end

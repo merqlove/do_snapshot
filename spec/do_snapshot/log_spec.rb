@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 require 'spec_helper'
 
-describe DoSnapshot::Log do
+RSpec.describe DoSnapshot::Log do
   include_context 'spec'
 
   subject(:log) { described_class }

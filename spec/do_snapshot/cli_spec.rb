@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 require 'spec_helper'
 
-describe DoSnapshot::CLI do
+RSpec.describe DoSnapshot::CLI do
   include_context 'spec'
   include_context 'api_v1_helpers'
 

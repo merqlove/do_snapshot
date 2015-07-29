@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 require 'spec_helper'
 
-describe DoSnapshot::Mail do
+RSpec.describe DoSnapshot::Mail do
   include_context 'spec'
 
   subject(:mail) { described_class }

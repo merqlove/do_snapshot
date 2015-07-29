@@ -82,6 +82,24 @@ module DoSnapshot
     end
   end
 
+  # When Droplet not Powered Off!
+  #
+  class DropletPowerError < RequestError
+    def initialize(*args)
+      DoSnapshot.logger.error "Droplet id: #{args[0]} must be Powered Off!"
+      super
+    end
+  end
+
+  # When Event is failed!
+  #
+  class EventError < RequestError
+    def initialize(*args)
+      DoSnapshot.logger.error "Event id: #{args[0]} is failed!"
+      super
+    end
+  end
+
   # When Digital Ocean API cannot retrieve list of droplets.
   # Sometimes it connection problem or DigitalOcean API maintenance.
   #

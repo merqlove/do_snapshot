@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 require 'spec_helper'
 
-describe DoSnapshot::Adapter::Abstract do
+RSpec.describe DoSnapshot::Adapter::Abstract do
   include_context 'spec'
 
   subject(:api) { described_class }
