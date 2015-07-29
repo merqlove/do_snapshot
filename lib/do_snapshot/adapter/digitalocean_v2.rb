@@ -64,7 +64,7 @@ module DoSnapshot
         # noinspection RubyResolve,RubyResolve
         event = client.droplet_actions.snapshot(droplet_id: id, name: name)
 
-        fail DoSnapshot::SnapshotCreateError.new(id) unless event && event.respond_to?(:id)
+        fail DoSnapshot::SnapshotCreateError.new(id), e.name unless event && event.respond_to?(:id)
 
         # noinspection RubyResolve
         wait_event(event.id)
@@ -127,7 +127,7 @@ module DoSnapshot
 
         action = client.actions.find(id: id)
 
-        fail DoSnapshot::EventError.new(id) unless action && action.respond_to?(:status)
+        fail DoSnapshot::EventError.new(id), 'Check your connection' unless action && action.respond_to?(:status)
 
         # noinspection RubyResolve,RubyResolve
         action.status.include?('completed') ? true : false

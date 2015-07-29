@@ -51,7 +51,7 @@ module DoSnapshot
     # Trying to create a snapshot.
     #
     def create_snapshot(droplet) # rubocop:disable MethodLength,Metrics/AbcSize
-      fail DropletPowerError.new(droplet.id) unless api.inactive?(droplet.id)
+      fail DropletPowerError.new(droplet.id), droplet.name unless api.inactive?(droplet.id)
 
       logger.info "Start creating snapshot for droplet id: #{droplet.id} name: #{droplet.name}."
 

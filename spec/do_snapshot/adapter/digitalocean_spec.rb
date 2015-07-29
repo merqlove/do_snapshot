@@ -177,14 +177,14 @@ RSpec.describe DoSnapshot::Adapter::Digitalocean do
         stub_droplet_inactive(droplet_id)
 
         expect(instance.inactive?(droplet_id))
-            .to be_truthy
+          .to be_truthy
       end
 
       it 'when active' do
         stub_droplet(droplet_id)
 
         expect(instance.inactive?(droplet_id))
-            .to be_falsey
+          .to be_falsey
       end
     end
 
