@@ -107,7 +107,6 @@ module DoSnapshot
       end
 
       # Looking for event status.
-      # Before snapshot we to know that machine has powered off.
       #
       def get_event_status(id, time)
         return true if timeout?(id, time)

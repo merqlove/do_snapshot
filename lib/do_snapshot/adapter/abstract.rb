@@ -24,7 +24,7 @@ module DoSnapshot
 
       def check_keys; end
 
-      # Waiting for event exit
+      # Waiting wrapper
       def wait_wrap(id, message = "Event Id: #{id}", &status_block)
         logger.debug message
         time = Time.now
@@ -36,7 +36,7 @@ module DoSnapshot
         wait_wrap(event_id) { |id, time| get_event_status(id, time) }
       end
 
-      # Waiting for event exit
+      # Waiting for droplet shutdown
       def wait_shutdown(droplet_id)
         wait_wrap(droplet_id, "Droplet Id: #{droplet_id} shutting down") { |id, time| get_shutdown_status(id, time) }
       end
@@ -51,18 +51,22 @@ module DoSnapshot
         end
       end
 
+      # Event request timeout.
+      #
       def timeout?(id, time, message = "Event #{id} finished by timeout #{time}")
         return false unless (Time.now - time) > @timeout
         logger.debug message
         true
       end
 
+      # Droplet request timeout
+      #
       def droplet_timeout?(id, time)
         timeout? id, time, "Droplet id: #{id} shutdown event closed by timeout #{time}"
       end
 
-      # Looking for event status.
-      # Before snapshot we to know that machine has powered off.
+      # Looking for droplet status.
+      # Before snapshot we need to know that machine is powered off.
       #
       def get_shutdown_status(id, time)
         fail "Droplet #{id} not responding for shutdown!" if droplet_timeout?(id, time)
