@@ -3,7 +3,7 @@ rvm:
   - 2.2.2
   - 2.1.6
   - 2.0.0
-  - jruby-9.0.0.0.rc2
+  - jruby-9.0.0.0
 notifications:
   email:
     - api@mrcr.ru

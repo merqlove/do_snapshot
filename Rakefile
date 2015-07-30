@@ -1,14 +1,8 @@
 # -*- encoding : utf-8 -*-
-# rubocop:disable Style/CaseIndentation
-# rubocop:disable Metrics/MethodLength
-# rubocop:disable Lint/UselessAssignment
-# rubocop:disable Lint/ShadowingOuterLocalVariable
-# rubocop:disable Style/MultilineTernaryOperator
-# rubocop:disable Lint/HandleExceptions
-# rubocop:disable Metrics/AbcSize
 require 'bundler/setup'
 
 PROJECT_ROOT = File.expand_path('..', __FILE__)
+PROJECT_ROOT_DIR = File.dirname(__FILE__)
 $:.unshift "#{PROJECT_ROOT}/lib"
 require 'do_snapshot'
 
@@ -55,7 +49,7 @@ task :clean do
 end
 
 desc 'Release the latest version'
-task 'release' => %w( ci gem:release tgz:release zip:release brew:release manifest:update ) do
+task 'release' => %w( ci gem:release git:release tgz:release zip:release brew:release manifest:update ) do
   puts("Released v#{version}")
 end
 

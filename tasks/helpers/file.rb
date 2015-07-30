@@ -14,7 +14,7 @@ end
 
 def assemble_distribution(target_dir = Dir.pwd)
   distribution_files.each do |source|
-    target = source.gsub(/^#{project_root}/, target_dir)
+    target = source.gsub(/^#{PROJECT_ROOT_DIR}/, target_dir)
     FileUtils.mkdir_p(File.dirname(target))
     FileUtils.cp(source, target)
   end
@@ -23,16 +23,13 @@ end
 GEM_BLACKLIST = %w( bundler do_snapshot )
 
 def assemble_gems(target_dir = Dir.pwd)
-  lines = `cd #{project_root} && bundle show `.strip.split("\n")
-  fail 'error running bundler' unless $?.success? # rubocop:disable Style/SpecialGlobalVars
-  gems = `cd #{project_root} && export BUNDLE_WITHOUT=development:test && bundle show `.split("\n")
-  gems.each do |line|
+  %x{ env BUNDLE_WITHOUT="development:test" bundle show }.split("\n").each do |line|
     next unless line =~ /^  \* (.*?) \((.*?)\)/
     next if GEM_BLACKLIST.include?(Regexp.last_match[1])
     puts "vendoring: #{Regexp.last_match[1]}-#{Regexp.last_match[2]}"
-    gem_dir = ` cd #{project_root} && bundle show #{Regexp.last_match[1]} `.strip
+    gem_dir = %x{ bundle show #{Regexp.last_match[1]} }.strip
     FileUtils.mkdir_p "#{target_dir}/vendor/gems"
-    ` cp -R "#{gem_dir}" "#{target_dir}/vendor/gems" `
+    %x{ cp -R "#{gem_dir}" "#{target_dir}/vendor/gems" }
   end.compact
 end
 
@@ -60,10 +57,6 @@ end
 def pkg(filename)
   FileUtils.mkdir_p('pkg')
   File.expand_path("pkg/#{filename}", PROJECT_ROOT)
-end
-
-def project_root
-  File.dirname(__FILE__)
 end
 
 def resource(name)

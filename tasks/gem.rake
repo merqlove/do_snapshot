@@ -13,6 +13,4 @@ end
 
 task 'gem:release' => 'gem:build' do |t|
   sh "gem push #{pkg("do_snapshot-#{version}.gem")}"
-  sh "git tag v#{version}"
-  sh 'git push origin master --tags'
 end
