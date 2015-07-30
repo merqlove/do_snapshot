@@ -12,5 +12,5 @@ TrailingComma:
 AllCops:
   Exclude:
     - '*.gemspec'
-    - 'dist/**/*'
+    - 'tasks/**/*'
     - 'Rakefile'

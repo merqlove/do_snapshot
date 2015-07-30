@@ -1,4 +1,4 @@
-task "brew:release" => pkg("do_snapshot-#{version}.tgz.sha256") do |t|
+task 'brew:release' => pkg("do_snapshot-#{version}.tgz.sha256") do |t|
   sha256 = File.read(t.source).strip
   tempdir do |dir|
     dest = 'homebrew-do-snapshot'
