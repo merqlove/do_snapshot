@@ -28,9 +28,7 @@ Here some features:
 
 ## Compatibility
 
-Ruby versions 2.0.0 and higher. JRuby 9.0.0.0 or later is also supported.
-
-*Ruby versions 1.9.3 or less and JRuby in 1.9-mode supported in releases 0.0.14 or earlier.*
+Ruby versions 1.9.3 and higher. JRuby 1.7, 9.0.0.0 or later is also supported.
 
 <img src="https://raw.githubusercontent.com/merqlove/do_snapshot/master/assets/example.png" style="max-width:100%" alt="DoSnaphot example">
 

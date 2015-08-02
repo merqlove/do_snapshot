@@ -35,7 +35,7 @@ module DoSnapshot
     end
 
     def reset_options
-      %i(droplets exclude only keep quiet stop clean timeout delay protocol threads api).each do |key|
+      [:droplets, :exclude, :only, :keep, :quiet, :stop, :clean, :timeout, :delay, :protocol, :threads, :api].each do |key|
         send("#{key}=", nil)
       end
     end
