@@ -40,6 +40,19 @@ module DoSnapshot
         logger.error "Droplet #{id} is still running. Skipping."
       end
 
+      # Request Power On for droplet
+      #
+      def power_on(id)
+        # noinspection RubyResolve
+        event = ::DigitaloceanC::Droplet.power_on(id)
+        case event && event.status
+        when 'OK'
+          logger.info "Droplet id: #{id} is requested for Power On."
+        else
+          logger.error "Droplet id: #{id} is failed to request for Power On."
+        end
+      end
+
       # Power Off request for Droplet
       #
       def stop_droplet(id)
@@ -49,7 +62,7 @@ module DoSnapshot
         fail event.message unless event.status.include? 'OK'
 
         # noinspection RubyResolve
-        wait_shutdown(id)
+        wait_event(event.event_id)
       rescue => e
         raise DropletShutdownError.new(id), e.message, e.backtrace
       end
@@ -115,19 +128,6 @@ module DoSnapshot
         fail DoSnapshot::EventError.new(id), event.message unless event.status.include?('OK')
         # noinspection RubyResolve,RubyResolve
         event.event.percentage && event.event.percentage.include?('100') ? true : false
-      end
-
-      # Request Power On for droplet
-      #
-      def power_on(id)
-        # noinspection RubyResolve
-        event = ::DigitaloceanC::Droplet.power_on(id)
-        case event && event.status
-        when 'OK'
-          logger.info "Droplet id: #{id} is requested for Power On."
-        else
-          logger.error "Droplet id: #{id} is failed to request for Power On."
-        end
       end
     end
   end

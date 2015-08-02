@@ -42,6 +42,21 @@ module DoSnapshot
         logger.error "Droplet #{id} is still running. Skipping."
       end
 
+      # Request Power On for droplet
+      #
+      def power_on(id)
+        # noinspection RubyResolve
+        response = client.droplet.power_on(id)
+
+        fail DoSnapshot::EventError.new(id), response.message unless response.respond_to?(:action)
+
+        if response.action.status.include?('in-progress')
+          logger.info "Droplet id: #{id} is requested for Power On."
+        else
+          logger.error "Droplet id: #{id} is failed to request for Power On."
+        end
+      end
+
       # Power Off request for Droplet
       #
       def stop_droplet(id)
@@ -123,21 +138,6 @@ module DoSnapshot
 
         # noinspection RubyResolve,RubyResolve
         response.action.status.include?('completed') ? true : false
-      end
-
-      # Request Power On for droplet
-      #
-      def power_on(id)
-        # noinspection RubyResolve
-        response = client.droplet.power_on(id)
-
-        fail DoSnapshot::EventError.new(id), response.message unless response.respond_to?(:action)
-
-        if response.action.status.include?('in-progress')
-          logger.info "Droplet id: #{id} is requested for Power On."
-        else
-          logger.error "Droplet id: #{id} is failed to request for Power On."
-        end
       end
     end
   end

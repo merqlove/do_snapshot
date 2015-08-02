@@ -112,24 +112,20 @@ RSpec.describe DoSnapshot::Adapter::Digitalocean do
       it 'with success' do
         stub_event_done(event_id)
         stub_droplet_stop(droplet_id)
-        stub_droplet_inactive(droplet_id)
 
         instance.stop_droplet(droplet_id)
 
         expect(a_request(:get, droplet_stop_url))
           .to have_been_made
-        expect(a_request(:get, droplet_url))
+        expect(a_request(:get, event_find_url))
           .to have_been_made
       end
 
       it 'with error' do
         stub_droplet_stop_fail(droplet_id)
-        stub_droplet(droplet_id)
 
-        instance.timeout = 1
         expect { instance.stop_droplet(droplet_id) }
           .to raise_error(DoSnapshot::DropletShutdownError)
-        instance.timeout = timeout
         expect(DoSnapshot.logger.buffer)
           .to include 'Droplet id: 100823 is Failed to Power Off.'
 
