@@ -44,7 +44,7 @@ RSpec.describe DoSnapshot::Adapter::DigitaloceanV2 do
         expect { instance.droplet(droplet_id) }
           .to raise_error(DoSnapshot::DropletFindError)
         expect(DoSnapshot.logger.buffer)
-          .to include 'Droplet Not Found'
+          .to include "Droplet id: #{droplet_id} Not Found"
 
         expect(a_request(:get, droplet_url))
           .to have_been_made

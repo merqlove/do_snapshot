@@ -8,9 +8,9 @@ RSpec.describe DoSnapshot do
     subject(:error) { described_class }
 
     it 'should work' do
-      error.new
+      error.new(droplet_id)
       expect(DoSnapshot.logger.buffer)
-        .to include 'Droplet Not Found'
+        .to include "Droplet id: #{droplet_id} Not Found"
     end
   end
 

@@ -12,7 +12,7 @@ module DoSnapshot
       def droplet(id)
         # noinspection RubyResolve
         response = ::DigitaloceanC::Droplet.find(id)
-        fail DropletFindError, response.message unless response.status.include? 'OK'
+        fail DropletFindError.new(id), response.message unless response.status.include? 'OK'
         response.droplet
       end
 

@@ -9,13 +9,13 @@ shared_context 'api_v2_helpers' do
   let(:actions_api_base)   { "#{api_base}/actions" }
   let(:images_api_base)    { "#{api_base}/images" }
   let(:image_destroy_uri)  { "#{images_api_base}/[id]" }
-  let(:droplets_uri)       { "#{droplets_api_base}?page=1&per_page=20" }
-  let(:droplet_find_uri)   { "#{droplets_api_base}/[id]" }
+  let(:droplets_uri)       { "#{droplets_api_base}?per_page=200" }
+  let(:droplet_find_uri)   { "#{droplets_api_base}/[id]?per_page=200" }
   let(:droplet_stop_uri)   { "#{droplets_api_base}/[id]/actions" }
   let(:droplet_start_uri)  { "#{droplets_api_base}/[id]/actions" }
   let(:snapshot_uri)       { "#{droplets_api_base}/[id]/actions" }
   let(:event_find_uri)     { "#{events_api_base}/[id]" }
-  let(:action_find_uri)    { "#{actions_api_base}/[id]" }
+  let(:action_find_uri)    { "#{actions_api_base}/[id]?per_page=200" }
 
   # List of droplets
   #

@@ -161,7 +161,7 @@ RSpec.describe DoSnapshot::Command do
         expect(DoSnapshot.logger.buffer)
           .to include 'Droplet id: 100823 is Failed to Power Off.'
         expect(DoSnapshot.logger.buffer)
-          .to include 'Droplet Not Found'
+          .to include "Droplet id: #{droplet_id} Not Found"
       end
 
       it 'with start error' do

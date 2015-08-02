@@ -1,6 +1,4 @@
 # -*- encoding : utf-8 -*-
-require 'active_support/multibyte' # ActiveSupport 3.2 & Mail gem fix to work together.
-
 require_relative 'do_snapshot/version'
 require_relative 'do_snapshot/configuration'
 
@@ -77,7 +75,7 @@ module DoSnapshot
   #
   class DropletFindError < RequestError
     def initialize(*args)
-      DoSnapshot.logger.error 'Droplet Not Found'
+      DoSnapshot.logger.error "Droplet id: #{args[0]} Not Found"
       super
     end
   end
