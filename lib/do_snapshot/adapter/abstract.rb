@@ -18,6 +18,17 @@ module DoSnapshot
         end
       end
 
+      # Power On request for Droplet
+      #
+      def start_droplet(id)
+        # noinspection RubyResolve
+        instance = droplet(id)
+
+        return power_on(id) unless instance.status.include?('active')
+
+        logger.error "Droplet #{id} is still running. Skipping."
+      end
+
       protected
 
       def set_id; end
