@@ -77,7 +77,7 @@ RSpec.describe DoSnapshot::Adapter::Digitalocean do
         stub_droplet_start(droplet_id)
 
         instance.start_droplet(droplet_id)
-        expect(DoSnapshot.logger.buffer).to include 'Power On has been requested.'
+        expect(DoSnapshot.logger.buffer).to include "Droplet id: #{droplet_id} is requested for Power On."
 
         expect(a_request(:get, droplet_start_url))
           .to have_been_made

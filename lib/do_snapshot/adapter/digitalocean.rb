@@ -124,9 +124,9 @@ module DoSnapshot
         event = ::DigitaloceanC::Droplet.power_on(id)
         case event && event.status
         when 'OK'
-          logger.info 'Power On has been requested.'
+          logger.info "Droplet id: #{id} is requested for Power On."
         else
-          logger.error 'Power On failed to request.'
+          logger.error "Droplet id: #{id} is failed to request for Power On."
         end
       end
     end

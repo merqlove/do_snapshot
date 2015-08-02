@@ -23,7 +23,7 @@ module DoSnapshot
       def droplets
         # noinspection RubyResolve
         response = client.droplet.all
-        fail DropletListError unless response && response.respond_to?(:droplets)
+        fail DropletListError, response.message unless response.respond_to?(:droplets)
         response.droplets
       end
 
@@ -46,12 +46,12 @@ module DoSnapshot
       #
       def stop_droplet(id)
         # noinspection RubyResolve,RubyResolve
-        client.droplet.power_off(id)
+        response = client.droplet.power_off(id)
+
+        raise DropletShutdownError.new(id), response.message unless response.respond_to?(:action)
 
         # noinspection RubyResolve
-        wait_shutdown(id)
-      rescue => e
-        raise DropletShutdownError.new(id), e.message, e.backtrace
+        wait_event(response.action.id)
       end
 
       # Sending event to create snapshot via DigitalOcean API and wait for success
@@ -60,7 +60,7 @@ module DoSnapshot
         # noinspection RubyResolve,RubyResolve
         response = client.droplet.snapshot(id, name: name)
 
-        fail DoSnapshot::SnapshotCreateError.new(id), name unless response && response.respond_to?(:action)
+        fail DoSnapshot::SnapshotCreateError.new(id), response.message unless response.respond_to?(:action)
 
         # noinspection RubyResolve
         wait_event(response.action.id)
@@ -99,7 +99,7 @@ module DoSnapshot
       #
       def set_id
         logger.debug 'Setting DigitalOcean Access Token.'
-        @client = ::Barge::Client.new(access_token: ENV['DIGITAL_OCEAN_ACCESS_TOKEN'])
+        @client = ::Barge::Client.new(access_token: ENV['DIGITAL_OCEAN_ACCESS_TOKEN'], timeout: 15, open_timeout: 15)
       end
 
       protected
@@ -119,7 +119,7 @@ module DoSnapshot
 
         response = client.action.show(id)
 
-        fail DoSnapshot::EventError.new(id), 'Check your connection' unless response && response.respond_to?(:action)
+        fail DoSnapshot::EventError.new(id), response.message unless response.respond_to?(:action)
 
         # noinspection RubyResolve,RubyResolve
         response.action.status.include?('completed') ? true : false
@@ -131,12 +131,12 @@ module DoSnapshot
         # noinspection RubyResolve
         response = client.droplet.power_on(id)
 
-        fail DoSnapshot::EventError.new(id), 'Check your connection' unless response && response.respond_to?(:action)
+        fail DoSnapshot::EventError.new(id), response.message unless response.respond_to?(:action)
 
         if response.action.status.include?('in-progress')
-          logger.info 'Power On has been requested.'
+          logger.info "Droplet id: #{id} is requested for Power On."
         else
-          logger.error 'Power On failed to request.'
+          logger.error "Droplet id: #{id} is failed to request for Power On."
         end
       end
     end

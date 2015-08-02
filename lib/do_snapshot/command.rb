@@ -14,6 +14,7 @@ module DoSnapshot
     def snap
       logger.info 'Start performing operations'
       work_with_droplets
+      power_on_failed_droplets
       logger.info 'All operations has been finished.'
 
       mailer.notify if mailer && notify && !quiet
@@ -82,8 +83,22 @@ module DoSnapshot
       end
     end
 
+    def power_on_failed_droplets
+      processed_droplet_ids
+          .select { |id| api.inactive?(id) }
+          .each   { |id| api.start_droplet(id) }
+    end
+
+    # API launcher
+    #
     def api
       @api ||= DoSnapshot::Adapter.api(protocol, delay: delay, timeout: timeout)
+    end
+
+    # Processed droplets
+    #
+    def processed_droplet_ids
+      @droplet_ids ||= %w()
     end
 
     protected
@@ -154,6 +169,7 @@ module DoSnapshot
       return unless droplet
       logger.info "Preparing droplet id: #{droplet.id} name: #{droplet.name} to take snapshot."
       return if too_much_snapshots(droplet)
+      processed_droplet_ids << droplet.id
       thread_runner(droplet)
     end
 
