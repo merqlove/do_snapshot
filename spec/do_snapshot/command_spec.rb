@@ -96,9 +96,9 @@ RSpec.describe DoSnapshot::Command do
         load_options
         cmd.processed_droplet_ids << droplet_id
         expect { cmd.power_on_failed_droplets }
-            .not_to raise_error
+          .not_to raise_error
         expect(DoSnapshot.logger.buffer)
-            .not_to include "Droplet id: #{droplet_id} is requested for Power On."
+          .not_to include "Droplet id: #{droplet_id} is requested for Power On."
       end
 
       it 'when one' do
@@ -108,9 +108,9 @@ RSpec.describe DoSnapshot::Command do
         load_options
         cmd.processed_droplet_ids << droplet_id
         expect { cmd.power_on_failed_droplets }
-            .not_to raise_error
+          .not_to raise_error
         expect(DoSnapshot.logger.buffer)
-            .to include "Droplet id: #{droplet_id} is requested for Power On."
+          .to include "Droplet id: #{droplet_id} is requested for Power On."
       end
     end
 

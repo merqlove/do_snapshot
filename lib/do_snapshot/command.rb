@@ -85,8 +85,8 @@ module DoSnapshot
 
     def power_on_failed_droplets
       processed_droplet_ids
-          .select { |id| api.inactive?(id) }
-          .each   { |id| api.start_droplet(id) }
+        .select { |id| api.inactive?(id) }
+        .each   { |id| api.start_droplet(id) }
     end
 
     # API launcher
