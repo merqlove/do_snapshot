@@ -193,7 +193,7 @@ Support this project and others by [merqlove](https://gratipay.com/~merqlove/) v
 
 - [Thor](https://github.com/erikhuda/thor) for CLI.
 - [Digitalocean](https://github.com/scottmotte/digitalocean) for API V1 requests.
-- [DropletKit](https://github.com/digitalocean/droplet_kit) for API V2 requests.
+- [Barge](https://github.com/blom/barge) for API V2 requests.
 - [Pony](https://github.com/benprew/pony) for mail notifications.
 
 ## Contributing
