@@ -48,7 +48,7 @@ module DoSnapshot
         # noinspection RubyResolve,RubyResolve
         response = client.droplet.power_off(id)
 
-        raise DropletShutdownError.new(id), response.message unless response.respond_to?(:action)
+        fail DropletShutdownError.new(id), response.message unless response.respond_to?(:action)
 
         # noinspection RubyResolve
         wait_event(response.action.id)
