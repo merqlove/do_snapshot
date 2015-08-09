@@ -55,7 +55,7 @@ module DoSnapshot
         fail DropletShutdownError.new(id), response.message unless response.respond_to?(:action)
 
         # noinspection RubyResolve
-        wait_event(response.action.id)
+        wait_shutdown(id, response.action.id)
       end
 
       # Sending event to create snapshot via DigitalOcean API and wait for success

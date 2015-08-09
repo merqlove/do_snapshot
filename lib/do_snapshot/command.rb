@@ -92,7 +92,7 @@ module DoSnapshot
     # API launcher
     #
     def api
-      @api ||= DoSnapshot::Adapter.api(protocol, delay: delay, timeout: timeout)
+      @api ||= DoSnapshot::Adapter.api(protocol, delay: delay, timeout: timeout, stop_by: stop_by)
     end
 
     # Processed droplets
@@ -104,7 +104,7 @@ module DoSnapshot
     protected
 
     attr_accessor :droplets, :exclude, :only
-    attr_accessor :keep, :quiet, :stop, :clean, :timeout, :delay, :protocol
+    attr_accessor :keep, :quiet, :stop, :stop_by_power, :clean, :timeout, :delay, :protocol
 
     attr_writer :threads, :api
 
@@ -114,6 +114,10 @@ module DoSnapshot
 
     def threads
       @threads ||= []
+    end
+
+    def stop_by
+      stop_by_power ? :power_status : :event_status
     end
 
     # Working with list of droplets.

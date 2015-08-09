@@ -9,7 +9,7 @@ module DoSnapshot
     attr_accessor :mailer
 
     def initialize
-      @logger  = nil
+      @logger = nil
       @logger_level = Logger::INFO
       @verbose = false
       @quiet   = false

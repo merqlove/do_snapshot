@@ -9,6 +9,7 @@ module DoSnapshot
       include DoSnapshot::Helpers
 
       attr_accessor :delay, :timeout
+      attr_writer   :stop_by
 
       def initialize(options = {})
         check_keys
@@ -35,6 +36,10 @@ module DoSnapshot
 
       def check_keys; end
 
+      def stop_by
+        @stop_by ||= :event_status
+      end
+
       # Waiting wrapper
       def wait_wrap(id, message = "Event Id: #{id}", &status_block)
         logger.debug message
@@ -48,8 +53,15 @@ module DoSnapshot
       end
 
       # Waiting for droplet shutdown
-      def wait_shutdown(droplet_id)
-        wait_wrap(droplet_id, "Droplet Id: #{droplet_id} shutting down") { |id, time| get_shutdown_status(id, time) }
+      def wait_shutdown(droplet_id, event_id)
+        case stop_by
+        when :power_status
+          wait_wrap(droplet_id, "Droplet Id: #{droplet_id} shutting down") { |id, time| get_shutdown_status(id, time) }
+        when :event_status
+          wait_event(event_id)
+        else
+          fail 'Please define :stopper method (:droplet_status, :event_status'
+        end
       end
 
       def after_cleanup(droplet_id, droplet_name, snapshot, event)

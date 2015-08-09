@@ -172,6 +172,7 @@ For working mailer you need to set e-mail settings via run options.
       -l, [--log=/Users/someone/.do_snapshot/main.log]               # Log file path. By default logging is disabled.
       -c, [--clean], [--no-clean]                                    # Cleanup snapshots after create. If you have more images than you want to `keep`, older will be deleted.
       -s, [--stop], [--no-stop]                                      # Stop creating snapshots if maximum is reached.
+          [--stop-by-power], [--no-stop-by-power]                    # Check if droplet stopped by its power status instead of waiting for event completed state.
       -v, [--trace], [--no-trace]                                    # Verbose mode.
       -q, [--quiet], [--no-quiet]                                    # Quiet mode. If don't need any messages in console.
           [--digital-ocean-access-token=YOURLONGAPITOKEN]            # DIGITAL_OCEAN_ACCESS_TOKEN. if you can't use environment.

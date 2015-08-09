@@ -109,6 +109,24 @@ RSpec.describe DoSnapshot::Runner, type: :aruba do
           expect(all_stdout).to include(t_snapshot_created(snapshot_name))
         end
 
+        it 'with stop by power' do
+          attribute_eq 'stop_by_power', true
+
+          expect(last_command).to have_exit_status(0)
+          expect(all_stdout).to include(t_droplet_shutdown)
+          expect(all_stdout).to include(t_wait_until_create)
+          expect(all_stdout).to include(t_snapshot_created(snapshot_name))
+        end
+
+        it 'with stop by event' do
+          attribute_eq 'stop_by_power', false
+
+          expect(last_command).to have_exit_status(0)
+          expect(all_stdout).to include(t_droplet_shutdown)
+          expect(all_stdout).to include(t_wait_until_create)
+          expect(all_stdout).to include(t_snapshot_created(snapshot_name))
+        end
+
         it 'with clean' do
           attribute_eq 'clean', true
 
@@ -314,18 +332,12 @@ RSpec.describe DoSnapshot::Runner, type: :aruba do
       elsif value.is_a?(Numeric)
         "--#{key}=#{value}"
       elsif value.is_a?(Array)
-        if value.size > 0
-          "--#{key}=#{value.join(' ')}"
-        else
-          nil
-        end
+        next unless value.size > 0
+        "--#{key}=#{value.join(' ')}"
       elsif value.is_a?(Hash)
-        if value.size > 0
-          items = value.map { |param, setting| "#{param}:#{setting}" }.join(' ')
-          "--#{key}=#{items}"
-        else
-          nil
-        end
+        next unless value.size > 0
+        items = value.map { |param, setting| "#{param}:#{setting}" }.join(' ')
+        "--#{key}=#{items}"
       else
         "--#{key}"
       end

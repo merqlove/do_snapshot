@@ -14,7 +14,7 @@ module DoSnapshot
 
     default_task :snap
 
-    map %w( c s create )  => :snap
+    map %w( c s create ) => :snap
     map %w( -V ) => :version
 
     # Overriding Thor method for custom initialization
@@ -135,6 +135,9 @@ module DoSnapshot
                   type: :boolean,
                   aliases: %w( -s),
                   desc: 'Stop creating snapshots if maximum is reached.'
+    method_option :stop_by_power,
+                  type: :boolean,
+                  desc: 'Check if droplet stopped by its power status instead of waiting for event completed state.'
     method_option :trace,
                   type: :boolean,
                   aliases: %w( -v ),

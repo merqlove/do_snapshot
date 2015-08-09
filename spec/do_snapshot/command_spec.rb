@@ -114,7 +114,30 @@ RSpec.describe DoSnapshot::Command do
       end
     end
 
-    describe '.stop_droplet' do
+    describe '.stop_droplet by power status' do
+      it 'when raised with error' do
+        stub_droplet_stop_fail(droplet_id)
+        load_options(stop_by_power: true)
+        droplet = cmd.api.droplet droplet_id
+        expect { cmd.stop_droplet(droplet) }
+          .not_to raise_error
+        expect(cmd.stop_droplet(droplet))
+          .to be_falsey
+      end
+
+      it 'when stopped' do
+        stub_droplet_inactive(droplet_id)
+        stub_droplet_stop(droplet_id)
+        load_options(stop_by_power: true)
+        droplet = cmd.api.droplet droplet_id
+        expect { cmd.stop_droplet(droplet) }
+          .not_to raise_error
+        expect(cmd.stop_droplet(droplet))
+          .to be_truthy
+      end
+    end
+
+    describe '.stop_droplet by event' do
       it 'when raised with error' do
         stub_droplet_stop_fail(droplet_id)
         load_options
