@@ -57,7 +57,11 @@ For **OSX** users ([Homebrew Tap](http://github.com/merqlove/homebrew-do-snapsho
     $ brew tap merqlove/do-snapshot && brew install do_snapshot
     
     $ do_snapshot -V
-    
+
+Standalone with one-liner:
+
+    $ wget https://assets.merqlove.ru.s3.amazonaws.com/do_snapshot/do_snapshot.tgz && sudo tar -xzf do_snapshot.tgz /usr/local/lib/ && sudo ln -s /usr/local/lib/do_snapshot/bin/do_snapshot /usr/local/bin/do_snapshot
+
 Standalone pack for **Unix/Linux** users: [Download](https://assets.merqlove.ru.s3.amazonaws.com/do_snapshot/do_snapshot.tgz)
  
     $ wget https://assets.merqlove.ru.s3.amazonaws.com/do_snapshot/do_snapshot.tgz # if not done.
