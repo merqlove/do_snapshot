@@ -89,6 +89,11 @@
 <pre><code>$ sudo gem install do_snapshot
 </code></pre>
 
+<p>Standalone with one-liner:</p>
+
+<pre><code>$ wget https://assets.merqlove.ru.s3.amazonaws.com/do_snapshot/do_snapshot.tgz &amp;&amp; sudo tar -xzf do_snapshot.tgz /usr/local/lib/ &amp;&amp; sudo ln -s /usr/local/lib/do_snapshot/bin/do_snapshot /usr/local/bin/do_snapshot
+</code></pre>
+
 <p>For <strong>OSX</strong> users (<a href="http://github.com/merqlove/homebrew-do-snapshot">Homebrew Tap</a>):</p>
 
 <pre><code>$ brew tap merqlove/do-snapshot &amp;&amp; brew install do_snapshot
@@ -234,6 +239,7 @@ Options:
   -l, [--log=/Users/someone/.do_snapshot/main.log]               # Log file path. By default logging is disabled.
   -c, [--clean], [--no-clean]                                    # Cleanup snapshots after create. If you have more images than you want to `keep`, older will be deleted.
   -s, [--stop], [--no-stop]                                      # Stop creating snapshots if maximum is reached.
+      [--stop-by-power], [--no-stop-by-power]                    # Check if droplet stopped by its power status instead of waiting for event completed state.
   -v, [--trace], [--no-trace]                                    # Verbose mode.
   -q, [--quiet], [--no-quiet]                                    # Quiet mode. If don't need any messages in console.
       [--digital-ocean-access-token=YOURLONGAPITOKEN]            # DIGITAL_OCEAN_ACCESS_TOKEN. if you can't use environment.
