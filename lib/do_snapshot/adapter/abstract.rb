@@ -45,11 +45,13 @@ module DoSnapshot
         logger.debug message
         time = Time.now
         sleep(delay) until status_block.call(id, time)
+      rescue => e
+        logger.error "#{message} is failed."
       end
 
       # Waiting for event exit
       def wait_event(event_id)
-        wait_wrap(event_id) { |id, time| get_event_status(id, time) }
+        wait_wrap(event_id) do |id, time| get_event_status(id, time) end
       end
 
       # Waiting for droplet shutdown
@@ -87,6 +89,9 @@ module DoSnapshot
       def droplet_timeout?(id, time)
         timeout? id, time, "Droplet id: #{id} shutdown event closed by timeout #{time}"
       end
+
+      # This is stub for event status
+      def get_event_status(id, time); true end
 
       # Looking for droplet status.
       # Before snapshot we need to know that machine is powered off.
