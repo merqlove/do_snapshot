@@ -196,7 +196,9 @@ RSpec.describe DoSnapshot::Adapter::DigitaloceanV2 do
         stub_event_fail(event_id)
 
         expect { instance.create_snapshot(droplet_id, snapshot_name) }
-          .to raise_error(DoSnapshot::EventError)
+          .not_to raise_error
+        expect(DoSnapshot.logger.buffer)
+          .to include "Event id: #{event_id} is failed!"
 
         expect(a_request(:post, droplet_snapshot_url))
           .to have_been_made

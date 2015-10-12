@@ -18,25 +18,25 @@ RSpec.describe DoSnapshot::Adapter::Abstract do
       let(:instance) { api.new(timeout: timeout) }
       it('with custom timeout') { expect(instance.timeout).to eq timeout }
     end
+  end
 
-    describe '#wait_wrap' do
-      let(:instance) { api.new }
-      it('with custom timeout') do
-        expect {
-          instance.send(:wait_wrap, 1, 'Event Id: 1') { fail StandardError.new('Some Error') }
-        }.not_to raise_exception
-      end
+  describe '#wait_wrap' do
+    let(:instance) { api.new }
+    it('with custom timeout') do
+      expect do
+        instance.send(:wait_wrap, 1, 'Event Id: 1') { fail StandardError, 'Some Error' }
+      end.not_to raise_exception
     end
+  end
 
-    describe '#wait_event' do
-      let(:delay) { 5 }
-      let(:timeout) { 5 }
-      let(:instance) { api.new(delay: delay, timeout: timeout) }
-      it('with custom timeout') do
-        expect {
-          instance.send(:wait_event, 5)
-        }.not_to raise_exception
-      end
+  describe '#wait_event' do
+    let(:delay) { 5 }
+    let(:timeout) { 5 }
+    let(:instance) { api.new(delay: delay, timeout: timeout) }
+    it('with custom timeout') do
+      expect do
+        instance.send(:wait_event, 5)
+      end.not_to raise_exception
     end
   end
 end
