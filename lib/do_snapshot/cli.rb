@@ -215,7 +215,7 @@ module DoSnapshot
       end
 
       def send_error
-        return unless DoSnapshot.mailer.opts
+        return unless DoSnapshot.mailer.respond_to?(:opts)
 
         DoSnapshot.mailer.opts[:subject] = 'Digital Ocean: Error.'
         DoSnapshot.mailer.opts[:body] = 'Please check your droplets.'
