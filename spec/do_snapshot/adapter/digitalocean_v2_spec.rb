@@ -8,8 +8,6 @@ RSpec.describe DoSnapshot::Adapter::DigitaloceanV2 do
   subject(:api) { described_class }
   subject(:log) { DoSnapshot::Log }
 
-  let(:event_id) { '7499' }
-
   describe '.initialize' do
     describe '#delay' do
       let(:delay) { 5 }

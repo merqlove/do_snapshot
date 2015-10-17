@@ -3,7 +3,7 @@ require 'spec_helper'
 
 RSpec.describe DoSnapshot::CLI do
   include_context 'spec'
-  include_context 'api_v1_helpers'
+  include_context 'api_v2_helpers'
 
   subject(:cli)     { described_class }
   subject(:api)     { DoSnapshot::Adapter::Digitalocean }

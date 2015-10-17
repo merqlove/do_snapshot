@@ -14,6 +14,7 @@ def s3_connect
   )
 end
 
+# TODO: Fix rights
 def s3_store(package_file, filename, bucket = 'assets.merqlove.ru')
   s3_connect
   puts "storing: #{filename}"

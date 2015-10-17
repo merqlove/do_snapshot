@@ -12,6 +12,8 @@
 
 Use this tool to backup DigitalOcean droplet's via snapshot method, on the fly!
 
+## Breaking changes: now we use DO API V2 by default, due V1 deprecation at 11.2015.
+
 Here some features:
 
 - Multiple threads out of the box. No matter how much droplet's you have.
@@ -48,7 +50,7 @@ Install it yourself as:
 
     $ gem install do_snapshot
     
-Or System Wide Install (OSX, *nix):
+System Wide Install (OSX, *nix):
   
     $ sudo gem install do_snapshot
         
@@ -81,6 +83,15 @@ Mainly it's pretty simple:
 
 ### Setup 
 
+### Digitalocean API V2 (default):
+You'll need to generate an access token in Digital Ocean's control panel at https://cloud.digitalocean.com/settings/applications
+    
+    $ export DIGITAL_OCEAN_ACCESS_TOKEN="SOMETOKEN"
+    
+If you want to set keys without environment, than set it via options when you run do_snapshot:
+    
+    $ do_snapshot --digital-ocean-access-token YOURLONGTOKEN   
+    
 ### Digitalocean API V1:
 You'll need to generate an access token in Digital Ocean's control panel at https://cloud.digitalocean.com/api_access
 
@@ -89,16 +100,7 @@ You'll need to generate an access token in Digital Ocean's control panel at http
     
 If you want to set keys without environment, than set it via options when you run do_snapshot:
 
-    $ do_snapshot --digital-ocean-client-id YOURLONGAPICLIENTID --digital-ocean-api-key YOURLONGAPIKEY
-    
-### Digitalocean API V2:
-You'll need to generate an access token in Digital Ocean's control panel at https://cloud.digitalocean.com/settings/applications
-    
-    $ export DIGITAL_OCEAN_ACCESS_TOKEN="SOMETOKEN"
-    
-If you want to set keys without environment, than set it via options when you run do_snapshot:
-    
-    $ do_snapshot --digital-ocean-access-token YOURLONGTOKEN    
+    $ do_snapshot --digital-ocean-client-id YOURLONGAPICLIENTID --digital-ocean-api-key YOURLONGAPIKEY 
 
 ### How-To (Here is also [Longren Tutorial](https://longren.io/automate-making-snapshots-of-your-digitalocean-droplets/))
  
@@ -106,9 +108,9 @@ Here we `keeping` only 5 **latest** snapshots and cleanup older after new one is
 
     $ do_snapshot --keep 5 -c
 
-Using API V2:
+Using API V1:
   
-    $ do_snapshot -p 2
+    $ do_snapshot -p 1
     
 Keep latest 3 from selected droplet:
   
@@ -162,7 +164,7 @@ For working mailer you need to set e-mail settings via run options.
     
     Options:
       -p, [--protocol=1]                                             # Select api version.
-                                                                     # Default: 1
+                                                                     # Default: 2
       -o, [--only=123456 123456 123456]                              # Select some droplets.
       -e, [--exclude=123456 123456 123456]                           # Except some droplets.
       -k, [--keep=5]                                                 # How much snapshots you want to keep?

@@ -42,7 +42,7 @@ module DoSnapshot
 
     Select api version (1, 2):
 
-    $ do_snapshot -a 2
+    $ do_snapshot -p 1
 
     Set DigitalOcean keys:
 
@@ -78,7 +78,7 @@ module DoSnapshot
     LONGDESC
     method_option :protocol,
                   type: :numeric,
-                  default: 1,
+                  default: 2,
                   aliases: %w( -p ),
                   banner: '1',
                   desc: 'Select api version.'

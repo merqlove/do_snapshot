@@ -10,10 +10,10 @@ module DoSnapshot
   module Adapter
     def api(protocol, options)
       case protocol
-      when 2
-        return DigitaloceanV2.new(options)
-      else
+      when 1
         return Digitalocean.new(options)
+      else
+        return DigitaloceanV2.new(options)
       end
     end
     module_function :api

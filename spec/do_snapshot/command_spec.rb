@@ -8,12 +8,12 @@ RSpec.describe DoSnapshot::Command do
   subject(:cmd)     { DoSnapshot::Command.new }
   subject(:log)     { DoSnapshot::Log }
 
-  describe 'V2' do
-    include_context 'api_v2_helpers'
-  end
-
   describe 'V1' do
     include_context 'api_v1_helpers'
+  end
+
+  describe 'V2' do
+    include_context 'api_v2_helpers'
 
     describe '.snap' do
       context 'when success' do
@@ -215,8 +215,7 @@ RSpec.describe DoSnapshot::Command do
 
       it 'with start error' do
         stub_droplet_inactive(droplet_id)
-        stub_droplet_start_fail(droplet_id)
-        stub_event_fail(event_id)
+        stub_droplet_start_done(droplet_id)
 
         expect { cmd.fail_power_off(DoSnapshot::DropletShutdownError.new(droplet_id)) }
           .not_to raise_error
@@ -234,8 +233,8 @@ RSpec.describe DoSnapshot::Command do
   end
 
   def load_options(options = nil)
-    options ||= default_options.merge(protocol: 1)
-    cmd.load_options(options, [:log, :mail, :smtp, :trace, :digital_ocean_client_id, :digital_ocean_api_key])
+    options ||= default_options.merge(protocol: 2)
+    cmd.load_options(options, [:log, :mail, :smtp, :trace, :digital_ocean_access_token])
   end
 
   def snap_runner

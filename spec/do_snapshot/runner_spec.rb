@@ -185,10 +185,6 @@ RSpec.describe DoSnapshot::Runner, type: :aruba do
       end
 
       context 'API V2' do
-        let(:default_options_cli) { default_options.reject { |key, _| %w( droplets threads ).include?(key.to_s) }.merge(protocol: 2) }
-        let(:event_id) { '7499' }
-        let(:snapshot_name) { "example.com_#{DateTime.now.strftime('%Y_%m_%d')}" }
-
         include_context 'api_v2_helpers'
         it_behaves_like '.snap methods'
 
@@ -216,6 +212,9 @@ RSpec.describe DoSnapshot::Runner, type: :aruba do
       end
 
       context 'API V1' do
+        let(:default_options_cli) { default_options.merge(protocol: 1) }
+        let(:snapshot_name) { "foo_#{DateTime.now.strftime('%Y_%m_%d')}" }
+
         include_context 'api_v1_helpers'
         it_behaves_like '.snap methods'
 
