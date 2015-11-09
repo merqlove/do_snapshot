@@ -43,17 +43,17 @@
 <h2>
 <a id="breaking-changes-now-we-use-do-api-v2-by-default-due-v1-deprecation-at-112015" class="anchor" href="#breaking-changes-now-we-use-do-api-v2-by-default-due-v1-deprecation-at-112015" aria-hidden="true"><span class="octicon octicon-link"></span></a>Breaking changes: now we use DO API V2 by default, due V1 deprecation at 11.2015.</h2>
 
-<p>Here some features:</p>
+<p>Here are some features:</p>
 
 <ul>
-<li>Multiple threads out of the box. No matter how much droplet's you have.</li>
+<li>Multiple threads out of the box, no matter how many droplets you have.</li>
 <li>Snapshots Auto-Cleanup.</li>
-<li>Auto-Boot Droplet back if Snapshot Event is failed or bad connection exception.</li>
-<li>Binary special for cron and command-line. Homebrew, Standalone installers.</li>
-<li>Mail notifications when fail or maximum of snapshots is reached for one or multiple droplets.</li>
+<li>Auto-Boot Droplet if Snapshot Event fails or encounters a bad connection exception.</li>
+<li>Special binaries for cron and command-line, Homebrew, and standalone installers.</li>
+<li>Mail notifications when a snapshot fails or the maximum number of snapshots is reached for a droplet or droplets.</li>
 <li>Custom mail settings (You can set <a href="https://github.com/benprew/pony">Pony</a> mail settings).</li>
-<li>Stop mode (when you don't want to create new snapshots when maximum is reached).</li>
-<li>Timeout option for long requests or uncaught loops. By default it 600 seconds, but you can change it by hand.</li>
+<li>Stop mode (automatically stop creating new snapshots when the maximum is reached).</li>
+<li>Timeout option for long requests or uncaught loops. Defaults to 600 seconds, but can be changed.</li>
 <li>Logging into selected directory.</li>
 <li>Verbose mode for research.</li>
 <li>Quiet mode for silence.</li>
