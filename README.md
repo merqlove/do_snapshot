@@ -14,16 +14,16 @@ Use this tool to backup DigitalOcean droplet's via snapshot method, on the fly!
 
 ## Breaking changes: now we use DO API V2 by default, due V1 deprecation at 11.2015.
 
-Here some features:
+Here are some features:
 
-- Multiple threads out of the box. No matter how much droplet's you have.
+- Multiple threads out of the box, no matter how many droplets you have.
 - Snapshots Auto-Cleanup.
-- Auto-Boot Droplet back if Snapshot Event is failed or bad connection exception.
-- Binary special for cron and command-line. Homebrew, Standalone installers.
-- Mail notifications when fail or maximum of snapshots is reached for one or multiple droplets.
+- Auto-Boot Droplet if Snapshot Event fails or encounters a bad connection exception.
+- Special binaries for cron and command-line, Homebrew, and standalone installers.
+- Mail notifications when a snapshot fails or the maximum number of snapshots is reached for a droplet or droplets.
 - Custom mail settings (You can set [Pony](https://github.com/benprew/pony) mail settings).
-- Stop mode (when you don't want to create new snapshots when maximum is reached).
-- Timeout option for long requests or uncaught loops. By default it 600 seconds, but you can change it by hand.
+- Stop mode (automatically stop creating new snapshots when the maximum is reached).
+- Timeout option for long requests or uncaught loops. Defaults to 600 seconds, but can be changed.
 - Logging into selected directory.
 - Verbose mode for research.
 - Quiet mode for silence.
