@@ -34,16 +34,6 @@ Ruby versions 1.9.3 and higher. JRuby 1.7, 9.0.0.0 or later is also supported.
 
 <img src="https://raw.githubusercontent.com/merqlove/do_snapshot/master/assets/example.png" style="max-width:100%" alt="DoSnaphot example">
 
-### You can ask me, "Why you made this tool?"
-
-- First. I needed stable tool, which can provide for me automatic Snapshot feature for all of my Droplets via Cron planner.
-- I don't want to think how much snapshots for each droplet i have.
-- I don't wont to sleep when my droplets Offline!!! And i wanted tool which can BOOT back droplets, which failed to snapshot.
-- Also i want to understand what's going on if there some error. Mail is my choice. But logs also good.
-- And ... sure ;) We want to do it fast as rocket! :)
-- more more more...
-- So this tool can save a lot of time for people.
-
 ## Installation
 
 Install it yourself as:
@@ -189,6 +179,16 @@ For working mailer you need to set e-mail settings via run options.
       `do_snapshot` able to create and cleanup snapshots on your droplets.
     
       You can optionally specify parameters to select or exclude some droplets.   
+
+## You can ask, "Why you made this tool?"
+
+- First. I needed stable tool, which can provide for me automatic Snapshot feature for all of my Droplets via Cron planner.
+- I don't want to think how much snapshots for each droplet i have.
+- I don't wont to sleep when my droplets Offline!!! And i wanted tool which can BOOT back droplets, which failed to snapshot.
+- Also i want to understand what's going on if there some error. Mail is my choice. But logs also good.
+- And ... sure ;) We want to do it fast as rocket! :)
+- more more more...
+- So this tool can save a lot of time for people.
 
 ## Donating:
 Support this project and others by [merqlove](https://gratipay.com/~merqlove/) via [gratipay](https://gratipay.com/~merqlove/).  
