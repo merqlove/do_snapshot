@@ -83,6 +83,12 @@ You'll need to generate an access token in Digital Ocean's control panel at http
 If you want to set keys without environment, than set it via options when you run do_snapshot:
     
     $ do_snapshot --digital-ocean-access-token YOURLONGTOKEN   
+
+### How-To (Here is also [Longren Tutorial](https://longren.io/automate-making-snapshots-of-your-digitalocean-droplets/))
+ 
+Here we `keeping` only 5 **latest** snapshots and cleanup older after new one is created. If creation of snapshots failed no one will be deleted. By default we keeping `10` droplets.
+
+    $ do_snapshot --keep 5 -c
     
 Keep latest 3 from selected droplet:
   
