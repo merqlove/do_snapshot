@@ -41,7 +41,12 @@
 <p>Use this tool to backup DigitalOcean droplet's via snapshot method, on the fly!</p>
 
 <h2>
-<a id="breaking-changes-now-we-use-do-api-v2-by-default-due-v1-deprecation-at-112015" class="anchor" href="#breaking-changes-now-we-use-do-api-v2-by-default-due-v1-deprecation-at-112015" aria-hidden="true"><span class="octicon octicon-link"></span></a>Breaking changes: now we use DO API V2 by default, due V1 deprecation at 11.2015.</h2>
+<a id="api-changes" class="anchor" href="#api-changes" aria-hidden="true"><span class="octicon octicon-link"></span></a>API Changes:</h2>
+
+<ul>
+<li>08.01.16: now we have to use DO API V2 only, because V1 is not work anymore.</li>
+<li>17.10.15: now we use DO API V2 by default, due V1 deprecation at 11.2015.</li>
+</ul>
 
 <p>Here are some features:</p>
 
@@ -128,30 +133,11 @@ $ do_snapshot help
 </code></pre>
 
 <h3>
-<a id="digitalocean-api-v1" class="anchor" href="#digitalocean-api-v1" aria-hidden="true"><span class="octicon octicon-link"></span></a>Digitalocean API V1:</h3>
-
-<p>You'll need to generate an access token in Digital Ocean's control panel at <a href="https://cloud.digitalocean.com/api_access">https://cloud.digitalocean.com/api_access</a></p>
-
-<pre><code>$ export DIGITAL_OCEAN_CLIENT_ID="SOMEID"
-$ export DIGITAL_OCEAN_API_KEY="SOMEKEY"
-</code></pre>
-
-<p>If you want to set keys without environment, than set it via options when you run do_snapshot:</p>
-
-<pre><code>$ do_snapshot --digital-ocean-client-id YOURLONGAPICLIENTID --digital-ocean-api-key YOURLONGAPIKEY 
-</code></pre>
-
-<h3>
 <a id="how-to-here-is-also-longren-tutorial" class="anchor" href="#how-to-here-is-also-longren-tutorial" aria-hidden="true"><span class="octicon octicon-link"></span></a>How-To (Here is also <a href="https://longren.io/automate-making-snapshots-of-your-digitalocean-droplets/">Longren Tutorial</a>)</h3>
 
 <p>Here we <code>keeping</code> only 5 <strong>latest</strong> snapshots and cleanup older after new one is created. If creation of snapshots failed no one will be deleted. By default we keeping <code>10</code> droplets.</p>
 
 <pre><code>$ do_snapshot --keep 5 -c
-</code></pre>
-
-<p>Using API V1:</p>
-
-<pre><code>$ do_snapshot -p 1
 </code></pre>
 
 <p>Keep latest 3 from selected droplet:</p>
