@@ -19,11 +19,11 @@ module DoSnapshot
 
       def find_protocol(protocol)
         if protocol.is_a?(Integer)
-          "::DoSnapshot::Adapter::DigitaloceanV#{protocol}"
+          "DigitaloceanV#{protocol}"
         elsif protocol.is_a?(String)
           protocol
         else
-          '::DoSnapshot::Adapter::DigitaloceanV2'
+          'DigitaloceanV2'
         end
       end
     end
