@@ -84,8 +84,12 @@ If you want to set keys without environment, than set it via options when you ru
     
     $ do_snapshot --digital-ocean-access-token YOURLONGTOKEN   
 
-### How-To (Here is also [Longren Tutorial](https://longren.io/automate-making-snapshots-of-your-digitalocean-droplets/))
- 
+### How-To 
+
+##### Tutorials: 
+- [Longren Tutorial](https://longren.io/automate-making-snapshots-of-your-digitalocean-droplets/)
+- [Arun Kumar Tutorial](http://www.ashout.com/automate-digital-ocean-droplet-snaphot/)
+
 Here we `keeping` only 5 **latest** snapshots and cleanup older after new one is created. If creation of snapshots failed no one will be deleted. By default we keeping `10` droplets.
 
     $ do_snapshot --keep 5 -c
