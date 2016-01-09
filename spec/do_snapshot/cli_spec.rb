@@ -15,7 +15,7 @@ RSpec.describe DoSnapshot::CLI do
         expect(cli_obj.args)
           .to include('help')
         expect(cli_obj.options)
-          .to include('digital_ocean_client_id')
+          .to include('digital_ocean_access_token')
       end
     end
   end

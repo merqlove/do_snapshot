@@ -27,7 +27,7 @@ module DoSnapshot
       set_mailer
 
       # Check for keys via options
-      %w( digital_ocean_client_id digital_ocean_api_key digital_ocean_access_token ).each do |key|
+      %w( digital_ocean_access_token ).each do |key|
         ENV[key.upcase] = options[key] if options.include? key
       end
     end
@@ -40,9 +40,9 @@ module DoSnapshot
 
     ### Examples
 
-    Select api version (1, 2):
+    Select api version (2):
 
-    $ do_snapshot -p 1
+    $ do_snapshot -p 2
 
     Set DigitalOcean keys:
 
@@ -151,14 +151,6 @@ module DoSnapshot
                   type: :string,
                   banner: 'YOURLONGAPITOKEN',
                   desc: 'DIGITAL_OCEAN_ACCESS_TOKEN. if you can\'t use environment.'
-    method_option :digital_ocean_client_id,
-                  type: :string,
-                  banner: 'YOURLONGAPICLIENTID',
-                  desc: 'DIGITAL_OCEAN_CLIENT_ID. if you can\'t use environment.'
-    method_option :digital_ocean_api_key,
-                  type: :string,
-                  banner: 'YOURLONGAPIKEY',
-                  desc: 'DIGITAL_OCEAN_API_KEY. if you can\'t use environment.'
 
     def snap
       command.snap
@@ -197,7 +189,7 @@ module DoSnapshot
       end
 
       def command_filter
-        %w( log smtp mail trace digital_ocean_client_id digital_ocean_api_key digital_ocean_access_token )
+        %w( log smtp mail trace digital_ocean_access_token )
       end
 
       def setup_config # rubocop:disable Metrics/AbcSize

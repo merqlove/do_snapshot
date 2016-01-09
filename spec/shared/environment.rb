@@ -16,8 +16,8 @@ RSpec.shared_context 'environment' do
   let(:image_id)            { '5019770' }
   let(:image_id2)           { '5019903' }
   let(:cli_env_nil)         { Hash['DIGITAL_OCEAN_CLIENT_ID' => nil, 'DIGITAL_OCEAN_API_KEY' => nil, 'DIGITAL_OCEAN_ACCESS_TOKEN' => nil] }
-  let(:cli_keys)            { Thor::CoreExt::HashWithIndifferentAccess.new(digital_ocean_client_id: client_key, digital_ocean_api_key: api_key, digital_ocean_access_token: access_token) }
-  let(:cli_keys_other)      { Thor::CoreExt::HashWithIndifferentAccess.new(digital_ocean_client_id: 'NOTFOO', digital_ocean_api_key: 'NOTBAR', digital_ocean_access_token: 'NOTTOK') }
+  let(:cli_keys)            { Thor::CoreExt::HashWithIndifferentAccess.new(digital_ocean_access_token: access_token) }
+  let(:cli_keys_other)      { Thor::CoreExt::HashWithIndifferentAccess.new(digital_ocean_access_token: 'NOTTOK') }
   let(:snapshot_name)       { "example.com_#{DateTime.now.strftime('%Y_%m_%d')}" }
   let(:default_options)     { Hash[protocol: 2, only: %w( 100823 ), exclude: %w(), keep: 3, stop: false, trace: true, clean: true, delay: 0, timeout: 600] }
   let(:default_options_cli) { default_options.reject { |key, _| %w( droplets threads ).include?(key.to_s) } }
