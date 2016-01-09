@@ -4,9 +4,11 @@ require 'spec_helper'
 RSpec.describe DoSnapshot::Adapter do
   include_context 'environment'
 
-  module AdapterFactory
-    class Adapter # rubocop:disable Style/Documentation
-      def initialize(_ = {}); end
+  module DoSnapshot
+    module Adapter
+      class CustomAdapter # rubocop:disable Style/Documentation
+        def initialize(_ = {}); end
+      end
     end
   end
 
@@ -19,8 +21,12 @@ RSpec.describe DoSnapshot::Adapter do
     end
 
     it 'when custom adapter' do
-      api = adapter.api('AdapterFactory::Adapter')
-      expect(api).to be_a_kind_of(AdapterFactory::Adapter)
+      api = adapter.api('CustomAdapter')
+      expect(api).to be_a_kind_of(DoSnapshot::Adapter::CustomAdapter)
+    end
+
+    it 'when wrong custom adapter' do
+      expect { adapter.api('CustomAdapter2') }.to raise_exception(DoSnapshot::NoProtocolError)
     end
 
     it 'when error' do
