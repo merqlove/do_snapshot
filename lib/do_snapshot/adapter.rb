@@ -11,8 +11,8 @@ module DoSnapshot
       def api(protocol, options = {})
         konst = find_protocol(protocol)
         fail DoSnapshot::NoProtocolError, "Not existing protocol: #{protocol}." unless
-            Object.const_defined?("DoSnapshot::Adapter::#{konst}")
-        obj = Object.const_get("DoSnapshot::Adapter::#{konst}")
+            Object.const_defined?(konst)
+        obj = Object.const_get(konst)
         obj.new(options)
       end
 
@@ -20,11 +20,11 @@ module DoSnapshot
 
       def find_protocol(protocol)
         if protocol.is_a?(Integer)
-          "DigitaloceanV#{protocol}"
+          "DoSnapshot::Adapter::DigitaloceanV#{protocol}"
         elsif protocol.is_a?(String)
           protocol
         else
-          'DigitaloceanV2'
+          'DoSnapshot::Adapter::DigitaloceanV2'
         end
       end
     end
