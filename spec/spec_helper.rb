@@ -4,6 +4,9 @@ Coveralls.wear! do
   add_filter '/spec/*'
 end
 
+require 'bundler'
+Bundler.setup
+
 require 'do_snapshot/cli'
 require 'webmock/rspec'
 require 'fileutils'
