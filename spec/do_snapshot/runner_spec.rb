@@ -2,7 +2,7 @@
 require 'spec_helper'
 
 RSpec.describe DoSnapshot::Runner, type: :aruba do
-  include_context 'spec'
+  include_context 'environment'
 
   context 'commands' do
     context '.snap' do
@@ -211,35 +211,6 @@ RSpec.describe DoSnapshot::Runner, type: :aruba do
         end
       end
 
-      context 'API V1' do
-        let(:default_options_cli) { default_options.merge(protocol: 1) }
-        let(:snapshot_name) { "foo_#{DateTime.now.strftime('%Y_%m_%d')}" }
-
-        include_context 'api_v1_helpers'
-        it_behaves_like '.snap methods'
-
-        context 'when no credentials' do
-          it 'with warning about digitalocean credentials' do
-            with_environment(cli_env_nil) do
-              run "do_snapshot snap #{options_line}"
-
-              expect(last_command).to have_exit_status(1)
-              expect(all_stdout)
-                .to include(t_wrong_keys(%w( digital_ocean_client_id digital_ocean_api_key ).join(', ')))
-            end
-          end
-        end
-
-        context 'when different credentials' do
-          let(:keys_uri) { "api_key=#{cli_keys_other[:digital_ocean_api_key]}&client_id=#{cli_keys_other[:digital_ocean_client_id]}" }
-
-          it 'with no warning' do
-            hash_attribute_eq(cli_keys_other)
-
-            expect(last_command).to have_exit_status(0)
-          end
-        end
-      end
     end
 
     context '.help' do

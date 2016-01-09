@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 require 'spec_helper'
 
-shared_context 'api_v2_helpers' do
+RSpec.shared_context 'api_v2_helpers' do
   let(:api_base)           { 'https://api.digitalocean.com/v2' }
   let(:droplets_api_base)  { "#{api_base}/droplets" }
   let(:api_access_token)   { "Bearer #{access_token}" }

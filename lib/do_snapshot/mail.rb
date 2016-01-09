@@ -8,8 +8,6 @@ module DoSnapshot
   # Shared mailer.
   #
   class Mail
-    include DoSnapshot::Helpers
-
     attr_writer :mailer, :opts_default, :smtp_default
 
     def initialize(options = {})
@@ -57,6 +55,10 @@ module DoSnapshot
     end
 
     protected
+
+    def logger
+      DoSnapshot::Helpers::UniversalLogger
+    end
 
     def opts_default
       @opts_default ||= {

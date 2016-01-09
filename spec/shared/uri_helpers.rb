@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 require 'spec_helper'
 
-shared_context 'uri_helpers' do
+RSpec.shared_context 'uri_helpers' do
   let(:droplet_url) { url_with_id(droplet_find_uri, droplet_id) }
   let(:droplet_stop_url) { url_with_id(droplet_stop_uri, droplet_id) }
   let(:droplet_start_url) { url_with_id(droplet_start_uri, droplet_id) }

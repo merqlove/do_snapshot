@@ -12,7 +12,9 @@
 
 Use this tool to backup DigitalOcean droplet's via snapshot method, on the fly!
 
-## Breaking changes: now we use DO API V2 by default, due V1 deprecation at 11.2015.
+## API Changes: 
+- 08.01.16: now we have to use DO API V2 only, because V1 is not work anymore.
+- 17.10.15: now we use DO API V2 by default, due V1 deprecation at 11.2015.
 
 Here some features:
 
@@ -91,26 +93,6 @@ You'll need to generate an access token in Digital Ocean's control panel at http
 If you want to set keys without environment, than set it via options when you run do_snapshot:
     
     $ do_snapshot --digital-ocean-access-token YOURLONGTOKEN   
-    
-### Digitalocean API V1:
-You'll need to generate an access token in Digital Ocean's control panel at https://cloud.digitalocean.com/api_access
-
-    $ export DIGITAL_OCEAN_CLIENT_ID="SOMEID"
-    $ export DIGITAL_OCEAN_API_KEY="SOMEKEY"
-    
-If you want to set keys without environment, than set it via options when you run do_snapshot:
-
-    $ do_snapshot --digital-ocean-client-id YOURLONGAPICLIENTID --digital-ocean-api-key YOURLONGAPIKEY 
-
-### How-To (Here is also [Longren Tutorial](https://longren.io/automate-making-snapshots-of-your-digitalocean-droplets/))
- 
-Here we `keeping` only 5 **latest** snapshots and cleanup older after new one is created. If creation of snapshots failed no one will be deleted. By default we keeping `10` droplets.
-
-    $ do_snapshot --keep 5 -c
-
-Using API V1:
-  
-    $ do_snapshot -p 1
     
 Keep latest 3 from selected droplet:
   

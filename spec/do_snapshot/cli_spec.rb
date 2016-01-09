@@ -2,11 +2,11 @@
 require 'spec_helper'
 
 RSpec.describe DoSnapshot::CLI do
-  include_context 'spec'
+  include_context 'environment'
   include_context 'api_v2_helpers'
 
   subject(:cli)     { described_class }
-  subject(:api)     { DoSnapshot::Adapter::Digitalocean }
+  subject(:api)     { DoSnapshot::Adapter::DigitaloceanV2 }
 
   describe '.initialize' do
     it 'with args & options' do

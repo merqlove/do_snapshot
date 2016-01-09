@@ -41,6 +41,10 @@ module DoSnapshot
   #
   class NoTokenError < StandardError; end
 
+  # Protocol must exist.
+  #
+  class NoProtocolError < StandardError; end
+
   # Base Exception for cases when we need id for log and/or something actions.
   #
   class RequestActionError < RequestError

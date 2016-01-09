@@ -172,14 +172,13 @@ module DoSnapshot
 
       return unless droplet
       logger.info "Preparing droplet id: #{droplet.id} name: #{droplet.name} to take snapshot."
-      return if too_much_snapshots(droplet)
+      return if too_much_snapshots?(droplet)
       processed_droplet_ids << droplet.id
       thread_runner(droplet)
     end
 
-    def too_much_snapshots(instance)
-      # noinspection RubyResolve
-      return false unless api.snapshots(instance).size >= keep
+    def too_much_snapshots?(instance)
+      return false if api.snapshots(instance).size < keep
       warning_size(instance.id, instance.name, keep)
       stop ? true : false
     end

@@ -2,7 +2,7 @@
 require 'spec_helper'
 
 RSpec.describe DoSnapshot::Adapter::DigitaloceanV2 do
-  include_context 'spec'
+  include_context 'environment'
   include_context 'api_v2_helpers'
 
   subject(:api) { described_class }

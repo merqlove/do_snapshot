@@ -2,40 +2,16 @@
 require 'spec_helper'
 
 RSpec.describe DoSnapshot::Log do
-  include_context 'spec'
+  include_context 'environment'
 
   subject(:log) { described_class }
 
   describe 'will have message' do
-    it '#info' do
-      expect(DoSnapshot.logger).to respond_to(:info)
-      DoSnapshot.logger.info('fff')
-      expect(DoSnapshot.logger.buffer).to include('fff')
-    end
-
-    it '#debug' do
-      expect(DoSnapshot.logger).to respond_to(:debug)
-      DoSnapshot.logger.info('fff')
-      expect(DoSnapshot.logger.buffer).to include('fff')
-    end
-
-    it '#warn' do
-      expect(DoSnapshot.logger).to respond_to(:warn)
-      DoSnapshot.logger.info('fff')
-      expect(DoSnapshot.logger.buffer).to include('fff')
-    end
-
-    it '#fatal' do
-      expect(DoSnapshot.logger).to respond_to(:fatal)
-      DoSnapshot.logger.info('fff')
-      expect(DoSnapshot.logger.buffer).to include('fff')
-    end
-
-    it '#error' do
-      expect(DoSnapshot.logger).to respond_to(:error)
-      DoSnapshot.logger.info('fff')
-      expect(DoSnapshot.logger.buffer).to include('fff')
-    end
+    it('#info')  { logger_respond_to(:info)  }
+    it('#debug') { logger_respond_to(:debug) }
+    it('#warn')  { logger_respond_to(:warn)  }
+    it('#fatal') { logger_respond_to(:fatal) }
+    it('#error') { logger_respond_to(:error) }
 
     it '#blablabla' do
       expect(DoSnapshot.logger).not_to respond_to(:blablabla)
@@ -48,6 +24,12 @@ RSpec.describe DoSnapshot::Log do
         config.quiet = true
       end
       DoSnapshot.logger = DoSnapshot::Log.new
+    end
+
+    def logger_respond_to(type)
+      expect(DoSnapshot.logger).to respond_to(type)
+      DoSnapshot.logger.send(type, 'fff')
+      expect(DoSnapshot.logger.buffer).to include('fff')
     end
   end
 

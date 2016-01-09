@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 require 'spec_helper'
 
-shared_context 'spec' do
+RSpec.shared_context 'environment' do
   include_context 'api_helpers'
 
   def do_not_send_email

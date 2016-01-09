@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 require 'spec_helper'
 
-shared_context 'api_helpers' do
+RSpec.shared_context 'api_helpers' do
   # Stub helpers
   #
   def stub_with_id(request, id, fixture, status = 200)

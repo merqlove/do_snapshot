@@ -2,7 +2,7 @@
 require 'spec_helper'
 
 RSpec.describe DoSnapshot do
-  include_context 'spec'
+  include_context 'environment'
 
   describe DoSnapshot::DropletFindError do
     subject(:error) { described_class }
