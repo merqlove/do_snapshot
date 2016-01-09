@@ -20,7 +20,6 @@ Gem::Specification.new do |spec|
 
   spec.required_ruby_version = '>= 1.9.3'
 
-  spec.add_dependency 'digitalocean_c', '~> 1.2'
   spec.add_dependency 'barge', '~> 0.11'
   spec.add_dependency 'thor', '~> 0.19'
   spec.add_dependency 'pony', '~> 1.1'
