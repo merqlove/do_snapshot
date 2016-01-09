@@ -16,16 +16,16 @@ Use this tool to backup DigitalOcean droplet's via snapshot method, on the fly!
 - 08.01.16: now we have to use DO API V2 only, because V1 is not work anymore.
 - 17.10.15: now we use DO API V2 by default, due V1 deprecation at 11.2015.
 
-Here some features:
+Here are some features:
 
-- Multiple threads out of the box. No matter how much droplet's you have.
+- Multiple threads out of the box, no matter how many droplets you have.
 - Snapshots Auto-Cleanup.
-- Auto-Boot Droplet back if Snapshot Event is failed or bad connection exception.
-- Binary special for cron and command-line. Homebrew, Standalone installers.
-- Mail notifications when fail or maximum of snapshots is reached for one or multiple droplets.
+- Auto-Boot Droplet if Snapshot Event fails or encounters a bad connection exception.
+- Special binaries for cron and command-line, Homebrew, and standalone installers.
+- Mail notifications when a snapshot fails or the maximum number of snapshots is reached for a droplet or droplets.
 - Custom mail settings (You can set [Pony](https://github.com/benprew/pony) mail settings).
-- Stop mode (when you don't want to create new snapshots when maximum is reached).
-- Timeout option for long requests or uncaught loops. By default it 600 seconds, but you can change it by hand.
+- Stop mode (automatically stop creating new snapshots when the maximum is reached).
+- Timeout option for long requests or uncaught loops. Defaults to 600 seconds, but can be changed.
 - Logging into selected directory.
 - Verbose mode for research.
 - Quiet mode for silence.
@@ -35,16 +35,6 @@ Here some features:
 Ruby versions 1.9.3 and higher. JRuby 1.7, 9.0.0.0 or later is also supported.
 
 <img src="https://raw.githubusercontent.com/merqlove/do_snapshot/master/assets/example.png" style="max-width:100%" alt="DoSnaphot example">
-
-### You can ask me, "Why you made this tool?"
-
-- First. I needed stable tool, which can provide for me automatic Snapshot feature for all of my Droplets via Cron planner.
-- I don't want to think how much snapshots for each droplet i have.
-- I don't wont to sleep when my droplets Offline!!! And i wanted tool which can BOOT back droplets, which failed to snapshot.
-- Also i want to understand what's going on if there some error. Mail is my choice. But logs also good.
-- And ... sure ;) We want to do it fast as rocket! :)
-- more more more...
-- So this tool can save a lot of time for people.
 
 ## Installation
 
@@ -171,6 +161,16 @@ For working mailer you need to set e-mail settings via run options.
       `do_snapshot` able to create and cleanup snapshots on your droplets.
     
       You can optionally specify parameters to select or exclude some droplets.   
+
+## You can ask, "Why you made this tool?"
+
+- First. I needed stable tool, which can provide for me automatic Snapshot feature for all of my Droplets via Cron planner.
+- I don't want to think how much snapshots for each droplet i have.
+- I don't wont to sleep when my droplets Offline!!! And i wanted tool which can BOOT back droplets, which failed to snapshot.
+- Also i want to understand what's going on if there some error. Mail is my choice. But logs also good.
+- And ... sure ;) We want to do it fast as rocket! :)
+- more more more...
+- So this tool can save a lot of time for people.
 
 ## Donating:
 Support this project and others by [merqlove](https://gratipay.com/~merqlove/) via [gratipay](https://gratipay.com/~merqlove/).  
