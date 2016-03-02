@@ -87,8 +87,9 @@ If you want to set keys without environment, than set it via options when you ru
 ### How-To 
 
 ##### Tutorials: 
-- [Longren Tutorial](https://longren.io/automate-making-snapshots-of-your-digitalocean-droplets/)
-- [Arun Kumar Tutorial](http://www.ashout.com/automate-digital-ocean-droplet-snaphot/)
+- [Automate Taking Snapshots of Your DigitalOcean Droplets with DOSnapshot
+, Tyler Longren](https://longren.io/automate-making-snapshots-of-your-digitalocean-droplets/)
+- [How to Automate Taking Digital Ocean Droplet Snaphot with DoSnapShot Script, Arun Kumar](http://www.ashout.com/automate-digital-ocean-droplet-snaphot/)
 
 Here we `keeping` only 5 **latest** snapshots and cleanup older after new one is created. If creation of snapshots failed no one will be deleted. By default we keeping `10` droplets.
 
