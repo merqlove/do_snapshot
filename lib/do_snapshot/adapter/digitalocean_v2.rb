@@ -95,7 +95,7 @@ module DoSnapshot
       def check_keys
         logger.debug 'Checking DigitalOcean Access Token.'
         %w( DIGITAL_OCEAN_ACCESS_TOKEN ).each do |key|
-          fail DoSnapshot::NoTokenError, "You must have #{key} in environment or set it via options." if ENV[key].blank?
+          fail DoSnapshot::NoTokenError, "You must have #{key} in environment or set it via options." if ENV[key].nil? || ENV[key].empty?
         end
       end
 
