@@ -109,6 +109,24 @@ RSpec.describe DoSnapshot::Runner, type: :aruba do
           expect(all_stdout).to include(t_snapshot_created(snapshot_name))
         end
 
+        it 'with shutdown' do
+          attribute_eq 'shutdown', true
+
+          expect(last_command).to have_exit_status(0)
+          expect(all_stdout).to include(t_droplet_shutdown)
+          expect(all_stdout).to include(t_wait_until_create)
+          expect(all_stdout).to include(t_snapshot_created(snapshot_name))
+        end
+
+        it 'with no shutdown' do
+          attribute_eq 'shutdown', false
+
+          expect(last_command).to have_exit_status(0)
+          expect(all_stdout).not_to include(t_droplet_shutdown)
+          expect(all_stdout).to include(t_wait_until_create)
+          expect(all_stdout).to include(t_snapshot_created(snapshot_name))
+        end
+
         it 'with stop by power' do
           attribute_eq 'stop_by_power', true
 

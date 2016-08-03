@@ -7,6 +7,10 @@ module DoSnapshot
   class Command # rubocop:disable ClassLength
     include DoSnapshot::Helpers
 
+    RESET_OPTIONS = [:droplets, :exclude, :only, :keep, :quiet,
+                     :stop, :clean, :timeout, :shutdown, :delay,
+                     :protocol, :threads, :api]
+
     def initialize(*args)
       load_options(*args)
     end
@@ -21,6 +25,7 @@ module DoSnapshot
     end
 
     def fail_power_off(e)
+      return unless shutdown
       return unless e && e.id
       api.start_droplet(e.id)
     rescue
@@ -35,12 +40,13 @@ module DoSnapshot
     end
 
     def reset_options
-      [:droplets, :exclude, :only, :keep, :quiet, :stop, :clean, :timeout, :delay, :protocol, :threads, :api].each do |key|
+      RESET_OPTIONS.each do |key|
         send("#{key}=", nil)
       end
     end
 
     def stop_droplet(droplet)
+      return true unless shutdown
       logger.debug 'Shutting down droplet.'
       api.stop_droplet(droplet.id) unless droplet.status.include? 'off'
       true
@@ -104,7 +110,7 @@ module DoSnapshot
     protected
 
     attr_accessor :droplets, :exclude, :only
-    attr_accessor :keep, :quiet, :stop, :stop_by_power, :clean, :timeout, :delay, :protocol
+    attr_accessor :keep, :quiet, :shutdown, :stop, :stop_by_power, :clean, :timeout, :delay, :protocol
 
     attr_writer :threads, :api
 

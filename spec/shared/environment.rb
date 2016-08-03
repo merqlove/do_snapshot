@@ -19,7 +19,7 @@ RSpec.shared_context 'environment' do
   let(:cli_keys)            { Thor::CoreExt::HashWithIndifferentAccess.new(digital_ocean_access_token: access_token) }
   let(:cli_keys_other)      { Thor::CoreExt::HashWithIndifferentAccess.new(digital_ocean_access_token: 'NOTTOK') }
   let(:snapshot_name)       { "example.com_#{DateTime.now.strftime('%Y_%m_%d')}" }
-  let(:default_options)     { Hash[protocol: 2, only: %w( 100823 ), exclude: %w(), keep: 3, stop: false, trace: true, clean: true, delay: 0, timeout: 600] }
+  let(:default_options)     { Hash[protocol: 2, only: %w( 100823 ), exclude: %w(), keep: 3, stop: false, trace: true, clean: true, delay: 0, shutdown: true, timeout: 600] }
   let(:default_options_cli) { default_options.reject { |key, _| %w( droplets threads ).include?(key.to_s) } }
   let(:no_exclude)          { [] }
   let(:exclude)             { %w( 100824 100825 ) }
@@ -31,6 +31,7 @@ RSpec.shared_context 'environment' do
   let(:no_quiet)            { false }
   let(:clean)               { true }
   let(:no_clean)            { false }
+  let(:shutdown)            { true }
   let(:timeout)             { 600 }
   let(:delay)               { 0 }
   let(:log_path)            { "#{project_path}/log/test.log" }

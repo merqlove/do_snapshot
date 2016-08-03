@@ -13,6 +13,10 @@
 Use this tool to backup DigitalOcean droplet's via snapshot method, on the fly!
 
 ## API Changes: 
+- 03.08.16: DO now automagically keeps our droplets running when snapshot is processing, so:  
+  Added options `--shutdown`, `--no-shutdown`.    
+  `shutdown` now disabled by default, no downtime anymore, `YES`!  
+  If you want `shutdown` back use `--shutdown` option.
 - 08.01.16: now we have to use DO API V2 only, because V1 is not work anymore.
 - 17.10.15: now we use DO API V2 by default, due V1 deprecation at 11.2015.
 
@@ -147,6 +151,7 @@ For working mailer you need to set e-mail settings via run options.
     Options:
       -p, [--protocol=1]                                             # Select api version.
                                                                      # Default: 2
+          [--shutdown], [--no-shutdown]                              # Check if you want to stop your droplet before the snapshot.
       -o, [--only=123456 123456 123456]                              # Select some droplets.
       -e, [--exclude=123456 123456 123456]                           # Except some droplets.
       -k, [--keep=5]                                                 # How much snapshots you want to keep?
@@ -160,7 +165,7 @@ For working mailer you need to set e-mail settings via run options.
       -l, [--log=/Users/someone/.do_snapshot/main.log]               # Log file path. By default logging is disabled.
       -c, [--clean], [--no-clean]                                    # Cleanup snapshots after create. If you have more images than you want to `keep`, older will be deleted.
       -s, [--stop], [--no-stop]                                      # Stop creating snapshots if maximum is reached.
-          [--stop-by-power], [--no-stop-by-power]                    # Check if droplet stopped by its power status instead of waiting for event completed state.
+          [--stop-by-power], [--no-stop-by-power]                    # Droplet stop method, by it's power status (instead of waiting for event completed state).
       -v, [--trace], [--no-trace]                                    # Verbose mode.
       -q, [--quiet], [--no-quiet]                                    # Quiet mode. If don't need any messages in console.
           [--digital-ocean-access-token=YOURLONGAPITOKEN]            # DIGITAL_OCEAN_ACCESS_TOKEN. if you can't use environment.
