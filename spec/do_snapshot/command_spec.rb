@@ -202,6 +202,8 @@ RSpec.describe DoSnapshot::Command do
         load_options(shutdown: false)
         droplet = cmd.api.droplet droplet_id
         cmd.create_snapshot(droplet)
+        expect(DoSnapshot.logger.buffer)
+          .not_to include "Droplet id: #{droplet_id} must be Powered Off!"
         expect { cmd.create_snapshot(droplet) }
           .not_to raise_error
       end
