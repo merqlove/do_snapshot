@@ -1,34 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-us">
   <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <meta charset="UTF-8">
+    <title>DoSnapshot by merqlove</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
-
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-
-    <title>DoSnapshot by merqlove</title>
   </head>
-
   <body>
-    <header>
-      <div class="inner">
-        <h1>DoSnapshot</h1>
-        <h2>A command-line snapshot maker for your DigitalOcean droplets. Fully Automated. Multi-threaded.</h2>
-        <a href="https://github.com/merqlove/do_snapshot" class="button"><small>View project on</small> GitHub</a>
-      </div>
-    </header>
+    <section class="page-header">
+      <h1 class="project-name">DoSnapshot</h1>
+      <h2 class="project-tagline">A command-line snapshot maker for your DigitalOcean droplets. Fully Automated. Multi-threaded.</h2>
+      <a href="https://github.com/merqlove/do_snapshot" class="btn">View on GitHub</a>
+      <a href="https://github.com/merqlove/do_snapshot/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/merqlove/do_snapshot/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
 
-    <div id="content-wrapper">
-      <div class="inner clearfix">
-        <section id="main-content">
-          <p><a href="https://gitter.im/merqlove/do_snapshot?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge&amp;utm_content=badge"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Join the chat at https://gitter.im/merqlove/do_snapshot"></a>
+    <section class="main-content">
+      <p><a href="https://gitter.im/merqlove/do_snapshot?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge&amp;utm_content=badge"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Join the chat at https://gitter.im/merqlove/do_snapshot"></a>
 <a href="https://www.digitalocean.com/community/projects/dosnapshot">Project Page at Digital Ocean</a>, comment or vote for this project.</p>
 
 <p><a href="http://badge.fury.io/rb/do_snapshot"><img src="https://badge.fury.io/rb/do_snapshot.svg" alt="Gem Version"></a>
@@ -44,6 +35,10 @@
 <a id="api-changes" class="anchor" href="#api-changes" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>API Changes:</h2>
 
 <ul>
+<li>03.08.16: DO now automagically keeps our droplets running when snapshot is processing, so:
+Added options <code>--shutdown</code>, <code>--no-shutdown</code>.<br>
+<code>shutdown</code> now disabled by default, no downtime anymore, <code>YES</code>!
+If you want <code>shutdown</code> back use <code>--shutdown</code> option.</li>
 <li>08.01.16: now we have to use DO API V2 only, because V1 is not work anymore.</li>
 <li>17.10.15: now we use DO API V2 by default, due V1 deprecation at 11.2015.</li>
 </ul>
@@ -211,6 +206,7 @@ aliases: s, snap, create
 Options:
   -p, [--protocol=1]                                             # Select api version.
                                                                  # Default: 2
+      [--shutdown], [--no-shutdown]                              # Check if you want to stop your droplet before the snapshot.
   -o, [--only=123456 123456 123456]                              # Select some droplets.
   -e, [--exclude=123456 123456 123456]                           # Except some droplets.
   -k, [--keep=5]                                                 # How much snapshots you want to keep?
@@ -224,7 +220,7 @@ Options:
   -l, [--log=/Users/someone/.do_snapshot/main.log]               # Log file path. By default logging is disabled.
   -c, [--clean], [--no-clean]                                    # Cleanup snapshots after create. If you have more images than you want to `keep`, older will be deleted.
   -s, [--stop], [--no-stop]                                      # Stop creating snapshots if maximum is reached.
-      [--stop-by-power], [--no-stop-by-power]                    # Check if droplet stopped by its power status instead of waiting for event completed state.
+      [--stop-by-power], [--no-stop-by-power]                    # Droplet stop method, by it's power status (instead of waiting for event completed state).
   -v, [--trace], [--no-trace]                                    # Verbose mode.
   -q, [--quiet], [--no-quiet]                                    # Quiet mode. If don't need any messages in console.
       [--digital-ocean-access-token=YOURLONGAPITOKEN]            # DIGITAL_OCEAN_ACCESS_TOKEN. if you can't use environment.
@@ -288,24 +284,14 @@ Description:
 <p>Copyright (c) 2015 Alexander Merkulov</p>
 
 <p>MIT License</p>
-        </section>
 
-        <aside id="sidebar">
-          <a href="https://github.com/merqlove/do_snapshot/zipball/master" class="button">
-            <small>Download</small>
-            .zip file
-          </a>
-          <a href="https://github.com/merqlove/do_snapshot/tarball/master" class="button">
-            <small>Download</small>
-            .tar.gz file
-          </a>
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/merqlove/do_snapshot">DoSnapshot</a> is maintained by <a href="https://github.com/merqlove">merqlove</a>.</span>
 
-          <p class="repo-owner"><a href="https://github.com/merqlove/do_snapshot"></a> is maintained by <a href="https://github.com/merqlove">merqlove</a>.</p>
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
 
-          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
-        </aside>
-      </div>
-    </div>
+    </section>
 
             <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
