@@ -82,6 +82,10 @@ module DoSnapshot
                   aliases: %w( -p ),
                   banner: '1',
                   desc: 'Select api version.'
+    method_option :shutdown,
+                  default: false,
+                  type: :boolean,
+                  desc: 'Check if you want to stop droplet before the snapshot.'
     method_option :only,
                   type: :array,
                   default: [],
@@ -137,7 +141,7 @@ module DoSnapshot
                   desc: 'Stop creating snapshots if maximum is reached.'
     method_option :stop_by_power,
                   type: :boolean,
-                  desc: 'Check if droplet stopped by its power status instead of waiting for event completed state.'
+                  desc: "Droplet stop method, by it's power status (instead of waiting for event completed state)."
     method_option :trace,
                   type: :boolean,
                   aliases: %w( -v ),

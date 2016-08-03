@@ -113,7 +113,7 @@ RSpec.describe DoSnapshot::Command do
     describe '.stop_droplet by power status' do
       it 'when raised with error' do
         stub_droplet_stop_fail(droplet_id)
-        load_options(stop_by_power: true)
+        load_options(stop_by_power: true, shutdown: true)
         droplet = cmd.api.droplet droplet_id
         expect { cmd.stop_droplet(droplet) }
           .not_to raise_error
@@ -124,7 +124,17 @@ RSpec.describe DoSnapshot::Command do
       it 'when stopped' do
         stub_droplet_inactive(droplet_id)
         stub_droplet_stop(droplet_id)
-        load_options(stop_by_power: true)
+        load_options(stop_by_power: true, shutdown: true)
+        droplet = cmd.api.droplet droplet_id
+        expect { cmd.stop_droplet(droplet) }
+          .not_to raise_error
+        expect(cmd.stop_droplet(droplet))
+          .to be_truthy
+      end
+
+      it 'when nothing' do
+        stub_droplet(droplet_id)
+        load_options(stop_by_power: true, shutdown: false)
         droplet = cmd.api.droplet droplet_id
         expect { cmd.stop_droplet(droplet) }
           .not_to raise_error
@@ -154,6 +164,16 @@ RSpec.describe DoSnapshot::Command do
         expect(cmd.stop_droplet(droplet))
           .to be_truthy
       end
+
+      it 'when nothing' do
+        stub_droplet(droplet_id)
+        load_options(shutdown: false)
+        droplet = cmd.api.droplet droplet_id
+        expect { cmd.stop_droplet(droplet) }
+          .not_to raise_error
+        expect(cmd.stop_droplet(droplet))
+          .to be_truthy
+      end
     end
 
     describe '.create_snapshot' do
@@ -176,6 +196,16 @@ RSpec.describe DoSnapshot::Command do
           .not_to raise_error
       end
 
+      it 'when snapshot is created with no shutdown' do
+        stub_droplet(droplet_id)
+        stub_droplet_snapshot(droplet_id, snapshot_name)
+        load_options(shutdown: false)
+        droplet = cmd.api.droplet droplet_id
+        cmd.create_snapshot(droplet)
+        expect { cmd.create_snapshot(droplet) }
+          .not_to raise_error
+      end
+
       it 'when droplet is running' do
         stub_droplet(droplet_id)
         load_options
@@ -191,16 +221,25 @@ RSpec.describe DoSnapshot::Command do
     describe '.fail_power_off' do
       it 'when success' do
         stub_droplet_inactive(droplet_id)
-
+        load_options(shutdown: true)
         expect { cmd.fail_power_off(DoSnapshot::DropletShutdownError.new(droplet_id)) }
           .not_to raise_error
         expect(DoSnapshot.logger.buffer)
           .to include "Droplet id: #{droplet_id} is requested for Power On."
       end
 
+      it 'not rescue when shutdown is true' do
+        stub_droplet_fail(droplet_id)
+        load_options(shutdown: false)
+        expect { cmd.fail_power_off(DoSnapshot::SnapshotCreateError.new(droplet_id)) }
+          .not_to raise_error
+        expect(DoSnapshot.logger.buffer)
+          .to include "Droplet id: #{droplet_id} is Failed to Snapshot."
+      end
+
       it 'with request error' do
         stub_droplet_fail(droplet_id)
-
+        load_options(shutdown: true)
         expect { cmd.fail_power_off(DoSnapshot::DropletShutdownError.new(droplet_id)) }
           .to raise_error(DoSnapshot::DropletFindError)
         expect(DoSnapshot.logger.buffer)
@@ -212,7 +251,7 @@ RSpec.describe DoSnapshot::Command do
       it 'with start error' do
         stub_droplet_inactive(droplet_id)
         stub_droplet_start_done(droplet_id)
-
+        load_options(shutdown: true)
         expect { cmd.fail_power_off(DoSnapshot::DropletShutdownError.new(droplet_id)) }
           .not_to raise_error
         expect(DoSnapshot.logger.buffer)

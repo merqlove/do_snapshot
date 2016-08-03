@@ -75,6 +75,14 @@ RSpec.describe DoSnapshot::CLI do
         attribute_eq 'stop', false
       end
 
+      it 'with shutdown' do
+        attribute_eq 'shutdown', true
+      end
+
+      it 'with no shutdown' do
+        attribute_eq 'shutdown', false
+      end
+
       it 'with stop by power' do
         attribute_eq 'stop_by_power', true
       end
