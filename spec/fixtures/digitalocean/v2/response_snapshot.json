@@ -1,0 +1,12 @@
+{
+  "snapshot": {
+    "id": "50cacc62-f214-11e6-a9ab-000f53315820",
+    "name": "volume-nyc1-01_2017_02_13_670399885933",
+    "regions": ["nyc1"],
+    "created_at": "2017-02-13T17:46:15Z",
+    "resource_id": "cff9806c-f1f4-11e6-97e1-000f53315a41",
+    "resource_type": "volume",
+    "min_disk_size": 1,
+    "size_gigabytes": 0
+  }
+}

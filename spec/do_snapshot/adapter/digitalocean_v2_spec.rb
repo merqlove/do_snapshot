@@ -166,42 +166,66 @@ RSpec.describe DoSnapshot::Adapter::DigitaloceanV2 do
     end
 
     describe '.create_snapshot' do
-      it 'with success' do
-        stub_event_done(event_id)
-        stub_droplet_snapshot(droplet_id, snapshot_name)
+      context 'droplet' do
+        it 'with success' do
+          stub_event_done(event_id)
+          stub_droplet_snapshot(droplet_id, snapshot_name)
 
-        expect { instance.create_snapshot(droplet_id, snapshot_name) }
-          .not_to raise_error
+          expect { instance.create_snapshot(droplet_id, snapshot_name) }
+            .not_to raise_error
 
-        expect(a_request(:post, droplet_snapshot_url))
-          .to have_been_made
-        expect(a_request(:get, action_find_url))
-          .to have_been_made
+          expect(a_request(:post, droplet_snapshot_url))
+            .to have_been_made
+          expect(a_request(:get, action_find_url))
+            .to have_been_made
+        end
+
+        it 'with error' do
+          stub_droplet_snapshot_fail(droplet_id, snapshot_name)
+
+          expect { instance.create_snapshot(droplet_id, snapshot_name) }
+            .to raise_error(DoSnapshot::SnapshotCreateError)
+
+          expect(a_request(:post, droplet_snapshot_url))
+            .to have_been_made
+        end
+
+        it 'with event error' do
+          stub_droplet_snapshot(droplet_id, snapshot_name)
+          stub_event_fail(event_id)
+
+          expect { instance.create_snapshot(droplet_id, snapshot_name) }
+            .not_to raise_error
+          expect(DoSnapshot.logger.buffer)
+            .to include "Event id: #{event_id} is failed!"
+
+          expect(a_request(:post, droplet_snapshot_url))
+            .to have_been_made
+          expect(a_request(:get, action_find_url))
+            .to have_been_made
+        end
       end
+      context 'volume' do
+        it 'with success' do
+          stub_event_done(event_id)
+          stub_volume_snapshot(volume_id, snapshot_name)
 
-      it 'with error' do
-        stub_droplet_snapshot_fail(droplet_id, snapshot_name)
+          expect { instance.create_snapshot(volume_id, snapshot_name, 'volume') }
+            .not_to raise_error
 
-        expect { instance.create_snapshot(droplet_id, snapshot_name) }
-          .to raise_error(DoSnapshot::SnapshotCreateError)
+          expect(a_request(:post, volume_snapshot_url))
+            .to have_been_made
+        end
 
-        expect(a_request(:post, droplet_snapshot_url))
-          .to have_been_made
-      end
+        it 'with error' do
+          stub_volume_snapshot_fail(volume_id, snapshot_name)
 
-      it 'with event error' do
-        stub_droplet_snapshot(droplet_id, snapshot_name)
-        stub_event_fail(event_id)
+          expect { instance.create_snapshot(volume_id, snapshot_name, 'volume') }
+            .to raise_error(DoSnapshot::SnapshotCreateError)
 
-        expect { instance.create_snapshot(droplet_id, snapshot_name) }
-          .not_to raise_error
-        expect(DoSnapshot.logger.buffer)
-          .to include "Event id: #{event_id} is failed!"
-
-        expect(a_request(:post, droplet_snapshot_url))
-          .to have_been_made
-        expect(a_request(:get, action_find_url))
-          .to have_been_made
+          expect(a_request(:post, volume_snapshot_url))
+            .to have_been_made
+        end
       end
     end
 
@@ -222,42 +246,93 @@ RSpec.describe DoSnapshot::Adapter::DigitaloceanV2 do
     end
 
     describe '.cleanup_snapshots' do
-      it 'with success' do
-        stub_droplet(droplet_id)
-        stub_image_destroy(image_id)
-        stub_image_destroy(image_id2)
+      context 'droplet' do
+        it 'with success' do
+          stub_droplet(droplet_id)
+          stub_snapshots('droplet')
+          stub_snapshot_destroy(snapshot_id)
+          stub_snapshot_destroy(snapshot_id2)
 
-        droplet = instance.droplet(droplet_id)
-        expect { instance.cleanup_snapshots(droplet, 1) }
-          .not_to raise_error
-        expect(DoSnapshot.logger.buffer)
-          .to include 'Snapshot: 5019770 delete requested.'
+          droplet = instance.droplet(droplet_id)
+          expect { instance.cleanup_snapshots(droplet, 1) }
+            .not_to raise_error
+          expect(DoSnapshot.logger.buffer)
+            .to include 'Snapshot: 5019770 delete requested.'
 
-        expect(a_request(:get, droplet_url))
-          .to have_been_made
-        expect(a_request(:delete, image_destroy_url))
-          .to have_been_made
-        expect(a_request(:delete, image_destroy2_url))
-          .to have_been_made
+          expect(a_request(:get, droplet_url))
+            .to have_been_made
+          expect(a_request(:delete, snapshot_destroy_url))
+            .to have_been_made
+          expect(a_request(:delete, snapshot_destroy2_url))
+            .to have_been_made
+        end
+
+        it 'with warning message' do
+          stub_droplet(droplet_id)
+          stub_snapshots('droplet')
+          stub_snapshot_destroy_fail(snapshot_id)
+          stub_snapshot_destroy_fail(snapshot_id2)
+
+          droplet = instance.droplet(droplet_id)
+          expect { instance.cleanup_snapshots(droplet, 1) }
+            .not_to raise_error
+          expect(DoSnapshot.logger.buffer)
+            .to include 'Destroy of snapshot 5019770 for droplet id: 100823 name: example.com is failed.'
+
+          expect(a_request(:get, droplet_url))
+            .to have_been_made
+          expect(a_request(:delete, snapshot_destroy_url))
+            .to have_been_made
+          expect(a_request(:delete, snapshot_destroy2_url))
+            .to have_been_made
+        end
       end
+      context 'volume' do
+        it 'with success' do
+          stub_volume(volume_id)
+          stub_snapshots('volume')
+          stub_snapshot_destroy(snapshot_id)
+          stub_snapshot_destroy(snapshot_id2)
+          stub_snapshot_destroy(snapshot_id3)
 
-      it 'with warning message' do
-        stub_droplet(droplet_id)
-        stub_image_destroy_fail(image_id)
-        stub_image_destroy_fail(image_id2)
+          volume = instance.volume(volume_id)
+          expect { instance.cleanup_snapshots(volume, 2,  'volume') }
+            .not_to raise_error
+          expect(DoSnapshot.logger.buffer)
+            .to include 'Snapshot: 5019770 delete requested.'
 
-        droplet = instance.droplet(droplet_id)
-        expect { instance.cleanup_snapshots(droplet, 1) }
-          .not_to raise_error
-        expect(DoSnapshot.logger.buffer)
-          .to include 'Destroy of snapshot 5019903 for droplet id: 100823 name: example.com is failed.'
+          expect(a_request(:get, volume_url))
+            .to have_been_made
+          expect(a_request(:delete, snapshot_destroy_url))
+            .to have_been_made
+          expect(a_request(:delete, snapshot_destroy2_url))
+            .to have_been_made
+          expect(a_request(:delete, snapshot_destroy3_url))
+            .to have_been_made
+        end
 
-        expect(a_request(:get, droplet_url))
-          .to have_been_made
-        expect(a_request(:delete, image_destroy_url))
-          .to have_been_made
-        expect(a_request(:delete, image_destroy2_url))
-          .to have_been_made
+        it 'with warning message' do
+          stub_volume(volume_id)
+          stub_snapshots('volume')
+          stub_snapshot_destroy_fail(snapshot_id)
+          stub_snapshot_destroy_fail(snapshot_id2)
+          stub_snapshot_destroy_fail(snapshot_id3)
+
+          volume = instance.volume(volume_id)
+          expect { instance.cleanup_snapshots(volume, 2, 'volume') }
+            .not_to raise_error
+          expect(DoSnapshot.logger.buffer)
+            .to include 'Destroy of snapshot 119192817 for volume id: 7724db7c-e098-11e5-b522-000f53304e51 name: Example is failed.'
+
+          expect(a_request(:get, volume_url))
+            .to have_been_made
+          expect(a_request(:delete, snapshot_destroy_url))
+            .to have_been_made
+          expect(a_request(:delete, snapshot_destroy2_url))
+            .to have_been_made
+          expect(a_request(:delete, snapshot_destroy3_url))
+            .to have_been_made
+        end
       end
     end
   end

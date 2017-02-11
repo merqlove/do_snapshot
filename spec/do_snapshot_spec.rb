@@ -69,7 +69,38 @@ RSpec.describe DoSnapshot do
     it 'should work' do
       error.new(droplet_id)
       expect(DoSnapshot.logger.buffer)
-        .to include "Droplet id: #{droplet_id} is Failed to Snapshot."
+        .to include "Resource id: #{droplet_id} is Failed to Snapshot."
     end
   end
+
+  describe DoSnapshot::VolumeFindError do
+    subject(:error) { described_class }
+
+    it 'should work' do
+      error.new(droplet_id)
+      expect(DoSnapshot.logger.buffer)
+        .to include "Volume id: #{droplet_id} Not Found"
+    end
+  end
+
+  describe DoSnapshot::VolumeListError do
+    subject(:error) { described_class }
+
+    it 'should work' do
+      error.new
+      expect(DoSnapshot.logger.buffer)
+        .to include 'Volume Listing is failed to retrieve'
+    end
+  end
+
+  describe DoSnapshot::SnapshotListError do
+    subject(:error) { described_class }
+
+    it 'should work' do
+      error.new
+      expect(DoSnapshot.logger.buffer)
+        .to include 'Snapshot Listing is failed to retrieve'
+    end
+  end
+
 end

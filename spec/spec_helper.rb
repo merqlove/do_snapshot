@@ -10,6 +10,7 @@ Bundler.setup
 require 'do_snapshot/cli'
 require 'webmock/rspec'
 require 'fileutils'
+require 'pry'
 require_relative 'shared/api_helpers'
 require_relative 'shared/api_v2_helpers'
 require_relative 'shared/uri_helpers'

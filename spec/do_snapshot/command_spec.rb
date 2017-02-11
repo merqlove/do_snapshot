@@ -7,11 +7,13 @@ RSpec.describe DoSnapshot::Command do
 
   subject(:cmd)     { DoSnapshot::Command.new }
   subject(:log)     { DoSnapshot::Log }
+  let(:overwrite_options) { {} }
 
   describe 'V2' do
     include_context 'api_v2_helpers'
 
     describe '.snap' do
+
       context 'when success' do
         it 'sends message' do
           stub_droplet_inactive(droplet_id)
@@ -25,8 +27,8 @@ RSpec.describe DoSnapshot::Command do
       context 'when snapshot not cleanup' do
         it 'sends message' do
           stub_droplet_inactive(droplet_id)
-          stub_image_destroy_fail(image_id)
-          stub_image_destroy_fail(image_id2)
+          stub_snapshot_destroy_fail(snapshot_id)
+          stub_snapshot_destroy_fail(snapshot_id2)
 
           expect { snap_runner }
             .not_to raise_error
@@ -82,6 +84,47 @@ RSpec.describe DoSnapshot::Command do
             .to include "Droplet id: #{droplet_id} is Failed to Power Off."
         end
       end
+
+      context 'resource_type = volumes' do
+        let(:overwrite_options) { Hash[protocol: 2, resource_types: 'volumes', only: %w( 7724db7c-e098-11e5-b522-000f53304e51 ), exclude: %w(), keep: 3, stop: false, trace: true, clean: true, delay: 0, shutdown: true, timeout: 600] }
+
+        context 'when success' do
+          it 'sends message' do
+            expect { snap_runner }
+              .not_to raise_error
+            expect(DoSnapshot.logger.buffer)
+              .to include 'All operations has been finished.'
+          end
+        end
+
+        context 'when volume not found' do
+          it 'raised by exception' do
+            stub_volume_fail(volume_id)
+
+            expect { snap_runner }
+              .to raise_error(DoSnapshot::VolumeFindError)
+          end
+        end
+
+        context 'when failed to list volumes' do
+          it 'raised with error' do
+            stub_volumes_fail
+
+            expect { snap_runner }
+              .to raise_error(DoSnapshot::VolumeListError)
+          end
+        end
+
+        context 'when no snapshot created' do
+          it 'raised with error' do
+            stub_volume_snapshot_fail(volume_id, volume_snapshot_name)
+
+            expect { snap_runner }
+              .to raise_error(DoSnapshot::SnapshotCreateError)
+          end
+        end
+
+      end
     end
 
     describe '.power_on_failed_droplets' do
@@ -90,7 +133,7 @@ RSpec.describe DoSnapshot::Command do
         stub_droplet(droplet_id)
 
         load_options
-        cmd.processed_droplet_ids << droplet_id
+        cmd.processed_ids << droplet_id
         expect { cmd.power_on_failed_droplets }
           .not_to raise_error
         expect(DoSnapshot.logger.buffer)
@@ -102,7 +145,7 @@ RSpec.describe DoSnapshot::Command do
         stub_droplet_inactive(droplet_id)
 
         load_options
-        cmd.processed_droplet_ids << droplet_id
+        cmd.processed_ids << droplet_id
         expect { cmd.power_on_failed_droplets }
           .not_to raise_error
         expect(DoSnapshot.logger.buffer)
@@ -236,7 +279,7 @@ RSpec.describe DoSnapshot::Command do
         expect { cmd.fail_power_off(DoSnapshot::SnapshotCreateError.new(droplet_id)) }
           .not_to raise_error
         expect(DoSnapshot.logger.buffer)
-          .to include "Droplet id: #{droplet_id} is Failed to Snapshot."
+          .to include "Resource id: #{droplet_id} is Failed to Snapshot."
       end
 
       it 'with request error' do
@@ -270,7 +313,7 @@ RSpec.describe DoSnapshot::Command do
   end
 
   def load_options(options = nil)
-    options ||= default_options.merge(protocol: 2)
+    options ||= default_options.merge(protocol: 2).merge(overwrite_options)
     cmd.load_options(options, [:log, :mail, :smtp, :trace, :digital_ocean_access_token])
   end
 
