@@ -11,7 +11,7 @@ end
 group :test, :development do
   gem 'aruba', '~> 0.8.0'
   gem 'json', '~> 1.8.1'
-  gem 'rake', '>= 0.8.7'
+  gem 'rake', '< 11.0'
   gem 'rspec', '~> 3.3.0'
   gem 'rspec-core', '~> 3.3.0'
   gem 'rspec-expectations', '~> 3.3.0'
