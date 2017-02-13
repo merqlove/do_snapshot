@@ -33,7 +33,7 @@ module DoSnapshot
         else
           response = client.snapshot.all(resource_type: resource_type)
           fail SnapshotListError, response.message unless response.respond_to?(:snapshots)
-          response.snapshots.sort_by {|s| Time.parse(s["created_at"]) }.map(&:id)
+          response.snapshots.sort_by {|s| DateTime.strptime(s["created_at"]) }.map(&:id)
         end
       end
 
