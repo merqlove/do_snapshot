@@ -72,7 +72,7 @@ module DoSnapshot
       logger.info "Start creating snapshot for #{resource_type_singular} id: #{resource.id} name: #{resource.name}."
 
       today         = DateTime.now
-      name          = "#{resource.name}_#{today.strftime('%Y_%m_%d')}"
+      name          = "#{resource.name}_#{today.strftime('%Y-%m-%d-%H-%M')}"
       # noinspection RubyResolve
       snapshot_size = snapshot_size(resource)
 
