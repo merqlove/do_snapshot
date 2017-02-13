@@ -1,4 +1,4 @@
-# DoSnapshot CLI 
+# DoSnapshot CLI
 
 [![Join the chat at https://gitter.im/merqlove/do_snapshot](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/merqlove/do_snapshot?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [Project Page at Digital Ocean](https://www.digitalocean.com/community/projects/dosnapshot), comment or vote for this project.
@@ -12,10 +12,11 @@
 
 Use this tool to backup DigitalOcean droplet's via snapshot method, on the fly!
 
-## API Changes: 
-- 03.08.16: DO now automagically keeps our droplets running when snapshot is processing, so:  
-  Added options `--shutdown`, `--no-shutdown`.    
-  `shutdown` now disabled by default, no downtime anymore, `YES`!  
+## API Changes:
+- 03.02.17: Adds support to make snapshots of volumes
+- 03.08.16: DO now automagically keeps our droplets running when snapshot is processing, so:
+  Added options `--shutdown`, `--no-shutdown`.
+  `shutdown` now disabled by default, no downtime anymore, `YES`!
   If you want `shutdown` back use `--shutdown` option.
 - 08.01.16: now we have to use DO API V2 only, because V1 is not work anymore.
 - 17.10.15: now we use DO API V2 by default, due V1 deprecation at 11.2015.
@@ -42,18 +43,34 @@ Ruby versions 1.9.3 and higher. JRuby 1.7, 9.0.0.0 or later is also supported.
 
 ## Installation
 
+### While this fork is not merged into official gem
+
+Install [specific_install](https://github.com/rdp/specific_install) gem
+
+    $ gem install specific_install
+
+Install [this version of barge](https://github.com/rafaelp/barge) (that supports volumes and snapshots)
+
+    $ gem specific_install https://github.com/rafaelp/barge
+
+Install [this version of do_snapshot](https://github.com/rafaelp/do_snapshot/tree/volumes)
+
+    $ gem specific_install https://github.com/rafaelp/do_snapshot volumes
+
+### Instructions to install latest version of official gem
+
 Install it yourself as:
 
     $ gem install do_snapshot
-    
+
 System Wide Install (OSX, *nix):
-  
+
     $ sudo gem install do_snapshot
-        
+
 For **OSX** users ([Homebrew Tap](http://github.com/merqlove/homebrew-do-snapshot)):
 
     $ brew tap merqlove/do-snapshot && brew install do_snapshot
-    
+
     $ do_snapshot -V
 
 Standalone with one-liner:
@@ -61,36 +78,36 @@ Standalone with one-liner:
     $ wget https://assets.merqlove.ru.s3.amazonaws.com/do_snapshot/do_snapshot.tgz && sudo tar -xzf do_snapshot.tgz /usr/local/lib/ && sudo ln -s /usr/local/lib/do_snapshot/bin/do_snapshot /usr/local/bin/do_snapshot
 
 Standalone pack for **Unix/Linux** users: [Download](https://assets.merqlove.ru.s3.amazonaws.com/do_snapshot/do_snapshot.tgz)
- 
+
     $ wget https://assets.merqlove.ru.s3.amazonaws.com/do_snapshot/do_snapshot.tgz # if not done.
-    
+
     # Example Install into /usr/local
-    
-    $ tar -xzf do_snapshot.tgz /usr/local/ && ln -s /usr/local/do_snapshot/bin/do_snapshot /usr/local/bin/do_snapshot 
-    $ do_snapshot help      
+
+    $ tar -xzf do_snapshot.tgz /usr/local/ && ln -s /usr/local/do_snapshot/bin/do_snapshot /usr/local/bin/do_snapshot
+    $ do_snapshot help
 
 Standalone Zip pack for others: [Download](https://assets.merqlove.ru.s3.amazonaws.com/do_snapshot/do_snapshot.zip)
-    
+
 ## Usage
 
 Mainly it's pretty simple:
 
     $ do_snapshot --only 123456 -k 5 -c -v
 
-### Setup 
+### Setup
 
 ### Digitalocean API V2 (default):
 You'll need to generate an access token in Digital Ocean's control panel at https://cloud.digitalocean.com/settings/applications
-    
+
     $ export DIGITAL_OCEAN_ACCESS_TOKEN="SOMETOKEN"
-    
+
 If you want to set keys without environment, than set it via options when you run do_snapshot:
-    
-    $ do_snapshot --digital-ocean-access-token YOURLONGTOKEN   
 
-### How-To 
+    $ do_snapshot --digital-ocean-access-token YOURLONGTOKEN
 
-##### Tutorials: 
+### How-To
+
+##### Tutorials:
 - [Automate Taking Snapshots of Your DigitalOcean Droplets with DOSnapshot
 , Tyler Longren](https://longren.io/automate-making-snapshots-of-your-digitalocean-droplets/)
 - [How to Automate Taking Digital Ocean Droplet Snaphot with DoSnapShot Script, Arun Kumar](http://www.ashout.com/automate-digital-ocean-droplet-snaphot/)
@@ -98,22 +115,22 @@ If you want to set keys without environment, than set it via options when you ru
 Here we `keeping` only 5 **latest** snapshots and cleanup older after new one is created. If creation of snapshots failed no one will be deleted. By default we keeping `10` droplets.
 
     $ do_snapshot --keep 5 -c
-    
+
 Keep latest 3 from selected droplet:
-  
+
     $ do_snapshot --only 123456 --keep 3
-  
+
 Working with all except droplets:
-  
+
     $ do_snapshot --exclude 123456 123457
-  
+
 Keep latest 5 snapshots, send mail notification instead of creating new one:
-  
+
     $ do_snapshot --keep 10 --stop --mail to:yourmail@example.com
-    
+
 <img src="https://raw.githubusercontent.com/merqlove/do_snapshot/master/assets/safe_mode.png" style="max-width:100%" alt="DoSnapshot Safe Mode Example">
-    
-E-mail notifications disabled out of the box. 
+
+E-mail notifications disabled out of the box.
 For working mailer you need to set e-mail settings via run options.
 
     --mail to:mail@somehost.com from:from@host.com --smtp address:smtp.gmail.com port:25 user_name:someuser password:somepassword
@@ -125,7 +142,7 @@ For working mailer you need to set e-mail settings via run options.
 ### Real world example
 
     $ bin/do_snapshot --only 123456 -k 3 -c -m to:TO from:FROM -t address:HOST user_name:LOGIN password:PASSWORD port:2525 -v
-    
+
     Checking DigitalOcean Id's.
     Start performing operations
     Setting DigitalOcean Id's.
@@ -143,12 +160,12 @@ For working mailer you need to set e-mail settings via run options.
     All operations has been finished.
     Sending e-mail notification.
 
-### All options:    
+### All options:
 
-    > $ do_snapshot c  
-    
+    > $ do_snapshot c
+
     aliases: s, snap, create
-    
+
     Options:
       -p, [--protocol=1]                                             # Select api version.
                                                                      # Default: 2
@@ -158,9 +175,9 @@ For working mailer you need to set e-mail settings via run options.
       -k, [--keep=5]                                                 # How much snapshots you want to keep?
                                                                      # Default: 10
       -d, [--delay=5]                                                # Delay between snapshot operation status requests.
-                                                                     # Default: 10                                                                    
+                                                                     # Default: 10
           [--timeout=250]                                            # Timeout in sec's for events like Power Off or Create Snapshot.
-                                                                     # Default: 3600                                                                     
+                                                                     # Default: 3600
       -m, [--mail=to:yourmail@example.com]                           # Receive mail if fail or maximum is reached.
       -t, [--smtp=user_name:yourmail@example.com password:password]  # SMTP options.
       -l, [--log=/Users/someone/.do_snapshot/main.log]               # Log file path. By default logging is disabled.
@@ -171,12 +188,12 @@ For working mailer you need to set e-mail settings via run options.
       -q, [--quiet], [--no-quiet]                                    # Quiet mode. If don't need any messages in console.
           [--digital-ocean-access-token=YOURLONGAPITOKEN]            # DIGITAL_OCEAN_ACCESS_TOKEN. if you can't use environment.
           [--digital-ocean-client-id=YOURLONGAPICLIENTID]            # DIGITAL_OCEAN_CLIENT_ID. if you can't use environment.
-          [--digital-ocean-api-key=YOURLONGAPIKEY]                   # DIGITAL_OCEAN_API_KEY. if you can't use environment.    
-    
+          [--digital-ocean-api-key=YOURLONGAPIKEY]                   # DIGITAL_OCEAN_API_KEY. if you can't use environment.
+
     Description:
       `do_snapshot` able to create and cleanup snapshots on your droplets.
-    
-      You can optionally specify parameters to select or exclude some droplets.   
+
+      You can optionally specify parameters to select or exclude some droplets.
 
 ## You can ask, "Why you made this tool?"
 
@@ -189,7 +206,7 @@ For working mailer you need to set e-mail settings via run options.
 - So this tool can save a lot of time for people.
 
 ## Donating:
-Support this project and others by [merqlove](https://gratipay.com/~merqlove/) via [gratipay](https://gratipay.com/~merqlove/).  
+Support this project and others by [merqlove](https://gratipay.com/~merqlove/) via [gratipay](https://gratipay.com/~merqlove/).
 [![Support via Gratipay](https://cdn.rawgit.com/gratipay/gratipay-badge/2.3.0/dist/gratipay.png)](https://gratipay.com/merqlove/)
 
 ## Dependencies:
@@ -208,7 +225,7 @@ Support this project and others by [merqlove](https://gratipay.com/~merqlove/) v
 
 ### Testing
 
-    $ rake spec 
+    $ rake spec
 
 Copyright (c) 2015 Alexander Merkulov
 
