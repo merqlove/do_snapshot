@@ -93,7 +93,6 @@ module DoSnapshot
       #
       def cleanup_snapshots(instance, size, resource_type = 'droplet')
         snapshots = snapshot_ids(instance, resource_type)
-        require 'pry'
         (0..size).each do |i|
           # noinspection RubyResolve
           snapshot = snapshots[i]
