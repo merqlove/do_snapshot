@@ -34,9 +34,9 @@ module DoSnapshot
 
     desc 'c / s / snap / create', 'DEFAULT. Create and cleanup snapshot\'s'
     long_desc <<-LONGDESC
-    `do_snapshot` able to create and cleanup snapshots on your droplets.
+    `do_snapshot` able to create and cleanup snapshots on your droplets and volumes.
 
-    You can optionally specify parameters to select or exclude some droplets.
+    You can optionally specify parameters to select or exclude some droplets and/or volumes
 
     ### Examples
 
@@ -48,7 +48,19 @@ module DoSnapshot
 
     $ do_snapshot --digital_ocean_api_token SOMELONGTOKEN
 
-    Keep latest 5 and cleanup older if maximum is reached, verbose:
+    Only take snapshots of droplets (default)
+
+    $ do_snapshot -r droplets
+
+    Only take snapshots of volumes
+
+    $ do_snapshot --resource_types volumes
+
+    Take snapshots of both
+
+    $ do_snapshot -r droplets,volumes
+
+    Keep latest 5 droplets and cleanup older if maximum is reached, verbose:
 
     $ do_snapshot -k 5 -c -v
 
@@ -82,6 +94,12 @@ module DoSnapshot
                   aliases: %w( -p ),
                   banner: '1',
                   desc: 'Select api version.'
+    method_option :resource_types,
+                  type: :string,
+                  default: 'droplets',
+                  aliases: %w( -r ),
+                  banner: 'droplets volumes',
+                  desc: 'Select resource types to take snapshots (DEFAULT: droplets).'
     method_option :shutdown,
                   default: false,
                   type: :boolean,

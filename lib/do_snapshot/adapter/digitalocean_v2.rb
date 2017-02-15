@@ -27,8 +27,14 @@ module DoSnapshot
         response.droplets
       end
 
-      def snapshots(instance)
-        instance.snapshot_ids
+      def snapshot_ids(instance, resource_type = 'droplet')
+        if instance.snapshot_ids
+          instance.snapshot_ids
+        else
+          response = client.snapshot.all(resource_type: resource_type)
+          fail SnapshotListError, response.message unless response.respond_to?(:snapshots)
+          response.snapshots.sort_by {|s| DateTime.strptime(s["created_at"]) }.map(&:id)
+        end
       end
 
       # Request Power On for droplet
@@ -60,14 +66,19 @@ module DoSnapshot
 
       # Sending event to create snapshot via DigitalOcean API and wait for success
       #
-      def create_snapshot(id, name)
+      def create_snapshot(id, name, resource_type = nil)
         # noinspection RubyResolve,RubyResolve
-        response = client.droplet.snapshot(id, name: name)
+        case resource_type
+        when 'volume'
+          response = client.volume.create_snapshot(id, name: name)
+          fail DoSnapshot::SnapshotCreateError.new(id), response.message unless response.respond_to?(:snapshot)
+        else
+          response = client.droplet.snapshot(id, name: name)
+          fail DoSnapshot::SnapshotCreateError.new(id), response.message unless response.respond_to?(:action)
 
-        fail DoSnapshot::SnapshotCreateError.new(id), response.message unless response.respond_to?(:action)
-
-        # noinspection RubyResolve
-        wait_event(response.action.id)
+          # noinspection RubyResolve
+          wait_event(response.action.id)
+        end
       end
 
       # Checking if droplet is powered off.
@@ -80,15 +91,17 @@ module DoSnapshot
 
       # Cleanup our snapshots.
       #
-      def cleanup_snapshots(instance, size)
+      def cleanup_snapshots(instance, size, resource_type = 'droplet')
+        snapshots = snapshot_ids(instance, resource_type)
         (0..size).each do |i|
           # noinspection RubyResolve
-          snapshot = instance.snapshot_ids[i]
-          action = client.image.destroy(snapshot)
+          snapshot = snapshots[i]
+
+          action = client.snapshot.destroy(snapshot)
 
           logger.debug action unless action.success?
 
-          after_cleanup(instance.id, instance.name, snapshot, action)
+          after_cleanup(instance.id, instance.name, resource_type, snapshot, action)
         end
       end
 
@@ -106,11 +119,29 @@ module DoSnapshot
         @client = ::Barge::Client.new(access_token: ENV['DIGITAL_OCEAN_ACCESS_TOKEN'], timeout: 15, open_timeout: 15)
       end
 
+      # Get single volume from DigitalOcean
+      #
+      def volume(id)
+        # noinspection RubyResolve
+        response = client.volume.show(id)
+        fail VolumeFindError.new(id), response.message unless response.respond_to?(:volume)
+        response.volume
+      end
+
+      # Get volumes list from DigitalOcean
+      #
+      def volumes
+        # noinspection RubyResolve
+        response = client.volume.all
+        fail VolumeListError, response.message unless response.respond_to?(:volumes)
+        response.volumes
+      end
+
       protected
 
-      def after_cleanup(droplet_id, droplet_name, snapshot, action)
+      def after_cleanup(resource_id, resource_name, resource_type, snapshot, action)
         if !action.success?
-          logger.error "Destroy of snapshot #{snapshot} for droplet id: #{droplet_id} name: #{droplet_name} is failed."
+          logger.error "Destroy of snapshot #{snapshot} for #{resource_type} id: #{resource_id} name: #{resource_name} is failed."
         else
           logger.debug "Snapshot: #{snapshot} delete requested."
         end
@@ -129,5 +160,6 @@ module DoSnapshot
         response.action.status.include?('completed') ? true : false
       end
     end
+
   end
 end

@@ -240,7 +240,7 @@ RSpec.describe DoSnapshot::Runner, type: :aruba do
 
       it 'shows a help message for specific commands' do
         run 'do_snapshot help snap'
-        expect(all_stdout).to include('`do_snapshot` able to create and cleanup snapshots on your droplets.')
+        expect(all_stdout).to include('`do_snapshot` able to create and cleanup snapshots on your droplets and volumes.')
       end
 
       it 'sure no warning about credentials' do

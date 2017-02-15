@@ -2,6 +2,8 @@ source 'https://rubygems.org'
 
 gemspec
 
+gem 'barge', git: 'git@github.com:rafaelp/barge.git'
+
 group :development do
   gem 'rubocop', '~> 0.27.0'
   gem 'rubyzip', '~> 1.1.6'
@@ -11,7 +13,7 @@ end
 group :test, :development do
   gem 'aruba', '~> 0.8.0'
   gem 'json', '~> 1.8.1'
-  gem 'rake', '>= 0.8.7'
+  gem 'rake', '< 11.0'
   gem 'rspec', '~> 3.3.0'
   gem 'rspec-core', '~> 3.3.0'
   gem 'rspec-expectations', '~> 3.3.0'
@@ -19,4 +21,5 @@ group :test, :development do
   gem 'webmock', '~> 1.18.0'
   gem 'tins', '~> 1.6.0'
   gem 'coveralls', '~> 0.7.0'
+  gem 'pry', '~> 0.10.4'
 end

@@ -69,7 +69,7 @@ module DoSnapshot
   #
   class SnapshotCreateError < RequestActionError
     def initialize(*args)
-      DoSnapshot.logger.error "Droplet id: #{args[0]} is Failed to Snapshot."
+      DoSnapshot.logger.error "Resource id: #{args[0]} is Failed to Snapshot."
       super
     end
   end
@@ -116,4 +116,35 @@ module DoSnapshot
   # Sometimes it connection problem or DigitalOcean API maintenance.
   #
   class SnapshotCleanupError < RequestError; end
+
+  # When Digital Ocean API say us that not found volume by id.
+  # Or something wrong happened.
+  #
+  class VolumeFindError < RequestError
+    def initialize(*args)
+      DoSnapshot.logger.error "Volume id: #{args[0]} Not Found"
+      super
+    end
+  end
+
+  # When Digital Ocean API cannot retrieve list of volumes.
+  # Sometimes it connection problem or DigitalOcean API maintenance.
+  #
+  class VolumeListError < RequestError
+    def initialize(*args)
+      DoSnapshot.logger.error 'Volume Listing is failed to retrieve'
+      super
+    end
+  end
+
+  # When Digital Ocean API cannot retrieve list of volumes.
+  # Sometimes it connection problem or DigitalOcean API maintenance.
+  #
+  class SnapshotListError < RequestError
+    def initialize(*args)
+      DoSnapshot.logger.error 'Snapshot Listing is failed to retrieve'
+      super
+    end
+  end
+
 end
