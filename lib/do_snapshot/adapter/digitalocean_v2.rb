@@ -103,7 +103,7 @@ module DoSnapshot
       #
       def set_id
         logger.debug 'Setting DigitalOcean Access Token.'
-        @client = ::Barge::Client.new(access_token: ENV['DIGITAL_OCEAN_ACCESS_TOKEN'], timeout: 15, open_timeout: 15)
+        @client = ::Barge::Client.new(access_token: ENV['DIGITAL_OCEAN_ACCESS_TOKEN'], timeout: 15, open_timeout: 15, request_options: { ssl: { verify: false }})
       end
 
       protected
