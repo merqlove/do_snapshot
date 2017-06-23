@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gemspec
 
 group :development do
-  gem 'rubocop', '~> 0.27.0'
+  gem 'rubocop', '~> 0.48.0'
   gem 'rubyzip', '~> 1.1.6'
   gem 's3', '~> 0.3.21'
 end
