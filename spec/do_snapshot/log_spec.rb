@@ -31,6 +31,14 @@ RSpec.describe DoSnapshot::Log do
       DoSnapshot.logger.send(type, 'fff')
       expect(DoSnapshot.logger.buffer).to include('fff')
     end
+
+    context 'Hashie' do
+      it 'warn' do
+        expect(Hashie.logger).to respond_to(:warn)
+        Hashie.logger.send(:warn, 'fff')
+        expect(DoSnapshot.logger.buffer).to include('fff')
+      end
+    end
   end
 
   describe 'will work with files' do

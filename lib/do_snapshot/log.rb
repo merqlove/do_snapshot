@@ -1,5 +1,6 @@
 # -*- encoding : utf-8 -*-
 require 'logger'
+require 'hashie'
 
 module DoSnapshot
   # Shared logger
@@ -14,6 +15,7 @@ module DoSnapshot
       @quiet   = DoSnapshot.config.quiet
       options.each { |key, option| instance_variable_set(:"@#{key}", option) }
       instance.level = DoSnapshot.config.logger_level if instance
+      Hashie.logger = self
     end
 
     def instance
