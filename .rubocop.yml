@@ -1,14 +1,69 @@
 LineLength:
   Max: 200
 
+BlockLength:
+  Max: 500
+
 HashSyntax:
   EnforcedStyle: ruby19
 
-SingleSpaceBeforeFirstArg:
+SpaceBeforeFirstArg:
   Enabled: false
 
-TrailingComma:
+Style/EmptyLineAfterMagicComment:
   Enabled: false
+
+TrailingCommaInArguments:
+  Enabled: false
+
+PercentLiteralDelimiters:
+  Enabled: false
+
+TrailingCommaInLiteral:
+  Enabled: false
+
+SpaceInsidePercentLiteralDelimiters:
+  Enabled: false
+
+FrozenStringLiteralComment:
+  Enabled: false
+
+MultilineMethodCallBraceLayout:
+  Enabled: false
+
+SignalException:
+  Enabled: false
+
+Style/SymbolArray:
+  Enabled: false
+
+Style/SafeNavigation:
+  Enabled: false
+
+Style/MultilineIfModifier:
+  Enabled: false
+
+Style/UnneededInterpolation:
+  Enabled: false
+
+Lint/UnneededDisable:
+  Enabled: false
+
+Bundler/OrderedGems:
+  Enabled: false
+
+Style/MutableConstant:
+  Enabled: false
+
+Performance/RedundantBlockCall:
+  Enabled: false
+
+Style/EmptyLinesAroundBlockBody:
+  Enabled: false
+
+Style/ZeroLengthPredicate:
+  Enabled: false
+
 AllCops:
   Exclude:
     - '*.gemspec'
