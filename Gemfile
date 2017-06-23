@@ -10,7 +10,7 @@ end
 
 group :test, :development do
   gem 'aruba', '~> 0.8.0'
-  gem 'public_suffix', '~> 1.5'
+  gem 'public_suffix', '~> 1.4.0'
   gem 'json', '~> 1.8.1'
   gem 'rake', '>= 0.8.7', '< 11.0'
   gem 'rspec', '~> 3.3.0'
