@@ -1,7 +1,7 @@
 LineLength:
   Max: 200
 
-BlockLength:
+Metrics/BlockLength:
   Max: 500
 
 HashSyntax:
