@@ -3,8 +3,8 @@
 require 'spec_helper'
 
 RSpec.describe DoSnapshot::CLI do
-  include_context 'environment'
-  include_context 'api_v2_helpers'
+  include DoSnapshot::RSpec::Environment
+  include DoSnapshot::RSpec::ApiV2Helpers
 
   subject(:cli)     { described_class }
   subject(:api)     { DoSnapshot::Adapter::DropletKit }

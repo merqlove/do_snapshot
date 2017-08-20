@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 RSpec.describe DoSnapshot::Mail do
-  include_context 'environment'
+  include DoSnapshot::RSpec::Environment
 
   subject(:mail) { described_class }
 

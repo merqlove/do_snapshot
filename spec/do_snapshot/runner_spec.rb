@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 RSpec.describe DoSnapshot::Runner, type: :aruba do
-  include_context 'environment'
+  include DoSnapshot::RSpec::Environment
 
   context 'commands' do
     context '.snap' do
@@ -204,7 +204,7 @@ RSpec.describe DoSnapshot::Runner, type: :aruba do
       end
 
       context 'API V2' do
-        include_context 'api_v2_helpers'
+        include DoSnapshot::RSpec::ApiV2Helpers
         it_behaves_like '.snap methods'
 
         context 'when no credentials' do

@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 RSpec.describe DoSnapshot::Adapter::Abstract do
-  include_context 'environment'
+  include DoSnapshot::RSpec::Environment
 
   subject(:api) { described_class }
 

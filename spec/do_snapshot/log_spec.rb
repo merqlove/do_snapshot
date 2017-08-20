@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 RSpec.describe DoSnapshot::Log do
-  include_context 'environment'
+  include DoSnapshot::RSpec::Environment
 
   subject(:log) { described_class }
 

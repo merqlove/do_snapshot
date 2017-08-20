@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 RSpec.describe DoSnapshot::Adapter do
-  include_context 'environment'
+  include DoSnapshot::RSpec::Environment
 
   module DoSnapshot
     module Adapter
