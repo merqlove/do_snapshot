@@ -22,7 +22,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'droplet_kit', '~> 2.2.0'
   spec.add_dependency 'activesupport', '< 5'
-  spec.add_dependency 'thor', '~> 0.20'
+  spec.add_dependency 'thor', '>= 0.19.1'
   spec.add_dependency 'hashie', '~> 3.5.6'
   spec.add_dependency 'pony', '~> 1.1'
 end

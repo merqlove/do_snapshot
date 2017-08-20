@@ -19,5 +19,5 @@ group :test, :development do
   gem 'rspec-mocks', '~> 3.6.0'
   gem 'webmock', '~> 1.18.0'
   gem 'tins', '~> 1.6.0'
-  gem 'coveralls', '~> 0.7.0'
+  gem 'coveralls', '~> 0.8.0'
 end
