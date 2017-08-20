@@ -6,10 +6,6 @@ RSpec.describe DoSnapshot::Adapter::DropletKit do
   include_context 'environment'
   include_context 'api_v2_helpers'
 
-  # let(:droplets_uri)       { "#{droplets_api_base}?page=1&per_page=1000" }
-  # let(:droplet_find_uri)   { "#{droplets_api_base}/[id]" }
-  # let(:action_find_uri)    { "#{actions_api_base}/[id]" }
-
   subject(:api) { described_class }
   subject(:log) { DoSnapshot::Log }
 
