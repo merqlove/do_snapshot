@@ -4,8 +4,8 @@ source 'https://rubygems.org'
 gemspec
 
 group :development do
-  gem 'rubocop', '~> 0.48.0'
-  gem 'rubyzip', '~> 1.1.6'
+  gem 'rubocop', '~> 0.49.0'
+  gem 'rubyzip', '~> 1.2.1'
   gem 's3', '~> 0.3.21'
 end
 
