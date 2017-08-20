@@ -10,7 +10,7 @@ HashSyntax:
 SpaceBeforeFirstArg:
   Enabled: false
 
-Style/EmptyLineAfterMagicComment:
+Layout/EmptyLineAfterMagicComment:
   Enabled: false
 
 TrailingCommaInArguments:
@@ -58,7 +58,7 @@ Style/MutableConstant:
 Performance/RedundantBlockCall:
   Enabled: false
 
-Style/EmptyLinesAroundBlockBody:
+Layout/EmptyLinesAroundBlockBody:
   Enabled: false
 
 Style/ZeroLengthPredicate:
