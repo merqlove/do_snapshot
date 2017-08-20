@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'do_snapshot/cli'
 
 module DoSnapshot

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec::Matchers.define :be_found_n_times do |str, times|
   match do |output|
     matches = output.scan(str)

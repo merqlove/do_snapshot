@@ -1,4 +1,5 @@
 # -*- encoding : utf-8 -*-
+# frozen_string_literal: true
 require 'thor'
 require 'do_snapshot'
 require_relative 'log'

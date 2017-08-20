@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module DoSnapshot
   # Configuration class. Used to share config across application.
   #

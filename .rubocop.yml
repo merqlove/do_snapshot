@@ -26,7 +26,7 @@ SpaceInsidePercentLiteralDelimiters:
   Enabled: false
 
 FrozenStringLiteralComment:
-  Enabled: false
+  Enabled: true
 
 MultilineMethodCallBraceLayout:
   Enabled: false
