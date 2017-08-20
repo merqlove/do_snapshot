@@ -1,0 +1,8 @@
+title: DoSnapshot
+description: A command-line snapshot maker for your DigitalOcean droplets. Fully Automated. Multi-threaded.
+google_analytics: UA-52965116-1
+show_downloads: true
+theme: jekyll-theme-architect
+
+gems:
+  - jekyll-mentions
