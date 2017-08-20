@@ -1,5 +1,6 @@
 # -*- encoding : utf-8 -*-
 require 'barge' unless defined?(::Barge)
+require 'active_support/core_ext/kernel/reporting'
 
 module DoSnapshot
   module Adapter
@@ -12,19 +13,23 @@ module DoSnapshot
       # Get single droplet from DigitalOcean
       #
       def droplet(id)
-        # noinspection RubyResolve
-        response = client.droplet.show(id)
-        fail DropletFindError.new(id), response.message unless response.respond_to?(:droplet)
-        response.droplet
+        silence_warnings do
+          # noinspection RubyResolve
+          response = client.droplet.show(id)
+          fail DropletFindError.new(id), response.message unless response.respond_to?(:droplet)
+          response.droplet
+        end
       end
 
       # Get droplets list from DigitalOcean
       #
       def droplets
         # noinspection RubyResolve
-        response = client.droplet.all
-        fail DropletListError, response.message unless response.respond_to?(:droplets)
-        response.droplets
+        silence_warnings do
+          response = client.droplet.all
+          fail DropletListError, response.message unless response.respond_to?(:droplets)
+          response.droplets
+        end
       end
 
       def snapshots(instance)
@@ -34,40 +39,46 @@ module DoSnapshot
       # Request Power On for droplet
       #
       def power_on(id)
-        # noinspection RubyResolve
-        response = client.droplet.power_on(id)
+        silence_warnings do
+          # noinspection RubyResolve
+          response = client.droplet.power_on(id)
 
-        fail DoSnapshot::EventError.new(id), response.message unless response.respond_to?(:action)
+          fail DoSnapshot::EventError.new(id), response.message unless response.respond_to?(:action)
 
-        if response.action.status.include?('in-progress')
-          logger.info "Droplet id: #{id} is requested for Power On."
-        else
-          logger.error "Droplet id: #{id} is failed to request for Power On."
+          if response.action.status.include?('in-progress')
+            logger.info "Droplet id: #{id} is requested for Power On."
+          else
+            logger.error "Droplet id: #{id} is failed to request for Power On."
+          end
         end
       end
 
       # Power Off request for Droplet
       #
       def stop_droplet(id)
-        # noinspection RubyResolve,RubyResolve
-        response = client.droplet.power_off(id)
+        silence_warnings do
+          # noinspection RubyResolve,RubyResolve
+          response = client.droplet.power_off(id)
 
-        fail DropletShutdownError.new(id), response.message unless response.respond_to?(:action)
+          fail DropletShutdownError.new(id), response.message unless response.respond_to?(:action)
 
-        # noinspection RubyResolve
-        wait_shutdown(id, response.action.id)
+          # noinspection RubyResolve
+          wait_shutdown(id, response.action.id)
+        end
       end
 
       # Sending event to create snapshot via DigitalOcean API and wait for success
       #
       def create_snapshot(id, name)
-        # noinspection RubyResolve,RubyResolve
-        response = client.droplet.snapshot(id, name: name)
+        silence_warnings do
+          # noinspection RubyResolve,RubyResolve
+          response = client.droplet.snapshot(id, name: name)
 
-        fail DoSnapshot::SnapshotCreateError.new(id), response.message unless response.respond_to?(:action)
+          fail DoSnapshot::SnapshotCreateError.new(id), response.message unless response.respond_to?(:action)
 
-        # noinspection RubyResolve
-        wait_event(response.action.id)
+          # noinspection RubyResolve
+          wait_event(response.action.id)
+        end
       end
 
       # Checking if droplet is powered off.
