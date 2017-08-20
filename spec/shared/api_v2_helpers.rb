@@ -9,7 +9,7 @@ RSpec.shared_context 'api_v2_helpers' do
   let(:actions_api_base)   { "#{api_base}/actions" }
   let(:images_api_base)    { "#{api_base}/images" }
   let(:image_destroy_uri)  { "#{images_api_base}/[id]" }
-  let(:droplets_uri)       { "#{droplets_api_base}" }
+  let(:droplets_uri)       { "#{droplets_api_base}?page=1&per_page=1000" }
   let(:droplet_find_uri)   { "#{droplets_api_base}/[id]" }
   let(:droplet_stop_uri)   { "#{droplets_api_base}/[id]/actions" }
   let(:droplet_start_uri)  { "#{droplets_api_base}/[id]/actions" }

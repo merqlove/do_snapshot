@@ -5,6 +5,10 @@ RSpec.describe DoSnapshot::Adapter::DropletKit do
   include_context 'environment'
   include_context 'api_v2_helpers'
 
+  # let(:droplets_uri)       { "#{droplets_api_base}?page=1&per_page=1000" }
+  # let(:droplet_find_uri)   { "#{droplets_api_base}/[id]" }
+  # let(:action_find_uri)    { "#{actions_api_base}/[id]" }
+
   subject(:api) { described_class }
   subject(:log) { DoSnapshot::Log }
 
@@ -53,7 +57,7 @@ RSpec.describe DoSnapshot::Adapter::DropletKit do
       it 'with droplets' do
         stub_droplets
 
-        instance.droplets
+        expect(instance.droplets.many?).to be_truthy
 
         expect(a_request(:get, droplets_uri))
           .to have_been_made
@@ -62,10 +66,9 @@ RSpec.describe DoSnapshot::Adapter::DropletKit do
       it 'with error' do
         stub_droplets_fail
 
-        # expect { instance.droplets }.to raise_error(DoSnapshot::DropletListError)
-        expect(instance.droplets.collection).to eq([])
-        # expect(DoSnapshot.logger.buffer)
-        #   .to include 'Droplet Listing is failed to retrieve'
+        expect { instance.droplets }.to raise_error(DoSnapshot::DropletListError)
+        expect(DoSnapshot.logger.buffer)
+          .to include 'Droplet Listing is failed to retrieve'
 
         expect(a_request(:get, droplets_uri))
           .to have_been_made

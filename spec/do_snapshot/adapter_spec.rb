@@ -17,7 +17,7 @@ RSpec.describe DoSnapshot::Adapter do
   describe '#api' do
     it 'when adapter' do
       api = adapter.api(2)
-      expect(api).to be_a_kind_of(DoSnapshot::Adapter::DigitaloceanV2)
+      expect(api).to be_a_kind_of(DoSnapshot::Adapter::DropletKit)
     end
 
     it 'when custom adapter' do

@@ -7,7 +7,13 @@ module DoSnapshot
     # Operating with Digital Ocean.
     #
     class DropletKit < Abstract
-      attr_reader :client
+      attr_reader :client, :per_page, :page
+
+      def initialize(*args)
+        @per_page = 1000
+        @page = 1
+        super(*args)
+      end
 
       # Get single droplet from DigitalOcean
       #
@@ -24,9 +30,11 @@ module DoSnapshot
       #
       def droplets
         # noinspection RubyResolve
-        response = client.droplets.all
-        fail :ropletListError unless response.respond_to?(:collection)
+        response = client.droplets.all(page: page, per_page: per_page)
+        response.many?
         response
+      rescue ::NoMethodError => e
+        fail DropletListError, e
       end
 
       def snapshots(instance)
@@ -53,7 +61,7 @@ module DoSnapshot
       def stop_droplet(id)
         # noinspection RubyResolve,RubyResolve
         response = client.droplet_actions.power_off(droplet_id: id)
-        
+
         # noinspection RubyResolve
         wait_shutdown(id, response.id)
       rescue ::DropletKit::Error => e

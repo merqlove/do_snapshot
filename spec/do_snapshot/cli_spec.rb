@@ -6,7 +6,7 @@ RSpec.describe DoSnapshot::CLI do
   include_context 'api_v2_helpers'
 
   subject(:cli)     { described_class }
-  subject(:api)     { DoSnapshot::Adapter::DigitaloceanV2 }
+  subject(:api)     { DoSnapshot::Adapter::DropletKit }
 
   describe '.initialize' do
     it 'with args & options' do

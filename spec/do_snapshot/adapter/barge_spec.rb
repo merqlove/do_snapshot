@@ -5,6 +5,10 @@ RSpec.describe DoSnapshot::Adapter::Barge do
   include_context 'environment'
   include_context 'api_v2_helpers'
 
+  let(:droplets_uri)       { "#{droplets_api_base}?per_page=200" }
+  let(:droplet_find_uri)   { "#{droplets_api_base}/[id]?per_page=200" }
+  let(:action_find_uri)    { "#{actions_api_base}/[id]?per_page=200" }
+
   subject(:api) { described_class }
   subject(:log) { DoSnapshot::Log }
 
@@ -62,10 +66,9 @@ RSpec.describe DoSnapshot::Adapter::Barge do
       it 'with error' do
         stub_droplets_fail
 
-        # expect { instance.droplets }.to raise_error(DoSnapshot::DropletListError)
-        expect(instance.droplets.collection).to eq([])
-        # expect(DoSnapshot.logger.buffer)
-        #   .to include 'Droplet Listing is failed to retrieve'
+        expect { instance.droplets }.to raise_error(DoSnapshot::DropletListError)
+        expect(DoSnapshot.logger.buffer)
+          .to include 'Droplet Listing is failed to retrieve'
 
         expect(a_request(:get, droplets_uri))
           .to have_been_made
@@ -249,16 +252,16 @@ RSpec.describe DoSnapshot::Adapter::Barge do
 
         droplet = instance.droplet(droplet_id)
         expect { instance.cleanup_snapshots(droplet, 1) }
-            .not_to raise_error
+          .not_to raise_error
         expect(DoSnapshot.logger.buffer)
-            .to include 'Destroy of snapshot 5019903 for droplet id: 100823 name: example.com is failed.'
+          .to include 'Destroy of snapshot 5019903 for droplet id: 100823 name: example.com is failed.'
 
         expect(a_request(:get, droplet_url))
-            .to have_been_made
+          .to have_been_made
         expect(a_request(:delete, image_destroy_url))
-            .to have_been_made
+          .to have_been_made
         expect(a_request(:delete, image_destroy2_url))
-            .to have_been_made
+          .to have_been_made
       end
     end
   end
