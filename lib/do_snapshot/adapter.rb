@@ -5,7 +5,6 @@ module DoSnapshot
   #
   module Adapter
     autoload :Abstract, 'do_snapshot/adapter/abstract'
-    autoload :Barge, 'do_snapshot/adapter/barge'
     autoload :DropletKit, 'do_snapshot/adapter/droplet_kit'
 
     class << self
