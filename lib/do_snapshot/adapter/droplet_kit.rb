@@ -20,10 +20,10 @@ module DoSnapshot
       def droplet(id)
         # noinspection RubyResolve
         result = client.droplets.find(id: id)
-        fail DropletFindError.new(id) unless result
+        fail DropletFindError, id unless result
         result
       rescue ::DropletKit::Error => e
-        raise DropletFindError.new(id) unless e.message
+        raise DropletFindError, id unless e.message
       end
 
       # Get droplets list from DigitalOcean
@@ -94,13 +94,7 @@ module DoSnapshot
         (0..size).each do |i|
           # noinspection RubyResolve
           snapshot = snapshots(instance)[i]
-          begin
-            action = client.images.delete(id: snapshot)
-            after_cleanup(instance.id, instance.name, snapshot, action)
-          rescue ::DropletKit::Error => e
-            logger.debug "#{snapshot} #{e.message}"
-            after_cleanup(instance.id, instance.name, snapshot, false)
-          end
+          delete_image(instance, snapshot)
         end
       end
 
@@ -119,6 +113,14 @@ module DoSnapshot
       end
 
       protected
+
+      def delete_image(instance, snapshot) # rubocop:disable Metrics/AbcSize
+        action = client.images.delete(id: snapshot)
+        after_cleanup(instance.id, instance.name, snapshot, action)
+      rescue ::DropletKit::Error => e
+        logger.debug "#{snapshot} #{e.message}"
+        after_cleanup(instance.id, instance.name, snapshot, false)
+      end
 
       def after_cleanup(droplet_id, droplet_name, snapshot, action)
         if !action

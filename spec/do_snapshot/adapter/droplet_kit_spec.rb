@@ -252,16 +252,16 @@ RSpec.describe DoSnapshot::Adapter::DropletKit do
 
         droplet = instance.droplet(droplet_id)
         expect { instance.cleanup_snapshots(droplet, 1) }
-            .not_to raise_error
+          .not_to raise_error
         expect(DoSnapshot.logger.buffer)
-            .to include 'Destroy of snapshot 5019903 for droplet id: 100823 name: example.com is failed.'
+          .to include 'Destroy of snapshot 5019903 for droplet id: 100823 name: example.com is failed.'
 
         expect(a_request(:get, droplet_url))
-            .to have_been_made
+          .to have_been_made
         expect(a_request(:delete, image_destroy_url))
-            .to have_been_made
+          .to have_been_made
         expect(a_request(:delete, image_destroy2_url))
-            .to have_been_made
+          .to have_been_made
       end
     end
   end

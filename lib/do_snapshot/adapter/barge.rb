@@ -40,16 +40,7 @@ module DoSnapshot
       #
       def power_on(id)
         silence_warnings do
-          # noinspection RubyResolve
-          response = client.droplet.power_on(id)
-
-          fail DoSnapshot::EventError.new(id), response.message unless response.respond_to?(:action)
-
-          if response.action.status.include?('in-progress')
-            logger.info "Droplet id: #{id} is requested for Power On."
-          else
-            logger.error "Droplet id: #{id} is failed to request for Power On."
-          end
+          _power_on(id)
         end
       end
 
@@ -118,6 +109,21 @@ module DoSnapshot
       end
 
       protected
+
+      # Request Power On for droplet
+      #
+      def _power_on(id)
+        # noinspection RubyResolve
+        response = client.droplet.power_on(id)
+
+        fail DoSnapshot::EventError.new(id), response.message unless response.respond_to?(:action)
+
+        if response.action.status.include?('in-progress')
+          logger.info "Droplet id: #{id} is requested for Power On."
+        else
+          logger.error "Droplet id: #{id} is failed to request for Power On."
+        end
+      end
 
       def after_cleanup(droplet_id, droplet_name, snapshot, action)
         if !action.success?
