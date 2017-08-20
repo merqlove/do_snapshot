@@ -6,7 +6,7 @@ module DoSnapshot
     # API for CLI commands
     # Operating with Digital Ocean.
     #
-    class DigitaloceanV2 < Abstract
+    class DropletKit < Abstract
       attr_reader :client
 
       # Get single droplet from DigitalOcean
@@ -16,7 +16,7 @@ module DoSnapshot
         result = client.droplets.find(id: id)
         fail DropletFindError.new(id) unless result
         result
-      rescue DropletKit::Error => e
+      rescue ::DropletKit::Error => e
         raise DropletFindError.new(id) unless e.message
       end
 
@@ -25,7 +25,7 @@ module DoSnapshot
       def droplets
         # noinspection RubyResolve
         response = client.droplets.all
-        fail DropletListError unless response.respond_to?(:collection)
+        fail :ropletListError unless response.respond_to?(:collection)
         response
       end
 
@@ -44,7 +44,7 @@ module DoSnapshot
         else
           logger.error "Droplet id: #{id} is failed to request for Power On."
         end
-      rescue DropletKit::Error => e
+      rescue ::DropletKit::Error => e
         fail DoSnapshot::EventError.new(id), e.message
       end
 
@@ -56,7 +56,7 @@ module DoSnapshot
         
         # noinspection RubyResolve
         wait_shutdown(id, response.id)
-      rescue DropletKit::Error => e
+      rescue ::DropletKit::Error => e
         fail DropletShutdownError.new(id), e.message
       end
 
@@ -68,7 +68,7 @@ module DoSnapshot
 
         # noinspection RubyResolve
         wait_event(response.id)
-      rescue DropletKit::Error => e
+      rescue ::DropletKit::Error => e
         fail DoSnapshot::SnapshotCreateError.new(id), e.message
       end
 
@@ -89,7 +89,7 @@ module DoSnapshot
           begin
             action = client.images.delete(id: snapshot)
             after_cleanup(instance.id, instance.name, snapshot, action)
-          rescue DropletKit::Error => e
+          rescue ::DropletKit::Error => e
             logger.debug "#{snapshot} #{e.message}"
             after_cleanup(instance.id, instance.name, snapshot, false)
           end

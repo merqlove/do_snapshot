@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 require 'spec_helper'
 
-RSpec.describe DoSnapshot::Adapter::DigitaloceanV2 do
+RSpec.describe DoSnapshot::Adapter::Barge do
   include_context 'environment'
   include_context 'api_v2_helpers'
 

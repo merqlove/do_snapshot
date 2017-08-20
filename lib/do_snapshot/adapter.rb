@@ -4,7 +4,8 @@ module DoSnapshot
   #
   module Adapter
     autoload :Abstract, 'do_snapshot/adapter/abstract'
-    autoload :DigitaloceanV2, 'do_snapshot/adapter/digitalocean_v2'
+    autoload :Barge, 'do_snapshot/adapter/barge'
+    autoload :DropletKit, 'do_snapshot/adapter/droplet_kit'
 
     class << self
       def api(protocol, options = {})
@@ -18,12 +19,10 @@ module DoSnapshot
       private
 
       def find_protocol(protocol)
-        if protocol.is_a?(Integer)
-          "DigitaloceanV#{protocol}"
-        elsif protocol.is_a?(String)
+        if protocol.is_a?(String)
           protocol
         else
-          'DigitaloceanV2'
+          'Barge'
         end
       end
     end
