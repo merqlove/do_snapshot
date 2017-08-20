@@ -1,8 +1,9 @@
 # -*- encoding : utf-8 -*-
+# frozen_string_literal: true
 require 'spec_helper'
 
 RSpec.describe DoSnapshot::Adapter do
-  include_context 'environment'
+  include DoSnapshot::RSpec::Environment
 
   module DoSnapshot
     module Adapter
@@ -17,7 +18,7 @@ RSpec.describe DoSnapshot::Adapter do
   describe '#api' do
     it 'when adapter' do
       api = adapter.api(2)
-      expect(api).to be_a_kind_of(DoSnapshot::Adapter::DigitaloceanV2)
+      expect(api).to be_a_kind_of(DoSnapshot::Adapter::DropletKit)
     end
 
     it 'when custom adapter' do

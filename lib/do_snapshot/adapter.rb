@@ -1,29 +1,32 @@
+# frozen_string_literal: true
 module DoSnapshot
   # Adapter interface for API connections
   # Ability to select DigitalOcean API versions.
   #
   module Adapter
     autoload :Abstract, 'do_snapshot/adapter/abstract'
-    autoload :DigitaloceanV2, 'do_snapshot/adapter/digitalocean_v2'
+    autoload :DropletKit, 'do_snapshot/adapter/droplet_kit'
 
     class << self
       def api(protocol, options = {})
         konst = find_protocol(protocol)
-        fail DoSnapshot::NoProtocolError, "Not existing protocol: #{protocol}." unless
-            DoSnapshot::Adapter.const_defined?(konst)
+        error_protocol(protocol) unless DoSnapshot::Adapter.const_defined?(konst)
         obj = DoSnapshot::Adapter.const_get(konst)
         obj.new(options)
       end
 
       private
 
+      def error_protocol(protocol)
+        fail DoSnapshot::NoProtocolError, "Not existing protocol: #{protocol}."
+      end
+
       def find_protocol(protocol)
-        if protocol.is_a?(Integer)
-          "DigitaloceanV#{protocol}"
-        elsif protocol.is_a?(String)
+        if protocol.is_a?(String)
           protocol
         else
-          'DigitaloceanV2'
+          error_protocol(protocol) if protocol.is_a?(Integer) && protocol < 2
+          'DropletKit'
         end
       end
     end

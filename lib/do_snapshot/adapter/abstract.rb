@@ -1,4 +1,5 @@
 # -*- encoding : utf-8 -*-
+# frozen_string_literal: true
 
 module DoSnapshot
   module Adapter
@@ -25,7 +26,7 @@ module DoSnapshot
         # noinspection RubyResolve
         instance = droplet(id)
 
-        return power_on(id) unless instance.status.include?('active')
+        return power_on(id) if instance.respond_to?(:status) && !instance.status.include?('active')
 
         logger.error "Droplet #{id} is still running. Skipping."
       end

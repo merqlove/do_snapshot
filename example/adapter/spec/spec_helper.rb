@@ -1,18 +1,10 @@
 # -*- encoding : utf-8 -*-
 # frozen_string_literal: true
-require 'coveralls'
-Coveralls.wear! do
-  add_filter '/spec/*'
-end
-
 require 'bundler'
 Bundler.setup
 
-require 'do_snapshot/cli'
 require 'webmock/rspec'
-require 'fileutils'
 require 'do_snapshot/rspec'
-require 'do_snapshot/core_ext/hash'
 
 WebMock.disable_net_connect!(allow_localhost: true)
 WebMock.disable!(except: [:net_http])

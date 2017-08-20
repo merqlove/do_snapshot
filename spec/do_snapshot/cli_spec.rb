@@ -1,12 +1,13 @@
 # -*- encoding : utf-8 -*-
+# frozen_string_literal: true
 require 'spec_helper'
 
 RSpec.describe DoSnapshot::CLI do
-  include_context 'environment'
-  include_context 'api_v2_helpers'
+  include DoSnapshot::RSpec::Environment
+  include DoSnapshot::RSpec::ApiV2Helpers
 
   subject(:cli)     { described_class }
-  subject(:api)     { DoSnapshot::Adapter::DigitaloceanV2 }
+  subject(:api)     { DoSnapshot::Adapter::DropletKit }
 
   describe '.initialize' do
     it 'with args & options' do

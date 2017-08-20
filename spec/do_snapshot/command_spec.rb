@@ -1,15 +1,16 @@
 # -*- encoding : utf-8 -*-
+# frozen_string_literal: true
 require 'spec_helper'
 
 RSpec.describe DoSnapshot::Command do
-  include_context 'environment'
-  include_context 'uri_helpers'
+  include DoSnapshot::RSpec::Environment
+  include DoSnapshot::RSpec::UriHelpers
 
   subject(:cmd)     { DoSnapshot::Command.new }
   subject(:log)     { DoSnapshot::Log }
 
   describe 'V2' do
-    include_context 'api_v2_helpers'
+    include DoSnapshot::RSpec::ApiV2Helpers
 
     describe '.snap' do
       context 'when success' do

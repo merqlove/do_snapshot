@@ -1,14 +1,11 @@
 language: ruby
 rvm:
+  - 2.4.1
   - 2.3.4
   - 2.2.7
   - 2.1.6
   - 2.0.0
-  - jruby-9.0.0.0
-  - 1.9.3
-matrix:
-  allow_failures:
-    - rvm: 1.9.3
+  - jruby-9.1.9.0
 notifications:
   email:
     - api@mrcr.ru

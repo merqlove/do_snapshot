@@ -1,8 +1,9 @@
 # -*- encoding : utf-8 -*-
+# frozen_string_literal: true
 require 'spec_helper'
 
 RSpec.describe DoSnapshot::Mail do
-  include_context 'environment'
+  include DoSnapshot::RSpec::Environment
 
   subject(:mail) { described_class }
 
