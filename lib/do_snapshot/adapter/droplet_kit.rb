@@ -143,7 +143,7 @@ module DoSnapshot
         fail DoSnapshot::EventError.new(id), response.message unless response.respond_to?(:status)
 
         # noinspection RubyResolve,RubyResolve
-        response.action.status.include?('completed') ? true : false
+        response.status.include?('completed') ? true : false
       end
     end
   end
