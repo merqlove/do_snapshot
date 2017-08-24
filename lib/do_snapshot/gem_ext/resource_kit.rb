@@ -4,7 +4,7 @@ require 'forwardable'
 
 # TODO: Remove after `resource_kit` gem update.
 module ResourceKit
-  module ActionFix
+  module ActionFix # rubocop:disable Style/Documentation
     def handler(*response_codes, &block)
       if response_codes.empty?
         handlers[:any] = block
@@ -16,7 +16,7 @@ module ResourceKit
       end
     end
   end
-  module ResourceCollectionFix
+  module ResourceCollectionFix # rubocop:disable Style/Documentation
     def default_handler(*response_codes, &block)
       if response_codes.empty?
         default_handlers[:any] = block
