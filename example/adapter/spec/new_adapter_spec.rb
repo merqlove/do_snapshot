@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-RSpec.describe DoSnapshot::Adapter::NewAdapter do
+RSpec.describe NewAdapter do
   include DoSnapshot::RSpec::Environment
   include DoSnapshot::RSpec::ApiV2Helpers
   include DoSnapshot::RSpec::Adapter
