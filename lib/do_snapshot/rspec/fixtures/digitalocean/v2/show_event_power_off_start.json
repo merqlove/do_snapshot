@@ -1,0 +1,29 @@
+{
+  "action": {
+    "id": 7499,
+    "status": "in-progress",
+    "type": "power_off",
+    "started_at": "2015-05-03T01:00:12Z",
+    "completed_at": "2015-05-03T01:35:51Z",
+    "resource_id": 100823,
+    "resource_type": "droplet",
+    "region": {
+      "name": "Amsterdam 1",
+      "slug": "ams1",
+      "sizes": [
+        "512mb",
+        "1gb",
+        "4gb",
+        "2gb",
+        "8gb",
+        "16gb"
+      ],
+      "features": [
+        "virtio",
+        "backups"
+      ],
+      "available": true
+    },
+    "region_slug": "ams1"
+  }
+}

@@ -69,3 +69,4 @@ AllCops:
     - '*.gemspec'
     - 'tasks/**/*'
     - 'Rakefile'
+    - 'example/**/*'

@@ -1,0 +1,284 @@
+{
+  "droplets": [
+    {
+      "id": 100823,
+      "name": "example1.com",
+      "memory": 512,
+      "vcpus": 1,
+      "disk": 20,
+      "locked": false,
+      "status": "active",
+      "kernel": {
+        "id": 139,
+        "name": "CentOS 6.4 x64 vmlinuz-2.6.32-358.6.2.el6.x86_64",
+        "version": "2.6.32-358.6.2.el6.x86_64"
+      },
+      "created_at": "2013-05-28T22:36:38Z",
+      "features": [],
+      "backup_ids": [],
+      "next_backup_window": null,
+      "snapshot_ids": [],
+      "image": {
+        "id": 562354,
+        "name": "CentOS 6.4 x64",
+        "distribution": "CentOS",
+        "slug": "centos-6-4-x64",
+        "public": false,
+        "regions": [
+          "nyc1",
+          "ams1",
+          "sfo1",
+          "nyc2",
+          "ams2",
+          "sgp1",
+          "lon1",
+          "nyc3",
+          "ams3",
+          "fra1"
+        ],
+        "created_at": "2013-07-24T20:45:07Z",
+        "min_disk_size": 20,
+        "type": "snapshot"
+      },
+      "size": {
+        "slug": "512mb",
+        "memory": 512,
+        "vcpus": 1,
+        "disk": 20,
+        "transfer": 1.0,
+        "price_monthly": 5.0,
+        "price_hourly": 0.00744,
+        "regions": [
+          "nyc1",
+          "sgp1",
+          "ams1",
+          "sfo1",
+          "nyc2",
+          "lon1",
+          "nyc3",
+          "ams3",
+          "ams2",
+          "fra1"
+        ],
+        "available": true
+      },
+      "size_slug": "512mb",
+      "networks": {
+        "v4": [
+          {
+            "ip_address": "104.236.32.182",
+            "netmask": "255.255.192.0",
+            "gateway": "104.236.0.1",
+            "type": "public"
+          }
+        ],
+        "v6": []
+      },
+      "region": {
+        "name": "Amsterdam 1",
+        "slug": "ams1",
+        "sizes": [
+          "16gb",
+          "2gb",
+          "1gb",
+          "4gb",
+          "8gb",
+          "512mb"
+        ],
+        "features": [
+          "virtio",
+          "backups"
+        ],
+        "available": true
+      }
+    },
+    {
+      "id": 100824,
+      "name": "example2.com",
+      "memory": 512,
+      "vcpus": 1,
+      "disk": 20,
+      "locked": false,
+      "status": "active",
+      "kernel": {
+        "id": 139,
+        "name": "CentOS 6.4 x64 vmlinuz-2.6.32-358.6.2.el6.x86_64",
+        "version": "2.6.32-358.6.2.el6.x86_64"
+      },
+      "created_at": "2013-11-29T08:15:38Z",
+      "features": ["virtio"],
+      "backup_ids": [],
+      "next_backup_window": null,
+      "snapshot_ids": [
+      ],
+      "image": {
+        "id": 562354,
+        "name": "CentOS 6.4 x64",
+        "distribution": "CentOS",
+        "slug": "centos-6-4-x64",
+        "public": false,
+        "regions": [
+          "nyc1",
+          "ams1",
+          "sfo1",
+          "nyc2",
+          "ams2",
+          "sgp1",
+          "lon1",
+          "nyc3",
+          "ams3",
+          "fra1"
+        ],
+        "created_at": "2014-07-11T22:00:45Z",
+        "min_disk_size": 20,
+        "type": "snapshot"
+      },
+      "size": {
+        "slug": "512mb",
+        "memory": 512,
+        "vcpus": 1,
+        "disk": 20,
+        "transfer": 1.0,
+        "price_monthly": 5.0,
+        "price_hourly": 0.00744,
+        "regions": [
+          "nyc1",
+          "sgp1",
+          "ams1",
+          "sfo1",
+          "nyc2",
+          "lon1",
+          "nyc3",
+          "ams3",
+          "ams2",
+          "fra1"
+        ],
+        "available": true
+      },
+      "size_slug": "512mb",
+      "networks": {
+        "v4": [
+          {
+            "ip_address": "104.236.32.183",
+            "netmask": "255.255.192.0",
+            "gateway": "104.236.0.1",
+            "type": "public"
+          }
+        ],
+        "v6": []
+      },
+      "region": {
+        "name": "Amsterdam 1",
+        "slug": "ams1",
+        "sizes": [
+          "16gb",
+          "2gb",
+          "1gb",
+          "4gb",
+          "8gb",
+          "512mb"
+        ],
+        "features": [
+          "virtio",
+          "backups"
+        ],
+        "available": true
+      }
+    },
+    {
+      "id": 100825,
+      "name": "example3.com",
+      "memory": 512,
+      "vcpus": 1,
+      "disk": 20,
+      "locked": false,
+      "status": "active",
+      "kernel": {
+        "id": 139,
+        "name": "CentOS 6.4 x64 vmlinuz-2.6.32-358.6.2.el6.x86_64",
+        "version": "2.6.32-358.6.2.el6.x86_64"
+      },
+      "created_at": "2013-11-29T08:15:38Z",
+      "features": ["virtio"],
+      "backup_ids": [],
+      "next_backup_window": null,
+      "snapshot_ids": [
+      ],
+      "image": {
+        "id": 562354,
+        "name": "CentOS 6.4 x64",
+        "distribution": "CentOS",
+        "slug": "centos-6-4-x64",
+        "public": false,
+        "regions": [
+          "nyc1",
+          "ams1",
+          "sfo1",
+          "nyc2",
+          "ams2",
+          "sgp1",
+          "lon1",
+          "nyc3",
+          "ams3",
+          "fra1"
+        ],
+        "created_at": "2014-07-11T22:00:45Z",
+        "min_disk_size": 20,
+        "type": "snapshot"
+      },
+      "size": {
+        "slug": "512mb",
+        "memory": 512,
+        "vcpus": 1,
+        "disk": 20,
+        "transfer": 1.0,
+        "price_monthly": 5.0,
+        "price_hourly": 0.00744,
+        "regions": [
+          "nyc1",
+          "sgp1",
+          "ams1",
+          "sfo1",
+          "nyc2",
+          "lon1",
+          "nyc3",
+          "ams3",
+          "ams2",
+          "fra1"
+        ],
+        "available": true
+      },
+      "size_slug": "512mb",
+      "networks": {
+        "v4": [
+          {
+            "ip_address": "104.236.32.184",
+            "netmask": "255.255.192.0",
+            "gateway": "104.236.0.1",
+            "type": "public"
+          }
+        ],
+        "v6": []
+      },
+      "region": {
+        "name": "Amsterdam 1",
+        "slug": "ams1",
+        "sizes": [
+          "16gb",
+          "2gb",
+          "1gb",
+          "4gb",
+          "8gb",
+          "512mb"
+        ],
+        "features": [
+          "virtio",
+          "backups"
+        ],
+        "available": true
+      }
+    }
+  ],
+  "links": {},
+  "meta": {"total": 3}
+}

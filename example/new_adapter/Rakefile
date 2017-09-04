@@ -1,0 +1,20 @@
+# -*- encoding : utf-8 -*-
+# frozen_string_literal: true
+require 'bundler/setup'
+
+PROJECT_ROOT = File.expand_path('..', __FILE__)
+PROJECT_ROOT_DIR = File.dirname(__FILE__)
+$LOAD_PATH.unshift "#{PROJECT_ROOT}/lib"
+require 'new_adapter'
+
+begin
+  require 'rspec/core/rake_task'
+
+  desc 'Run all specs'
+  RSpec::Core::RakeTask.new(:spec)
+rescue LoadError
+  nil
+  # The test gem group fails to install on the platform for some reason
+end
+
+task default: :spec

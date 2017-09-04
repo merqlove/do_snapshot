@@ -29,9 +29,9 @@ RSpec.configure do |config|
 end
 
 def project_path
-  File.expand_path('../..', __FILE__)
+  DoSnapshot::RSpec.project_path
 end
 
 def fixture(fixture_name)
-  Pathname.new(project_path + '/spec/fixtures/digitalocean/').join("#{fixture_name}.json").read
+  DoSnapshot::RSpec.fixture(fixture_name)
 end
