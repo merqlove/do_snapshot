@@ -11,6 +11,7 @@
 Use this tool to backup DigitalOcean droplet's via snapshot method, on the fly!
 
 ## API Changes: 
+- 20.08.17: Change `Barge` to `DropletKit`. Release `1.0.0`.   
 - 03.08.16: DO now automagically keeps our droplets running when snapshot is processing, so:  
   Added options `--shutdown`, `--no-shutdown`.    
   `shutdown` now disabled by default, no downtime anymore, `YES`!  
@@ -34,7 +35,13 @@ Here are some features:
 
 ## Compatibility
 
-Ruby versions 1.9.3 and higher. JRuby 1.7, 9.0.0.0 or later is also supported.
+From `1.0.0`:
+- Ruby version 2.0.0 or higher
+- JRuby 9.1.0.0 or higher
+
+Prior to `0.6.4`:
+- Ruby version 1.9.3 or higher
+- JRuby 1.7, 9.0.0.0 or higher
 
 <img src="https://raw.githubusercontent.com/merqlove/do_snapshot/master/assets/example.png" style="max-width:100%" alt="DoSnaphot example">
 
@@ -193,7 +200,7 @@ Support this project and others by [merqlove](https://gratipay.com/~merqlove/) v
 ## Dependencies:
 
 - [Thor](https://github.com/erikhuda/thor) for CLI.
-- [Barge](https://github.com/blom/barge) for API V2 requests.
+- [DropletKit](https://github.com/digitalocean/droplet_kit) for API V2 requests.
 - [Pony](https://github.com/benprew/pony) for mail notifications.
 
 ## Contributing
@@ -208,6 +215,6 @@ Support this project and others by [merqlove](https://gratipay.com/~merqlove/) v
 
     $ rake spec 
 
-Copyright (c) 2015 Alexander Merkulov
+Copyright (c) 2017 Alexander Merkulov
 
 MIT License
