@@ -1,3 +1,7 @@
 # frozen_string_literal: true
-class NewAdapter < DoSnapshot::Adapter::Abstract
+
+require_relative 'new_adapter/version'
+
+module NewAdapter 
+  autoload :Adapter, 'new_adapter/adapter'
 end
