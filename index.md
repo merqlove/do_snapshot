@@ -10,6 +10,8 @@
 
 Use this tool to backup DigitalOcean droplet's via snapshot method, on the fly!
 
+### If your looking for fully managed DigitalOcean backups we recomend [SnapShooter which supports Droplet and backups.](https://snapshooter.io/)  
+
 ## API Changes: 
 - 20.08.17: Change `Barge` to `DropletKit`. Release `1.0.0`.   
 - 03.08.16: DO now automagically keeps our droplets running when snapshot is processing, so:  
