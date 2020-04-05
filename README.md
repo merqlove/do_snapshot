@@ -12,8 +12,6 @@
 
 Use this tool to backup DigitalOcean droplet's via snapshot method, on the fly!
 
-### Looking for a fully managed DigitalOcean backups solution? [We recommend Weap.io which has support for Droplets and Volumes](https://weap.io/)  
-
 ## API Changes: 
 - 20.08.17: Change `Barge` to `DropletKit`. Release `1.0.0`.   
 - 03.08.16: DO now automagically keeps our droplets running when snapshot is processing, so:  
