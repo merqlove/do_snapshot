@@ -67,18 +67,18 @@ For **OSX** users ([Homebrew Tap](http://github.com/merqlove/homebrew-do-snapsho
 
 Standalone with one-liner:
 
-    $ wget https://assets.merqlove.ru.s3.amazonaws.com/do_snapshot/do_snapshot.tgz && sudo tar -xzf do_snapshot.tgz /usr/local/lib/ && sudo ln -s /usr/local/lib/do_snapshot/bin/do_snapshot /usr/local/bin/do_snapshot
+    $ wget https://s3.amazonaws.com/assets.merqlove.ru/do_snapshot/do_snapshot.tgz && sudo tar -xzf do_snapshot.tgz /usr/local/lib/ && sudo ln -s /usr/local/lib/do_snapshot/bin/do_snapshot /usr/local/bin/do_snapshot
 
-Standalone pack for **Unix/Linux** users: [Download](https://assets.merqlove.ru.s3.amazonaws.com/do_snapshot/do_snapshot.tgz)
+Standalone pack for **Unix/Linux** users: [Download](https://s3.amazonaws.com/assets.merqlove.ru/do_snapshot/do_snapshot.tgz)
  
-    $ wget https://assets.merqlove.ru.s3.amazonaws.com/do_snapshot/do_snapshot.tgz # if not done.
+    $ wget https://s3.amazonaws.com/assets.merqlove.ru/do_snapshot/do_snapshot.tgz # if not done.
     
     # Example Install into /usr/local
     
     $ tar -xzf do_snapshot.tgz /usr/local/ && ln -s /usr/local/do_snapshot/bin/do_snapshot /usr/local/bin/do_snapshot 
     $ do_snapshot help      
 
-Standalone Zip pack for others: [Download](https://assets.merqlove.ru.s3.amazonaws.com/do_snapshot/do_snapshot.zip)
+Standalone Zip pack for others: [Download](https://s3.amazonaws.com/assets.merqlove.ru/do_snapshot/do_snapshot.zip)
     
 ## Usage
 
